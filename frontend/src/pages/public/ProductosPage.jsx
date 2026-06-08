@@ -8,28 +8,32 @@ const ProductosPage = () => {
       pais: 'Italia',
       especialidad: 'Filtros Prensa Automatizados',
       descripcion: 'Equipos full automatizados con opción a monitoreo remoto. Experiencia respaldada por más de 3000 instalaciones alrededor del mundo para tratamiento de lodos y concentrados.',
-      productos: ['Filtros Prensa', 'Plantas de Tratamiento de Lodos']
+      productos: ['Filtros Prensa', 'Plantas de Tratamiento de Lodos'],
+      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       nombre: 'ROYTEC Global',
       pais: 'Sudáfrica',
       especialidad: 'Espesadores y Circuitos',
       descripcion: 'Especialistas en separación sólido-líquido y soluciones de espesamiento para la minería de alto rendimiento.',
-      productos: ['Espesadores de Alta Tasa', 'Espesadores de Pasta', 'Circuitos CCD', 'Clarificadores', 'Filtros Banda de Vacío']
+      productos: ['Espesadores de Alta Tasa', 'Espesadores de Pasta', 'Circuitos CCD', 'Clarificadores', 'Filtros Banda de Vacío'],
+      img: 'https://images.unsplash.com/photo-1580982512133-c15cfa99d19f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       nombre: 'Bombas PEMO',
       pais: 'Italia',
       especialidad: 'Bombas para Transferencia de Lodos',
       descripcion: 'Bombas centrífugas diseñadas para las condiciones más abrasivas. Destacan por su diseño de succión lateral que aumenta drásticamente la vida útil del sello.',
-      productos: ['Series Horizontales AO/AB', 'Bombas Verticales', 'Bombas Sumergibles', 'Alimentación a Filtros Prensa']
+      productos: ['Series Horizontales AO/AB', 'Bombas Verticales', 'Bombas Sumergibles', 'Alimentación a Filtros Prensa'],
+      img: 'https://images.unsplash.com/photo-1613665813446-82a1404ed1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       nombre: 'Solids Control',
       pais: 'Global',
       especialidad: 'Centrífugas Industriales',
       descripcion: 'Soluciones de separación mediante fuerza centrífuga para procesos metalúrgicos y químicos de alta exigencia.',
-      productos: ['Centrífugas tipo "Pusher"', 'Equipos de separación dinámica']
+      productos: ['Centrífugas tipo "Pusher"', 'Equipos de separación dinámica'],
+      img: 'https://images.unsplash.com/photo-1536885542457-3f8202dfb1f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -69,6 +73,9 @@ const ProductosPage = () => {
           
           {marcas.map((marca, i) => (
             <div key={i} className="card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '220px', width: '100%', overflow: 'hidden', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                <img src={marca.img} alt={marca.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{marca.nombre}</h2>
                 <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--bg-secondary)', padding: '0.3rem 0.8rem', borderRadius: '20px', color: 'var(--text-secondary)' }}>

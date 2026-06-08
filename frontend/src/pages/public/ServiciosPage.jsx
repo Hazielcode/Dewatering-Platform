@@ -8,6 +8,7 @@ const ServiciosPage = () => {
       titulo: "Pruebas y Ensayos de Laboratorio",
       icono: Microscope,
       color: "#3b82f6",
+      img: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
       servicios: [
         "Ensayos de sedimentación y espesamiento.",
         "Ensayos de filtración a presión.",
@@ -24,6 +25,7 @@ const ServiciosPage = () => {
       titulo: "Pilotajes y Tratamiento de Aguas",
       icono: Droplets,
       color: "#10b981",
+      img: 'https://images.unsplash.com/photo-1565890787363-2fb5e5ebbaea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
       servicios: [
         "Pilotajes de tratamiento de aguas ácidas.",
         "Pilotajes de detoxificación.",
@@ -34,6 +36,7 @@ const ServiciosPage = () => {
       titulo: "Ingeniería y Soporte Industrial",
       icono: Wrench,
       color: "#f59e0b",
+      img: 'https://images.unsplash.com/photo-1504917595217-d4bf52e10ce8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
       servicios: [
         "Soporte metalúrgico.",
         "Montaje industrial.",
@@ -79,6 +82,16 @@ const ServiciosPage = () => {
               overflow: 'hidden',
               boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
             }}>
+              {/* Imagen Banner de Categoria */}
+              <div style={{ 
+                width: '100%', 
+                height: '250px', 
+                backgroundImage: `url(${cat.img})`, 
+                backgroundSize: 'cover', 
+                backgroundPosition: 'center',
+                borderBottom: '1px solid var(--border-color)'
+              }}></div>
+
               {/* Header Categoria */}
               <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                 <div style={{ width: 50, height: 50, borderRadius: '12px', backgroundColor: `${cat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -116,7 +129,7 @@ const ServiciosPage = () => {
           <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
             Nuestro equipo de expertos metalúrgicos e ingenieros de planta está listo para brindarle soporte técnico especializado en su operación minera o industrial.
           </p>
-          <a href="/contacto" className="btn btn-primary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
+          <a href="#contacto" className="btn btn-primary" style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}>
             Solicitar Asesoría
           </a>
         </div>

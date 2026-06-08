@@ -8,42 +8,48 @@ const ProyectosPage = () => {
       cliente: 'VOLCAN',
       pais: 'Perú',
       tipo: 'Filtración a Presión',
-      desc: 'Implementación y soporte en la planta de filtrado para el manejo eficiente de relaves mineros.'
+      desc: 'Implementación y soporte en la planta de filtrado para el manejo eficiente de relaves mineros.',
+      img: 'https://images.unsplash.com/photo-1578319439584-10402039a0e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       titulo: 'Pilotaje Tierras Raras con Carbonato',
       cliente: 'Biolantánidos',
       pais: 'Chile',
       tipo: 'Planta Piloto de Lixiviación',
-      desc: 'Desarrollo de pilotaje especializado para la extracción y recuperación de tierras raras.'
+      desc: 'Desarrollo de pilotaje especializado para la extracción y recuperación de tierras raras.',
+      img: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       titulo: 'Tratamiento de Aguas Ácidas',
       cliente: 'Minera Shahuindo',
       pais: 'Perú',
       tipo: 'Planta Piloto Móvil',
-      desc: 'Pruebas de neutralización, oxidación y sedimentación usando nuestra unidad móvil de tratamiento.'
+      desc: 'Pruebas de neutralización, oxidación y sedimentación usando nuestra unidad móvil de tratamiento.',
+      img: 'https://images.unsplash.com/photo-1613665813446-82a1404ed1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       titulo: 'Planta de Filtración de Salmueras de Litio',
       cliente: 'Punamining',
       pais: 'Argentina',
       tipo: 'Comisionamiento',
-      desc: 'Instalación, comisionamiento y pruebas de laboratorio para la recuperación de litio.'
+      desc: 'Instalación, comisionamiento y pruebas de laboratorio para la recuperación de litio.',
+      img: 'https://images.unsplash.com/photo-1536885542457-3f8202dfb1f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       titulo: 'Auditorías de Proceso Metalúrgico',
       cliente: 'Cerro Verde y Marcobre',
       pais: 'Perú',
       tipo: 'Auditoría',
-      desc: 'Evaluación y optimización de las etapas de separación sólido-líquido en grandes operaciones de cobre.'
+      desc: 'Evaluación y optimización de las etapas de separación sólido-líquido en grandes operaciones de cobre.',
+      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     },
     {
       titulo: 'Diseño e Ingeniería de Planta Paltarrumi',
       cliente: 'Paltarrumi',
       pais: 'Perú',
       tipo: 'Ingeniería',
-      desc: 'Diseño de la Planta de sedimentación y filtración de concentrado.'
+      desc: 'Diseño de la Planta de sedimentación y filtración de concentrado.',
+      img: 'https://images.unsplash.com/photo-1565890787363-2fb5e5ebbaea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -74,24 +80,27 @@ const ProyectosPage = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2.5rem' }}>
           
           {proyectos.map((proy, i) => (
-            <div key={i} className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--accent-light)', color: 'var(--accent-primary)', padding: '0.3rem 0.8rem', borderRadius: '20px' }}>
-                  {proy.tipo}
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                  <MapPin size={14} /> {proy.pais}
-                </span>
+            <div key={i} className="card" style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <img src={proy.img} alt={proy.titulo} style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
+              <div style={{ padding: '2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--accent-light)', color: 'var(--accent-primary)', padding: '0.3rem 0.8rem', borderRadius: '20px' }}>
+                    {proy.tipo}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                    <MapPin size={14} /> {proy.pais}
+                  </span>
+                </div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.5rem', lineHeight: 1.3 }}>
+                  {proy.titulo}
+                </h2>
+                <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '1rem', fontWeight: 600 }}>
+                  Cliente: {proy.cliente}
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
+                  {proy.desc}
+                </p>
               </div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.5rem', lineHeight: 1.3 }}>
-                {proy.titulo}
-              </h2>
-              <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '1rem', fontWeight: 600 }}>
-                Cliente: {proy.cliente}
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
-                {proy.desc}
-              </p>
             </div>
           ))}
 
