@@ -29,10 +29,6 @@ const RegisterPage = () => {
     e.preventDefault(); setErrorMsg(''); setSuccessMsg('');
     if (!allPass) { setErrorMsg('La contraseña no cumple los requisitos.'); return; }
     if (!match) { setErrorMsg('Las contraseñas no coinciden.'); return; }
-    if (!form.email.toLowerCase().endsWith('@dewatering.com')) {
-      setErrorMsg('Solo se permite el registro con correos @dewatering.com');
-      return;
-    }
     setIsLoading(true);
     try {
       await api.post('/auth/register', { email:form.email, password:form.password, full_name:`${form.nombres} ${form.apellidos}`, phone:form.telefono });
@@ -75,7 +71,7 @@ const RegisterPage = () => {
               </div>
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e=>handleChange('telefono',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Fecha de Nacimiento <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="date" className="input-control" value={form.fecha_nacimiento} onChange={e=>handleChange('fecha_nacimiento',e.target.value)} style={{ borderRadius:14 }}/></div>
-              <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="usuario@dewatering.com" required value={form.email} onChange={e=>handleChange('email',e.target.value)} style={{ borderRadius:14 }}/></div>
+              <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="gerencia@empresa.com" required value={form.email} onChange={e=>handleChange('email',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.password} onChange={e=>handleChange('password',e.target.value)} style={{ borderRadius:14 }}/></div>
 
               {form.password.length>0 && (
