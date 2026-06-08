@@ -37,50 +37,50 @@ export const AuthProvider = ({ children }) => {
 
   // Inicializar desde localStorage al montar
   useEffect(() => {
-    const storedToken = localStorage.getItem('mainroot_token');
+    const storedToken = localStorage.getItem('dewatering_token');
     if (storedToken && !isTokenExpired(storedToken)) {
       const decoded = decodeJWT(storedToken);
       setToken(storedToken);
       const userId = decoded.userId;
+      const roleOrRoles = decoded.role || decoded.roles;
+      const parsedRoles = Array.isArray(roleOrRoles) ? roleOrRoles : (roleOrRoles ? [roleOrRoles] : []);
       setUser({
         id: userId,
         userId: userId,
         email: decoded.email,
-        tiendaId: decoded.tiendaId,
-        roles: decoded.roles || [],
+        roles: parsedRoles,
       });
       setIsAuthenticated(true);
     } else {
       // Token expirado o inexistente — limpiar
-      localStorage.removeItem('mainroot_token');
+      localStorage.removeItem('dewatering_token');
     }
     setLoading(false);
   }, []);
 
   const login = useCallback((newToken, userData) => {
-    localStorage.setItem('mainroot_token', newToken);
+    localStorage.setItem('dewatering_token', newToken);
     setToken(newToken);
     
     // Priorizar datos del response del backend; fallback a decodificar JWT
     const decoded = decodeJWT(newToken);
     const userId = userData?.id || decoded?.userId;
+    const roleOrRoles = userData?.role || decoded?.role || userData?.roles || decoded?.roles;
+    const parsedRoles = Array.isArray(roleOrRoles) ? roleOrRoles : (roleOrRoles ? [roleOrRoles] : []);
+
     setUser({
       id: userId,
       userId: userId,
       email: userData?.email || decoded?.email,
-      nombres: userData?.nombres || '',
-      apellidos: userData?.apellidos || '',
-      nombre_completo: userData?.nombre_completo || decoded?.nombre_completo || '',
-      telefono: userData?.telefono || '',
-      fecha_nacimiento: userData?.fecha_nacimiento || '',
-      tiendaId: userData?.tienda_id || decoded?.tiendaId,
-      roles: userData?.roles || decoded?.roles || [],
+      nombre_completo: userData?.full_name || userData?.nombre_completo || decoded?.nombre_completo || '',
+      company: userData?.company || decoded?.company || '',
+      roles: parsedRoles,
     });
     setIsAuthenticated(true);
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('mainroot_token');
+    localStorage.removeItem('dewatering_token');
     setToken(null);
     setUser(null);
     setIsAuthenticated(false);

@@ -1,8 +1,8 @@
-# 🏗️ Mainroot Enterprise
+# 🏗️ Dewatering Solutions Platform
 
 <div align="center">
 
-![Mainroot](https://img.shields.io/badge/Mainroot-Enterprise-367CFC?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMzY3Q0ZDIi8+PHRleHQgeD0iNTAiIHk9IjY4IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNTIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NPC90ZXh0Pjwvc3ZnPg==)
+![Dewatering Solutions](https://img.shields.io/badge/Dewatering-Solutions-367CFC?style=for-the-badge)
 
 ![Node.js](https://img.shields.io/badge/Node.js-22+-339933?style=flat-square&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?style=flat-square&logo=express&logoColor=white)

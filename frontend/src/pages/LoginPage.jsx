@@ -15,10 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email.toLowerCase().endsWith('@dewatering.com')) {
-      setErrorMsg('Debe usar un correo corporativo @dewatering.com');
-      return;
-    }
+
     setIsLoading(true); setErrorMsg('');
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -49,11 +46,8 @@ const LoginPage = () => {
         padding: '5rem', color: 'white', position: 'relative', overflow: 'hidden'
       }}>
         <div style={{ position: 'relative', zIndex: 10, maxWidth: '550px' }}>
-          <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '48px', height: '48px', backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: 'white', fontWeight: '800', fontSize: '1.4rem' }}>D</span>
-            </div>
-            <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'white', letterSpacing: '-0.02em' }}>Dewatering Solutions</span>
+          <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center' }}>
+            <img className="logo-dark-bg" src="/logodewatering.png" alt="Dewatering Solutions" style={{ height: '180px', width: 'auto', objectFit: 'contain', transform: 'scale(1.3)', transformOrigin: 'left center' }} />
           </div>
 
           <h1 style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.08, letterSpacing: '-0.03em' }}>

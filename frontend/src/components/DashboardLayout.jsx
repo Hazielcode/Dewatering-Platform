@@ -11,11 +11,18 @@ const navItems = [
   { section: 'Principal', items: [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   ]},
-  { section: 'Gestión', items: [
+  { section: 'CRM / Comercial', items: [
+    { label: 'Leads (Prospectos)', icon: Users, path: '/leads', roles: ['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL'] },
     { label: 'Cotizaciones', icon: FileText, path: '/quotations', roles: ['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL'] },
-    { label: 'Leads', icon: Users, path: '/leads', roles: ['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL'] },
+  ]},
+  { section: 'Operaciones', items: [
     { label: 'Proyectos', icon: Store, path: '/projects', roles: ['SUPER_ADMIN', 'ADMIN', 'ENGINEER'] },
-    { label: 'Documentos', icon: Package, path: '/documents' },
+    { label: 'Documentos', icon: Package, path: '/documents', roles: ['SUPER_ADMIN', 'ADMIN', 'ENGINEER'] },
+  ]},
+  { section: 'Área del Cliente', items: [
+    { label: 'Mis Proyectos', icon: Store, path: '/client/projects', roles: ['CLIENT'] },
+    { label: 'Mis Cotizaciones', icon: FileText, path: '/client/quotations', roles: ['CLIENT'] },
+    { label: 'Mis Documentos', icon: Package, path: '/client/documents', roles: ['CLIENT'] },
   ]},
   { section: 'Configuración', items: [
     { label: 'Auditoría', icon: ShieldAlert, path: '/audit', roles: ['SUPER_ADMIN'] },
@@ -58,9 +65,8 @@ const DashboardLayout = ({ children, title, subtitle }) => {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-icon">D</div>
-          <span className="sidebar-brand-text">Dewatering</span>
+        <div className="sidebar-brand" style={{ padding: '2rem 1rem', borderBottom: '1px solid var(--border-color)', marginBottom: '1rem', display: 'flex', justifyContent: 'center', overflow: 'visible' }}>
+          <img className="logo-dynamic" src="/logodewatering.png" alt="Dewatering Solutions" style={{ width: '220px', height: 'auto', maxHeight: '120px', objectFit: 'contain', transform: 'scale(1.3)', dropShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
         </div>
         <nav className="sidebar-nav">
           {filteredNavItems.map(group => (

@@ -3,12 +3,12 @@ import axios from 'axios';
 // Instancia base de Axios
 const api = axios.create({
   // Asumimos que el backend de Node estará corriendo en el puerto 3000
-  baseURL: 'http://localhost:3000/api', 
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api', 
 });
 
 // Interceptor de Request: Inyecta el JWT automáticamente en cada petición
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('mainroot_token');
+  const token = localStorage.getItem('dewatering_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -26,7 +26,7 @@ api.interceptors.response.use(
       
       // Si el backend responde 401 por token expirado, limpiar sesión y redirigir
       if (status === 401 && data?.error?.includes('expirado')) {
-        localStorage.removeItem('mainroot_token');
+        localStorage.removeItem('dewatering_token');
         // Solo redirigir si no estamos ya en la página de login
         if (!window.location.pathname.match(/^\/(mfa)?$/)) {
           window.location.href = '/';

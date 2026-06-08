@@ -19,11 +19,12 @@ async function seed() {
         ('admin@dewatering.com', $1, 'Carlos Mendoza', '+51 999 111 001', 'Dewatering Solutions', 'Gerente General', 'SUPER_ADMIN'),
         ('ventas@dewatering.com', $2, 'María Flores', '+51 999 111 002', 'Dewatering Solutions', 'Ejecutiva Comercial', 'COMMERCIAL'),
         ('ingenieria@dewatering.com', $3, 'Jorge Ramírez', '+51 999 111 003', 'Dewatering Solutions', 'Ingeniero de Procesos', 'ENGINEER'),
-        ('contacto@minera-andina.com', $4, 'Ana Torres', '+51 999 222 001', 'Minera Andina SAC', 'Jefe de Operaciones', 'CLIENT')
+        ('contacto@minera-andina.com', $4, 'Ana Torres', '+51 999 222 001', 'Minera Andina SAC', 'Jefe de Operaciones', 'CLIENT'),
+        ('gerencia@antapaccay.com', $4, 'Luis Vargas', '+51 987 654 321', 'Compañía Minera Antapaccay', 'Gerente de Planta', 'CLIENT')
       ON CONFLICT (email) DO NOTHING
       RETURNING id, email, role;
     `, [adminHash, commercialHash, engineerHash, clientHash]);
-    console.log(`  ✅ ${users.rowCount} usuarios creados`);
+    console.log(`  ✅ ${users.rowCount} usuarios creados o verificados`);
 
     // ==================== 2. CATEGORÍAS DE SERVICIO ====================
     await client.query(`

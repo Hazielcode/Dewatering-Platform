@@ -1,4 +1,8 @@
 import React from 'react';
+import NosotrosPageReal from './public/NosotrosPage.jsx';
+import ServiciosPageReal from './public/ServiciosPage.jsx';
+import ProductosPageReal from './public/ProductosPage.jsx';
+import ProyectosPageReal from './public/ProyectosPage.jsx';
 
 const PagePlaceholder = ({ title }) => (
   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '6rem 2rem', textAlign: 'center' }}>
@@ -9,11 +13,11 @@ const PagePlaceholder = ({ title }) => (
   </div>
 );
 
-export const NosotrosPage = () => <PagePlaceholder title="Nosotros" />;
-export const ServiciosPage = () => <PagePlaceholder title="Servicios Especializados" />;
-export const ProductosPage = () => <PagePlaceholder title="Catálogo de Productos y Equipos" />;
+export const NosotrosPage = NosotrosPageReal;
+export const ServiciosPage = ServiciosPageReal;
+export const ProductosPage = ProductosPageReal;
 export const CapacitacionesPage = () => <PagePlaceholder title="Capacitaciones Técnicas" />;
-export const ProyectosPage = () => <PagePlaceholder title="Proyectos y Casos de Éxito" />;
+export const ProyectosPage = ProyectosPageReal;
 export const DescargasPage = () => <PagePlaceholder title="Centro de Descargas" />;
 export const BlogPage = () => <PagePlaceholder title="Blog Técnico" />;
 export const ContactoPage = () => <PagePlaceholder title="Contacto Rápido" />;

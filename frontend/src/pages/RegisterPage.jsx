@@ -29,13 +29,13 @@ const RegisterPage = () => {
     e.preventDefault(); setErrorMsg(''); setSuccessMsg('');
     if (!allPass) { setErrorMsg('La contraseña no cumple los requisitos.'); return; }
     if (!match) { setErrorMsg('Las contraseñas no coinciden.'); return; }
-    if (!form.email.toLowerCase().endsWith('@mainroot.com')) {
-      setErrorMsg('Solo se permite el registro con correos @mainroot.com');
+    if (!form.email.toLowerCase().endsWith('@dewatering.com')) {
+      setErrorMsg('Solo se permite el registro con correos @dewatering.com');
       return;
     }
     setIsLoading(true);
     try {
-      await api.post('/auth/register', { email:form.email, password:form.password, nombres:form.nombres, apellidos:form.apellidos, telefono:form.telefono, fecha_nacimiento:form.fecha_nacimiento });
+      await api.post('/auth/register', { email:form.email, password:form.password, full_name:`${form.nombres} ${form.apellidos}`, phone:form.telefono });
       setSuccessMsg('Cuenta creada. Redirigiendo...'); setTimeout(()=>navigate('/'),2000);
     } catch(err) { setErrorMsg(err.response?.data?.error||'Error al registrar'); }
     finally { setIsLoading(false); }
@@ -47,7 +47,7 @@ const RegisterPage = () => {
         <div style={{ position:'relative', zIndex:10, maxWidth:'550px' }}>
           <div style={{ marginBottom:'2.5rem', display:'flex', alignItems:'center', gap:14 }}>
             <div style={{ width:48, height:48, backgroundColor:'rgba(255,255,255,0.2)', backdropFilter:'blur(8px)', borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center' }}><span style={{ color:'white', fontWeight:800, fontSize:'1.4rem' }}>M</span></div>
-            <span style={{ fontSize:'1.4rem', fontWeight:700, color:'white' }}>Mainroot</span>
+            <span style={{ fontSize:'1.4rem', fontWeight:700, color:'white' }}>Dewatering</span>
           </div>
           <h1 style={{ fontSize:'3rem', fontWeight:800, marginBottom:'1.5rem', lineHeight:1.08, letterSpacing:'-0.03em' }}>Registro de<br/>Personal.</h1>
           <p style={{ fontSize:'1.1rem', opacity:0.85, lineHeight:1.7, maxWidth:'420px' }}>Cree su cuenta corporativa con cifrado de grado militar.</p>
@@ -75,7 +75,7 @@ const RegisterPage = () => {
               </div>
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e=>handleChange('telefono',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Fecha de Nacimiento <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="date" className="input-control" value={form.fecha_nacimiento} onChange={e=>handleChange('fecha_nacimiento',e.target.value)} style={{ borderRadius:14 }}/></div>
-              <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="usuario@mainroot.com" required value={form.email} onChange={e=>handleChange('email',e.target.value)} style={{ borderRadius:14 }}/></div>
+              <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="usuario@dewatering.com" required value={form.email} onChange={e=>handleChange('email',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.password} onChange={e=>handleChange('password',e.target.value)} style={{ borderRadius:14 }}/></div>
 
               {form.password.length>0 && (

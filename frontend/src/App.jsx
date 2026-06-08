@@ -17,6 +17,12 @@ import StaffPage from './pages/StaffPage.jsx';
 import AuditPage from './pages/AuditPage.jsx';
 import RolesPage from './pages/RolesPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import LeadsPage from './pages/crm/LeadsPage.jsx';
+import ClientModulePage from './pages/client/ClientModulePage.jsx';
+import ClientProjectsPage from './pages/client/ClientProjectsPage.jsx';
+import ClientQuotationsPage from './pages/client/ClientQuotationsPage.jsx';
+import ClientDocumentsPage from './pages/client/ClientDocumentsPage.jsx';
+import { Store, FileText, Package } from 'lucide-react';
 export const ThemeContext = createContext();
 
 /**
@@ -73,14 +79,14 @@ const ProtectedRoute = ({ children, requiredRoles }) => {
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const s = localStorage.getItem('mainroot_theme');
+    const s = localStorage.getItem('dewatering_theme');
     if (s) return s === 'dark';
     return window.matchMedia?.('(prefers-color-scheme: dark)').matches;
   });
 
   useEffect(() => {
     document.body.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('mainroot_theme', isDarkMode ? 'dark' : 'light');
+    localStorage.setItem('dewatering_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   return (
@@ -109,10 +115,18 @@ const App = () => {
             <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
             <Route path="/stores" element={<ProtectedRoute requiredRoles={['Admin', 'Gerente', 'Empleado', 'Auditor']}><StoresPage /></ProtectedRoute>} />
             <Route path="/staff" element={<ProtectedRoute requiredRoles={['Admin']}><StaffPage /></ProtectedRoute>} />
-            <Route path="/audit" element={<ProtectedRoute requiredRoles={['Admin', 'Auditor']}><AuditPage /></ProtectedRoute>} />
-            <Route path="/roles" element={<ProtectedRoute requiredRoles={['Admin']}><RolesPage /></ProtectedRoute>} />
+            <Route path="/audit" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'Auditor']}><AuditPage /></ProtectedRoute>} />
+            <Route path="/roles" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><RolesPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             
+            {/* Rutas Cliente Exclusivas */}
+            <Route path="/client/projects" element={<ProtectedRoute requiredRoles={['CLIENT']}><ClientProjectsPage /></ProtectedRoute>} />
+            <Route path="/client/quotations" element={<ProtectedRoute requiredRoles={['CLIENT']}><ClientQuotationsPage /></ProtectedRoute>} />
+            <Route path="/client/documents" element={<ProtectedRoute requiredRoles={['CLIENT']}><ClientDocumentsPage /></ProtectedRoute>} />
+
+            {/* Rutas CRM */}
+            <Route path="/leads" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL']}><LeadsPage /></ProtectedRoute>} />
+
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

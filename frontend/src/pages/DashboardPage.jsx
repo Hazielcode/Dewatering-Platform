@@ -8,6 +8,8 @@ import {
 import { TrendingUp, TrendingDown, Users, Package, Store, ShieldAlert, Activity, FileText, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import ClientDashboardPage from './client/ClientDashboardPage.jsx';
 
 // === Datos de Fallback (cuando la BD no está conectada) ===
 const fallbackAccessData = [
@@ -76,6 +78,7 @@ const ActionBadge = ({ action }) => {
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const { primaryRole } = useAuth();
   const [loaded, setLoaded] = useState(false);
   const [activePieIndex, setActivePieIndex] = useState(0);
   const [hoveredKpi, setHoveredKpi] = useState(null);
@@ -157,6 +160,10 @@ const DashboardPage = () => {
 
   // Audit logs para la tabla
   const displayLogs = auditLogs.length > 0 ? auditLogs : [];
+
+  if (primaryRole === 'CLIENT') {
+    return <ClientDashboardPage />;
+  }
 
   return (
     <DashboardLayout title="Dashboard" subtitle="Resumen general del sistema">

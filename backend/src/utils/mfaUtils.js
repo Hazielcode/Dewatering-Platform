@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 // Generar una clave secreta y el link para el Google Authenticator
 export const generateMfaSecret = (userEmail) => {
   const secret = speakeasy.generateSecret({
-    name: `Mainroot Enterprise (${userEmail})`,
+    name: `Dewatering Solutions (${userEmail})`,
     length: 20
   });
   
