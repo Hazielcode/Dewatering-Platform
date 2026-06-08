@@ -82,16 +82,6 @@ const ServiciosPage = () => {
               overflow: 'hidden',
               boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
             }}>
-              {/* Imagen Banner de Categoria */}
-              <div style={{ 
-                width: '100%', 
-                height: '250px', 
-                backgroundImage: `url(${cat.img})`, 
-                backgroundSize: 'cover', 
-                backgroundPosition: 'center',
-                borderBottom: '1px solid var(--border-color)'
-              }}></div>
-
               {/* Header Categoria */}
               <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                 <div style={{ width: 50, height: 50, borderRadius: '12px', backgroundColor: `${cat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

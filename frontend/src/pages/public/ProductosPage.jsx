@@ -73,9 +73,6 @@ const ProductosPage = () => {
           
           {marcas.map((marca, i) => (
             <div key={i} className="card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: '220px', width: '100%', overflow: 'hidden', borderRadius: '12px', marginBottom: '1.5rem' }}>
-                <img src={marca.img} alt={marca.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{marca.nombre}</h2>
                 <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--bg-secondary)', padding: '0.3rem 0.8rem', borderRadius: '20px', color: 'var(--text-secondary)' }}>

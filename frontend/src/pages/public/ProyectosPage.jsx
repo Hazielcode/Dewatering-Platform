@@ -80,10 +80,8 @@ const ProyectosPage = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2.5rem' }}>
           
           {proyectos.map((proy, i) => (
-            <div key={i} className="card" style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              <img src={proy.img} alt={proy.titulo} style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
-              <div style={{ padding: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+            <div key={i} className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--accent-light)', color: 'var(--accent-primary)', padding: '0.3rem 0.8rem', borderRadius: '20px' }}>
                     {proy.tipo}
                   </span>
