@@ -99,7 +99,6 @@ const ProyectosPage = () => {
                   {proy.desc}
                 </p>
               </div>
-            </div>
           ))}
 
         </div>
