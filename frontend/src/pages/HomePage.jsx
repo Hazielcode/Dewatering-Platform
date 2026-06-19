@@ -52,25 +52,24 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* 1. SECTION: HERO (BANNER PRINCIPAL) */}
-      <section style={{
-        position: 'relative', padding: '7rem 5%', display: 'flex', flexDirection: 'column',
-        alignItems: 'center', textAlign: 'center', overflow: 'hidden', backgroundColor: 'var(--bg-primary)'
+      {/* 1. SECTION: HERO (BANNER PRINCIPAL CON PARALLAX) */}
+      <section className="parallax-bg" style={{
+        padding: '8rem 5%', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', textAlign: 'center', minHeight: '85vh', justifyContent: 'center'
       }}>
-        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '50%', height: '80%', background: 'radial-gradient(circle, rgba(37,99,235,0.08) 0%, rgba(0,0,0,0) 70%)', zIndex: 0 }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '850px' }} className="animate-fade-in">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '0.4rem 1rem', background: 'var(--accent-light)', borderRadius: '99px', color: 'var(--accent-primary)', fontWeight: 600, fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-            <Activity size={16} /> Especialistas en separación sólido-líquido
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }} className="animate-fade-in">
+          <div className="glass-panel" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '0.5rem 1.25rem', borderRadius: '99px', color: '#ffffff', fontWeight: 600, fontSize: '0.9rem', marginBottom: '2rem' }}>
+            <Award size={18} color="#3b82f6" /> Certificados con ISO 9001 & ISO 45001:2018
           </div>
-          <h1 style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-1px' }}>
-            Soluciones integrales para la <span style={{ color: 'transparent', backgroundClip: 'text', WebkitBackgroundClip: 'text', backgroundImage: 'var(--accent-gradient)' }}>Industria Minera</span>
+          <h1 style={{ fontSize: '4.5rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-1px' }}>
+            Alta Ingeniería para la <span style={{ color: '#3b82f6' }}>Industria 4.0</span>
           </h1>
-          <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', marginBottom: '2.5rem', lineHeight: 1.6 }}>
-            Desde pruebas piloto y selección de reactivos hasta el suministro y montaje de equipos de filtración de alta tecnología. 25 años garantizando eficiencia.
+          <p style={{ fontSize: '1.25rem', color: '#cbd5e1', marginBottom: '3rem', lineHeight: 1.6, maxWidth: '800px', margin: '0 auto 3rem' }}>
+            Diseño, mantenimiento y suministro de tecnologías avanzadas para separación sólido-líquido. Soluciones robustas para Minería, Saneamiento y Sector Químico.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <a href="#contacto" className="btn btn-primary" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }}>Solicitar Cotización <Send size={18} /></a>
-            <a href="https://wa.me/51999111000" target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ padding: '0.85rem 2rem', fontSize: '1rem', background: 'var(--bg-secondary)' }}>Contactar por WhatsApp</a>
+            <a href="#contacto" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}>Solicitar Cotización <Send size={18} /></a>
+            <a href="https://wa.me/51956710062" target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', backgroundColor: 'rgba(255,255,255,0.1)', color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>Atención Inmediata</a>
           </div>
         </div>
       </section>
@@ -131,7 +130,7 @@ const HomePage = () => {
           ) : (
             <div className="grid-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
               {services.map(service => (
-                <Link to={`/servicios`} key={service.id} className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', transition: 'transform 0.3s', cursor: 'pointer', textDecoration: 'none' }}>
+                <Link to={`/servicios`} key={service.id} className="card hover-float" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', cursor: 'pointer', textDecoration: 'none' }}>
                   <div style={{ width: 48, height: 48, borderRadius: '12px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
                     {service.category_slug === 'filtracion' ? <Filter size={24} /> : 
                      service.category_slug === 'espesamiento' ? <Layers size={24} /> : 
@@ -165,7 +164,7 @@ const HomePage = () => {
           {loading ? null : (
             <div className="grid-2">
               {products.map(product => (
-                <div key={product.id} className="card" style={{ display: 'flex', padding: '1.5rem', gap: '2rem', alignItems: 'center' }}>
+                <div key={product.id} className="card hover-float" style={{ display: 'flex', padding: '1.5rem', gap: '2rem', alignItems: 'center' }}>
                   <div style={{ width: '120px', height: '120px', background: 'var(--bg-primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)' }}>
                     <Factory size={48} color="var(--text-secondary)" opacity={0.3} />
                   </div>
@@ -191,12 +190,12 @@ const HomePage = () => {
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 3rem' }}>Conozca cómo hemos resuelto desafíos complejos en plantas mineras de primer nivel.</p>
           <div className="grid-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
             {[1, 2, 3].map(i => (
-              <div key={i} className="card" style={{ overflow: 'hidden', padding: 0 }}>
+              <div key={i} className="card hover-float" style={{ overflow: 'hidden', padding: 0 }}>
                 <div style={{ height: '200px', background: 'var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Target size={48} color="var(--text-secondary)" opacity={0.2} />
                 </div>
                 <div style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Proyecto Minero Sur #{i}</h4>
+                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Proyecto Industrial #{i}</h4>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Instalación y puesta en marcha de planta de filtración de relaves a gran escala.</p>
                 </div>
               </div>

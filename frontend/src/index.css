@@ -508,3 +508,43 @@ table td, table th {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
+
+/* ======== PARALLAX & B2B HOVER EFFECTS ======== */
+.parallax-bg {
+  background-image: url('/images/hero-bg.webp'); /* Requiere imagen optimizada */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.parallax-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.7) 100%);
+  z-index: 0;
+}
+
+/* Glassmorphism para las tarjetas sobre el Parallax */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover Técnico/Profesional (No muy agresivo, solo elevación sutil y sombra) */
+.hover-float {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+.hover-float:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+body.dark .hover-float:hover {
+  box-shadow: 0 12px 32px rgba(96, 165, 250, 0.15);
+}

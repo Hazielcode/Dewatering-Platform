@@ -137,12 +137,18 @@ const PublicLayout = ({ children }) => {
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <li style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                 <MapPin size={16} color="var(--accent-primary)" style={{ flexShrink: 0, marginTop: '2px' }}/> 
-                Av. Circunvalación, Lurigancho-Chosica 15457, Perú
+                <div style={{ wordBreak: 'break-word' }}>
+                  Av. Circunvalación, Lurigancho-Chosica 15457, Perú
+                  <br /><br />
+                  Av. Circunvalación Club Golf Los Incas Nro. 208 Int. 602, Santiago de Surco
+                  <br /><br />
+                  <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>Futuro local:</span> Indupark Chilca (2500 m2)
+                </div>
               </li>
               <li style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                 <Phone size={16} color="var(--accent-primary)" style={{ flexShrink: 0, marginTop: '2px' }}/> 
                 <div>
-                  <div style={{ marginBottom: '4px' }}>Atención directa:</div>
+                  <div style={{ marginBottom: '4px' }}>Atención (WhatsApp / Llamada):</div>
                   <div style={{ color: '#ffffff', fontWeight: 500 }}>+51 956 710 062</div>
                 </div>
               </li>
