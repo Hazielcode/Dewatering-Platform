@@ -46,7 +46,8 @@ const RegisterPage = () => {
     setIsLoading(true);
     try {
       await api.post('/auth/register', { email:form.email, password:form.password, full_name:`${form.nombres} ${form.apellidos}`, phone:form.telefono });
-      setSuccessMsg('Cuenta creada. Redirigiendo...'); setTimeout(()=>navigate('/'),2000);
+      setSuccessMsg('Cuenta creada. Redirigiendo a Iniciar Sesión...'); 
+      setTimeout(()=>navigate('/login', { state: { email: form.email, password: form.password } }), 2000);
     } catch(err) { setErrorMsg(err.response?.data?.error||'Error al registrar'); }
     finally { setIsLoading(false); }
   };
@@ -116,7 +117,7 @@ const RegisterPage = () => {
               </button>
             </form>
             <div style={{ marginTop:'1.5rem', textAlign:'center', fontSize:'0.85rem', color:'var(--text-secondary)' }}>
-              ¿Ya tiene cuenta? <Link to="/" style={{ color:'var(--accent-primary)', fontWeight:600, textDecoration:'none' }}>Iniciar Sesión</Link>
+              ¿Ya tiene cuenta? <Link to="/login" state={{ email: form.email, password: form.password }} style={{ color:'var(--accent-primary)', fontWeight:600, textDecoration:'none' }}>Iniciar Sesión</Link>
             </div>
           </div>
         </div>

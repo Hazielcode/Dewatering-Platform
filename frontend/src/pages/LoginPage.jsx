@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../App.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import api from '../services/api.js';
@@ -7,10 +7,13 @@ import DewateringMascot from '../components/DewateringMascot.jsx';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+  // Use state passed from Register page if available
+  const [email, setEmail] = useState(location.state?.email || '');
+  const [password, setPassword] = useState(location.state?.password || '');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
