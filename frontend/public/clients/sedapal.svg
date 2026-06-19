@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" width="500" height="120">
+  <rect width="500" height="120" fill="transparent" />
+  <g transform="translate(20, 20)">
+    <path d="M0 40 Q40 0 80 40 T160 40" fill="none" stroke="#023e8a" stroke-width="12" stroke-linecap="round"/>
+    <text x="120" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="#023e8a" letter-spacing="-1">SEDAPAL</text>
+  </g>
+</svg>

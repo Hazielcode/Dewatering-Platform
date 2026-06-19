@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 120" width="550" height="120">
+  <rect width="550" height="120" fill="transparent" />
+  <g transform="translate(20, 20)">
+    <polygon points="40,0 80,40 40,80 0,40" fill="#d00000" />
+    <polygon points="40,20 60,40 40,60 20,40" fill="#ffba08" />
+    <text x="105" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="36" fill="#6a040f" letter-spacing="-1">SOUTHERN COPPER</text>
+  </g>
+</svg>

@@ -241,13 +241,33 @@ const HomePage = () => {
         <div className="marquee-container" style={{ marginBottom: '2rem' }}>
           <div className="marquee-content">
             {[
-              'Minera Cerro Verde', 'Volcan Compañía Minera', 'Glencore', 
-              'Minera Chinalco', 'Sedapal', 'Marcobre',
-              'Minera Cerro Verde', 'Volcan Compañía Minera', 'Glencore', 
-              'Minera Chinalco', 'Sedapal', 'Marcobre'
+              { id: 'antamina', src: '/clients/antamina.svg', alt: 'Antamina' },
+              { id: 'cerroverde', src: '/clients/cerroverde.svg', alt: 'Cerro Verde' },
+              { id: 'lasbambas', src: '/clients/lasbambas.svg', alt: 'Las Bambas' },
+              { id: 'sedapal', src: '/clients/sedapal.svg', alt: 'Sedapal' },
+              { id: 'southern', src: '/clients/southern.svg', alt: 'Southern Copper' },
+              { id: 'buenaventura', src: '/clients/buenaventura.svg', alt: 'Buenaventura' },
+              { id: 'antamina2', src: '/clients/antamina.svg', alt: 'Antamina' },
+              { id: 'cerroverde2', src: '/clients/cerroverde.svg', alt: 'Cerro Verde' },
+              { id: 'lasbambas2', src: '/clients/lasbambas.svg', alt: 'Las Bambas' },
+              { id: 'sedapal2', src: '/clients/sedapal.svg', alt: 'Sedapal' },
+              { id: 'southern2', src: '/clients/southern.svg', alt: 'Southern Copper' },
+              { id: 'buenaventura2', src: '/clients/buenaventura.svg', alt: 'Buenaventura' }
             ].map((client, idx) => (
-              <div key={idx} className="marquee-item">
-                <ShieldCheck size={20} color="var(--accent-primary)" /> {client}
+              <div key={idx} className="marquee-item" style={{ background: 'transparent', border: 'none', padding: '0 2rem', boxShadow: 'none' }}>
+                <img 
+                  src={client.src} 
+                  alt={client.alt} 
+                  style={{ 
+                    height: '55px', 
+                    width: 'auto', 
+                    filter: 'grayscale(100%) opacity(0.5)', 
+                    transition: 'all 0.4s ease',
+                    cursor: 'pointer'
+                  }} 
+                  onMouseOver={e => e.currentTarget.style.filter = 'grayscale(0%) opacity(1)'} 
+                  onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%) opacity(0.5)'} 
+                />
               </div>
             ))}
           </div>
