@@ -5,6 +5,7 @@ import {
   LayoutDashboard, ShieldAlert, Users, Package, Store, FileText,
   LogOut, Bell, Search
 } from 'lucide-react';
+import DewateringChatbot from './DewateringChatbot.jsx';
 
 const navItems = [
   { section: 'Principal', items: [
@@ -148,6 +149,9 @@ const DashboardLayout = ({ children, title, subtitle }) => {
         </div>
         <div className="page-content">{children}</div>
       </main>
+
+      {/* RAG Chatbot Widget */}
+      <DewateringChatbot />
     </div>
   );
 };
