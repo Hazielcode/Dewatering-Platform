@@ -61,16 +61,16 @@ const DewateringMascot = ({ isPasswordFocused, hasError, mouseX, mouseY }) => {
           style={{ transition: 'fill 0.5s ease' }}
         />
         
+        {/* Fondo de los ojos (Blancos) - ESTOS DEBEN QUEDARSE QUIETOS */}
+        <circle cx="35" cy="55" r="8" fill="#ffffff" />
+        <circle cx="65" cy="55" r="8" fill="#ffffff" />
+
         {/* 
-          LOS OJOS DINÁMICOS
-          Se mueven según el cálculo de eyeOffset
+          LAS PUPILAS DINÁMICAS
+          Solo las pupilas se mueven según el cálculo de eyeOffset
         */}
         <g transform={`translate(${eyeOffset.x}, ${eyeOffset.y})`} style={{ transition: 'transform 0.1s ease-out' }}>
           
-          {/* Fondo de los ojos (Blancos) */}
-          <circle cx="35" cy="55" r="8" fill="#ffffff" />
-          <circle cx="65" cy="55" r="8" fill="#ffffff" />
-
           {/* Pupilas (Si hay error, cambian de forma; si no, son puntos) */}
           {hasError ? (
             <>
