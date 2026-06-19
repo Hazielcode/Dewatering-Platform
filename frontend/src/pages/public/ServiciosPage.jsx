@@ -8,7 +8,7 @@ const ServiciosPage = () => {
       titulo: "Pruebas y Ensayos de Laboratorio",
       icono: Microscope,
       color: "#3b82f6",
-      img: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      img: '/images/laboratorio.webp',
       servicios: [
         "Ensayos de sedimentación y espesamiento.",
         "Ensayos de filtración a presión.",
@@ -25,7 +25,7 @@ const ServiciosPage = () => {
       titulo: "Pilotajes y Tratamiento de Aguas",
       icono: Droplets,
       color: "#10b981",
-      img: 'https://images.unsplash.com/photo-1565890787363-2fb5e5ebbaea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      img: '/images/planta-movil.webp',
       servicios: [
         "Pilotajes de tratamiento de aguas ácidas.",
         "Pilotajes de detoxificación.",
@@ -36,7 +36,7 @@ const ServiciosPage = () => {
       titulo: "Ingeniería y Soporte Industrial",
       icono: Wrench,
       color: "#f59e0b",
-      img: 'https://images.unsplash.com/photo-1504917595217-d4bf52e10ce8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      img: '/images/mantenimiento.webp',
       servicios: [
         "Soporte metalúrgico.",
         "Montaje industrial.",
@@ -75,14 +75,23 @@ const ServiciosPage = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
           
           {categorias.map((cat, index) => (
-            <div key={index} style={{ 
+            <div key={index} className="hover-float" style={{ 
               backgroundColor: 'var(--bg-secondary)', 
               borderRadius: '20px', 
               border: '1px solid var(--border-color)',
               overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
+              boxShadow: '0 10px 30px rgba(0,0,0,0.02)',
+              display: 'flex',
+              flexDirection: 'column'
             }}>
-              {/* Header Categoria */}
+              <div style={{ height: '250px', backgroundColor: 'var(--border-color)', position: 'relative' }}>
+                <img 
+                  src={cat.img} 
+                  alt={cat.titulo} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1200&q=80'; }}
+                />
+              </div>
               <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                 <div style={{ width: 50, height: 50, borderRadius: '12px', backgroundColor: `${cat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <cat.icono size={26} color={cat.color} />

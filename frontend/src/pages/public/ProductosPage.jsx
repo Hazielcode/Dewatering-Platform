@@ -9,7 +9,7 @@ const ProductosPage = () => {
       especialidad: 'Filtros Prensa Automatizados',
       descripcion: 'Equipos full automatizados con opción a monitoreo remoto. Experiencia respaldada por más de 3000 instalaciones alrededor del mundo para tratamiento de lodos y concentrados.',
       productos: ['Filtros Prensa', 'Plantas de Tratamiento de Lodos'],
-      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/filtro-prensa.webp'
     },
     {
       nombre: 'ROYTEC Global',
@@ -17,7 +17,7 @@ const ProductosPage = () => {
       especialidad: 'Espesadores y Circuitos',
       descripcion: 'Especialistas en separación sólido-líquido y soluciones de espesamiento para la minería de alto rendimiento.',
       productos: ['Espesadores de Alta Tasa', 'Espesadores de Pasta', 'Circuitos CCD', 'Clarificadores', 'Filtros Banda de Vacío'],
-      img: 'https://images.unsplash.com/photo-1580982512133-c15cfa99d19f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/espesador-roytec.webp'
     },
     {
       nombre: 'Bombas PEMO',
@@ -25,7 +25,7 @@ const ProductosPage = () => {
       especialidad: 'Bombas para Transferencia de Lodos',
       descripcion: 'Bombas centrífugas diseñadas para las condiciones más abrasivas. Destacan por su diseño de succión lateral que aumenta drásticamente la vida útil del sello.',
       productos: ['Series Horizontales AO/AB', 'Bombas Verticales', 'Bombas Sumergibles', 'Alimentación a Filtros Prensa'],
-      img: 'https://images.unsplash.com/photo-1613665813446-82a1404ed1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/bomba-pemo.webp'
     },
     {
       nombre: 'Solids Control',
@@ -33,7 +33,7 @@ const ProductosPage = () => {
       especialidad: 'Centrífugas Industriales',
       descripcion: 'Soluciones de separación mediante fuerza centrífuga para procesos metalúrgicos y químicos de alta exigencia.',
       productos: ['Centrífugas tipo "Pusher"', 'Equipos de separación dinámica'],
-      img: 'https://images.unsplash.com/photo-1536885542457-3f8202dfb1f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/centrifuga.webp'
     }
   ];
 
@@ -72,25 +72,33 @@ const ProductosPage = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem' }}>
           
           {marcas.map((marca, i) => (
-            <div key={i} className="card" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{marca.nombre}</h2>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--bg-secondary)', padding: '0.3rem 0.8rem', borderRadius: '20px', color: 'var(--text-secondary)' }}>
+            <div key={i} className="card hover-float" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '220px', backgroundColor: 'var(--border-color)', position: 'relative' }}>
+                <img 
+                  src={marca.img} 
+                  alt={marca.nombre} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80'; }} 
+                />
+                <span style={{ position: 'absolute', top: '15px', right: '15px', fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'rgba(255,255,255,0.9)', padding: '0.4rem 1rem', borderRadius: '20px', color: 'var(--text-primary)', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
                   {marca.pais}
                 </span>
               </div>
-              <h3 style={{ fontSize: '1.1rem', color: 'var(--accent-primary)', marginBottom: '1rem' }}>{marca.especialidad}</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2rem', flex: 1 }}>{marca.descripcion}</p>
-              
-              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
-                <h4 style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '1rem' }}>Equipos Destacados:</h4>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {marca.productos.map((prod, j) => (
-                    <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-                      <ArrowRight size={14} color="var(--accent-primary)" /> {prod}
-                    </li>
-                  ))}
-                </ul>
+              <div style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 0.5rem 0' }}>{marca.nombre}</h2>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--accent-primary)', marginBottom: '1rem' }}>{marca.especialidad}</h3>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2rem', flex: 1 }}>{marca.descripcion}</p>
+                
+                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+                  <h4 style={{ fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '1rem' }}>Equipos Destacados:</h4>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {marca.productos.map((prod, j) => (
+                      <li key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+                        <ArrowRight size={14} color="var(--accent-primary)" /> {prod}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           ))}

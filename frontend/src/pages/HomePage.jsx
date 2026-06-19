@@ -241,10 +241,10 @@ const HomePage = () => {
         <div className="marquee-container" style={{ marginBottom: '2rem' }}>
           <div className="marquee-content">
             {[
-              'Minera Andina SAC', 'Cementos Perú', 'Gold Mining Corp', 
-              'TechMetals', 'Consorcio Minero Sur', 'Aguas Industriales S.A.',
-              'Minera Andina SAC', 'Cementos Perú', 'Gold Mining Corp', 
-              'TechMetals', 'Consorcio Minero Sur', 'Aguas Industriales S.A.'
+              'Minera Cerro Verde', 'Volcan Compañía Minera', 'Glencore', 
+              'Minera Chinalco', 'Sedapal', 'Marcobre',
+              'Minera Cerro Verde', 'Volcan Compañía Minera', 'Glencore', 
+              'Minera Chinalco', 'Sedapal', 'Marcobre'
             ].map((client, idx) => (
               <div key={idx} className="marquee-item">
                 <ShieldCheck size={20} color="var(--accent-primary)" /> {client}

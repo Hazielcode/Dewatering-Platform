@@ -101,7 +101,7 @@ const NosotrosPage = () => {
               { icon: Zap, title: 'Trabajo en Equipo', desc: 'Fomentamos la convergencia de esfuerzos y capacidades para mejores resultados.' },
               { icon: BookOpen, title: 'Excelencia e Innovación', desc: 'Impulsamos la mejora continua de procesos técnicos desarrollando nuevas soluciones.' }
             ].map((valor, i) => (
-              <div key={i} style={{ padding: '2rem', borderRadius: '15px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', transition: 'transform 0.3s' }}>
+              <div key={i} className="hover-float" style={{ padding: '2rem', borderRadius: '15px', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)' }}>
                 <valor.icon size={28} color="var(--accent-primary)" style={{ marginBottom: '1rem' }} />
                 <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{valor.title}</h4>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.6 }}>{valor.desc}</p>

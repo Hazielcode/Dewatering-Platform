@@ -9,7 +9,7 @@ const ProyectosPage = () => {
       pais: 'Perú',
       tipo: 'Filtración a Presión',
       desc: 'Implementación y soporte en la planta de filtrado para el manejo eficiente de relaves mineros.',
-      img: 'https://images.unsplash.com/photo-1578319439584-10402039a0e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/chungar.webp'
     },
     {
       titulo: 'Pilotaje Tierras Raras con Carbonato',
@@ -17,7 +17,7 @@ const ProyectosPage = () => {
       pais: 'Chile',
       tipo: 'Planta Piloto de Lixiviación',
       desc: 'Desarrollo de pilotaje especializado para la extracción y recuperación de tierras raras.',
-      img: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/biolantanidos.webp'
     },
     {
       titulo: 'Tratamiento de Aguas Ácidas',
@@ -25,7 +25,7 @@ const ProyectosPage = () => {
       pais: 'Perú',
       tipo: 'Planta Piloto Móvil',
       desc: 'Pruebas de neutralización, oxidación y sedimentación usando nuestra unidad móvil de tratamiento.',
-      img: 'https://images.unsplash.com/photo-1613665813446-82a1404ed1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/shahuindo.webp'
     },
     {
       titulo: 'Planta de Filtración de Salmueras de Litio',
@@ -33,7 +33,7 @@ const ProyectosPage = () => {
       pais: 'Argentina',
       tipo: 'Comisionamiento',
       desc: 'Instalación, comisionamiento y pruebas de laboratorio para la recuperación de litio.',
-      img: 'https://images.unsplash.com/photo-1536885542457-3f8202dfb1f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/punamining.webp'
     },
     {
       titulo: 'Auditorías de Proceso Metalúrgico',
@@ -41,7 +41,7 @@ const ProyectosPage = () => {
       pais: 'Perú',
       tipo: 'Auditoría',
       desc: 'Evaluación y optimización de las etapas de separación sólido-líquido en grandes operaciones de cobre.',
-      img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/cerro-verde.webp'
     },
     {
       titulo: 'Diseño e Ingeniería de Planta Paltarrumi',
@@ -49,7 +49,7 @@ const ProyectosPage = () => {
       pais: 'Perú',
       tipo: 'Ingeniería',
       desc: 'Diseño de la Planta de sedimentación y filtración de concentrado.',
-      img: 'https://images.unsplash.com/photo-1565890787363-2fb5e5ebbaea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      img: '/images/paltarrumi.webp'
     }
   ];
 
@@ -80,8 +80,17 @@ const ProyectosPage = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2.5rem' }}>
           
           {proyectos.map((proy, i) => (
-            <div key={i} className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+            <div key={i} className="card hover-float" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '220px', backgroundColor: 'var(--border-color)', position: 'relative' }}>
+                <img 
+                  src={proy.img} 
+                  alt={proy.titulo} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1578319439584-10402039a0e1?auto=format&fit=crop&w=800&q=80'; }} 
+                />
+              </div>
+              <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--accent-light)', color: 'var(--accent-primary)', padding: '0.3rem 0.8rem', borderRadius: '20px' }}>
                     {proy.tipo}
                   </span>
@@ -99,6 +108,7 @@ const ProyectosPage = () => {
                   {proy.desc}
                 </p>
               </div>
+            </div>
           ))}
 
         </div>
