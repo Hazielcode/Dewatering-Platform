@@ -256,19 +256,28 @@ const HomePage = () => {
               { id: 'buenaventura2', src: '/clients/buenaventura.png', alt: 'Buenaventura' },
               { id: 'chinalco2', src: '/clients/chinalco.png', alt: 'Chinalco' }
             ].map((client, idx) => (
-              <div key={idx} className="marquee-item" style={{ background: 'transparent', border: 'none', padding: '0 2rem', boxShadow: 'none' }}>
+              <div key={idx} className="marquee-item" style={{ background: 'transparent', border: 'none', padding: '0 2.5rem', boxShadow: 'none' }}>
                 <img 
                   src={client.src} 
                   alt={client.alt} 
                   style={{ 
-                    height: '55px', 
+                    height: '85px', 
                     width: 'auto', 
-                    filter: 'grayscale(100%) opacity(0.5)', 
-                    transition: 'all 0.4s ease',
+                    maxWidth: '220px',
+                    objectFit: 'contain',
+                    filter: 'grayscale(100%) opacity(0.6)', 
+                    transform: 'scale(1)',
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                     cursor: 'pointer'
                   }} 
-                  onMouseOver={e => e.currentTarget.style.filter = 'grayscale(0%) opacity(1)'} 
-                  onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%) opacity(0.5)'} 
+                  onMouseOver={e => {
+                    e.currentTarget.style.filter = 'grayscale(0%) opacity(1)';
+                    e.currentTarget.style.transform = 'scale(1.15)';
+                  }} 
+                  onMouseOut={e => {
+                    e.currentTarget.style.filter = 'grayscale(100%) opacity(0.6)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }} 
                 />
               </div>
             ))}
