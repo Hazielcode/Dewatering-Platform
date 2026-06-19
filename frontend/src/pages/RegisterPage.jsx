@@ -1,8 +1,9 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ThemeContext } from '../App.jsx';
 import { Check, X } from 'lucide-react';
 import api from '../services/api.js';
+import DewateringMascot from '../components/DewateringMascot.jsx';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,19 @@ const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Mascot states
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   const handleChange = (f,v) => { setForm({...form,[f]:v}); setErrorMsg(''); };
 
   const rules = useMemo(()=>{
@@ -56,8 +70,17 @@ const RegisterPage = () => {
           <button onClick={toggleTheme} className="btn-ghost" style={{ width:40, height:40, borderRadius:12 }}>{isDarkMode?'☀️':'🌙'}</button>
         </div>
         <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center' }}>
-          <div className="card animate-fade-in" style={{ width:'100%', maxWidth:450, padding:'2.5rem', borderRadius:28 }}>
-            <div style={{ marginBottom:'1.5rem' }}>
+          <div className="card animate-fade-in" style={{ width:'100%', maxWidth:450, padding:'2.5rem', borderRadius:28, position:'relative' }}>
+            
+            {/* EL MUÑECO / MASCOTA */}
+            <DewateringMascot 
+              isPasswordFocused={isPasswordFocused} 
+              hasError={!!errorMsg} 
+              mouseX={mousePos.x} 
+              mouseY={mousePos.y} 
+            />
+
+            <div style={{ marginBottom:'1.5rem', textAlign: 'center' }}>
               <h2 style={{ fontSize:'1.5rem', marginBottom:'0.4rem', letterSpacing:'-0.02em' }}>Crear Cuenta</h2>
               <p className="text-secondary" style={{ fontSize:'0.88rem' }}>Complete sus datos para el registro</p>
             </div>
@@ -72,7 +95,7 @@ const RegisterPage = () => {
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e=>handleChange('telefono',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Fecha de Nacimiento <span style={{fontSize:'0.7rem', color:'var(--text-secondary)'}}>(Opcional)</span></label><input type="date" className="input-control" value={form.fecha_nacimiento} onChange={e=>handleChange('fecha_nacimiento',e.target.value)} style={{ borderRadius:14 }}/></div>
               <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="gerencia@empresa.com" required value={form.email} onChange={e=>handleChange('email',e.target.value)} style={{ borderRadius:14 }}/></div>
-              <div className="input-group"><label className="input-label">Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.password} onChange={e=>handleChange('password',e.target.value)} style={{ borderRadius:14 }}/></div>
+              <div className="input-group"><label className="input-label">Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.password} onChange={e=>handleChange('password',e.target.value)} onFocus={()=>setIsPasswordFocused(true)} onBlur={()=>setIsPasswordFocused(false)} style={{ borderRadius:14 }}/></div>
 
               {form.password.length>0 && (
                 <div style={{ marginBottom:'1.25rem', padding:'0.85rem 1rem', borderRadius:16, backgroundColor:'var(--bg-primary)', border:'1px solid var(--border-color)' }}>
@@ -86,7 +109,7 @@ const RegisterPage = () => {
                 </div>
               )}
 
-              <div className="input-group"><label className="input-label">Confirmar Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.confirmPassword} onChange={e=>handleChange('confirmPassword',e.target.value)} style={{ borderRadius:14, borderColor:form.confirmPassword.length>0?(match?'var(--success)':'var(--danger)'):'var(--border-color)' }}/></div>
+              <div className="input-group"><label className="input-label">Confirmar Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.confirmPassword} onChange={e=>handleChange('confirmPassword',e.target.value)} onFocus={()=>setIsPasswordFocused(true)} onBlur={()=>setIsPasswordFocused(false)} style={{ borderRadius:14, borderColor:form.confirmPassword.length>0?(match?'var(--success)':'var(--danger)'):'var(--border-color)' }}/></div>
 
               <button type="submit" className="btn btn-primary w-full" disabled={isLoading||!allPass||!match} style={{ padding:'0.85rem', fontSize:'0.92rem', borderRadius:14 }}>
                 {isLoading?'Creando...':'Registrarse'}

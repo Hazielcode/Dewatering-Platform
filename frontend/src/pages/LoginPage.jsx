@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ThemeContext } from '../App.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import api from '../services/api.js';
+import DewateringMascot from '../components/DewateringMascot.jsx';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,6 +13,18 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Mascot states
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,8 +91,17 @@ const LoginPage = () => {
         </div>
 
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '430px', padding: '3rem', borderRadius: '28px' }}>
-            <div style={{ marginBottom: '2rem' }}>
+          <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '430px', padding: '3rem', borderRadius: '28px', position: 'relative' }}>
+            
+            {/* EL MUÑECO / MASCOTA */}
+            <DewateringMascot 
+              isPasswordFocused={isPasswordFocused} 
+              hasError={!!errorMsg} 
+              mouseX={mousePos.x} 
+              mouseY={mousePos.y} 
+            />
+
+            <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
               <h2 style={{ fontSize: '1.65rem', marginBottom: '0.5rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Bienvenido</h2>
               <p className="text-secondary" style={{ fontSize: '0.9rem' }}>Ingrese sus credenciales corporativas</p>
             </div>
@@ -101,6 +123,8 @@ const LoginPage = () => {
                 <label className="input-label">Contraseña</label>
                 <input type="password" className="input-control" placeholder="••••••••" required
                   value={password} onChange={e => setPassword(e.target.value)}
+                  onFocus={() => setIsPasswordFocused(true)}
+                  onBlur={() => setIsPasswordFocused(false)}
                   style={{ borderRadius: '14px', padding: '0.8rem 1.1rem' }}/>
               </div>
 
