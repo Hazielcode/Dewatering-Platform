@@ -1,13 +1,11 @@
-import React, { useContext, useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ThemeContext } from '../App.jsx';
 import { Check, X } from 'lucide-react';
 import api from '../services/api.js';
 import DewateringMascot from '../components/DewateringMascot.jsx';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [form, setForm] = useState({ nombres: '', apellidos: '', telefono: '', fecha_nacimiento: '', email: '', password: '', confirmPassword: '' });
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -67,10 +65,10 @@ const RegisterPage = () => {
           </div>
 
           <h1 style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.08, letterSpacing: '-0.03em' }}>
-            Registro de<br/>Personal.
+            Registro<br />Personal o Corporativo.
           </h1>
           <p style={{ fontSize: '1.1rem', opacity: 0.85, lineHeight: 1.7, maxWidth: '420px', fontWeight: 400 }}>
-            Cree su cuenta corporativa con total seguridad y confianza.
+            Cree su cuenta Personal/orporativa con total seguridad y confianza.
           </p>
         </div>
 
@@ -83,8 +81,10 @@ const RegisterPage = () => {
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '2.5rem', backgroundColor: 'var(--bg-primary)' }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-          <button onClick={toggleTheme} className="btn-ghost" style={{ width: 40, height: 40, borderRadius: 12 }}>{isDarkMode ? '☀️' : '🌙'}</button>
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '1rem' }}>
+          <Link to="/" className="btn-ghost text-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', fontWeight: 600, padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem' }}>
+            ← Volver a la Web
+          </Link>
         </div>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div className="card animate-fade-in" style={{ width: '100%', maxWidth: 450, padding: '2.5rem', borderRadius: 28, position: 'relative' }}>

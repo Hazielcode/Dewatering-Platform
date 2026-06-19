@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ThemeContext } from '../App.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import api from '../services/api.js';
 import DewateringMascot from '../components/DewateringMascot.jsx';
@@ -8,7 +7,6 @@ import DewateringMascot from '../components/DewateringMascot.jsx';
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { login } = useAuth();
   
   // Use state passed from Register page if available
@@ -87,10 +85,10 @@ const LoginPage = () => {
         flex: 1, display: 'flex', flexDirection: 'column',
         padding: '2.5rem', backgroundColor: 'var(--bg-primary)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
-          <button onClick={toggleTheme} className="btn-ghost" style={{ width: 40, height: 40, borderRadius: '12px' }}>
-            {isDarkMode ? '☀️' : '🌙'}
-          </button>
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '1.5rem' }}>
+          <Link to="/" className="btn-ghost text-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', fontWeight: 600, padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem' }}>
+            ← Volver a la Web
+          </Link>
         </div>
 
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
