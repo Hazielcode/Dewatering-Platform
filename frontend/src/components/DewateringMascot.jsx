@@ -84,40 +84,40 @@ const DewateringMascot = ({ isPasswordFocused, hasError, mouseX, mouseY }) => {
         
         {/* Grupo de Párpados / Ojos con animación de parpadeo natural */}
         <g className={hasError || isPasswordFocused ? "" : "eye-blink"}>
-          {/* Fondo de los ojos (Blancos) - ESTOS DEBEN QUEDARSE QUIETOS */}
-          <circle cx="37" cy="56" r="7" fill="#ffffff" />
-          <circle cx="63" cy="56" r="7" fill="#ffffff" />
+          
+          {isPasswordFocused ? (
+            /* Ojos cerrados (Apretados / durmiendo) */
+            <>
+              <path d="M30 56 Q37 62 44 56" fill="none" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+              <path d="M56 56 Q63 62 70 56" fill="none" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+            </>
+          ) : (
+            /* Ojos Abiertos */
+            <>
+              {/* Fondo de los ojos (Blancos) - ESTOS DEBEN QUEDARSE QUIETOS */}
+              <circle cx="37" cy="56" r="7" fill="#ffffff" />
+              <circle cx="63" cy="56" r="7" fill="#ffffff" />
 
-          {/* LAS PUPILAS DINÁMICAS (Movimiento Suave) */}
-          <g transform={`translate(${eyeOffset.x}, ${eyeOffset.y})`}>
-            {hasError ? (
-              <>
-                <path d="M34 53 L40 59 M40 53 L34 59" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M60 53 L66 59 M66 53 L60 59" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
-              </>
-            ) : (
-              <>
-                {/* Pupilas normales un poco más grandes y juntas */}
-                <circle cx="37" cy="56" r="4" fill="#1e293b" />
-                <circle cx="63" cy="56" r="4" fill="#1e293b" />
-                {/* Brillo en los ojos para que se vea tierno/natural */}
-                <circle cx="35.5" cy="54.5" r="1.5" fill="#ffffff" opacity="0.8" />
-                <circle cx="61.5" cy="54.5" r="1.5" fill="#ffffff" opacity="0.8" />
-              </>
-            )}
-          </g>
-        </g>
-
-        {/* ANIMACIÓN DE PASSWORD (TAPAR OJOS) */}
-        <g style={{ 
-            transform: isPasswordFocused ? 'translateY(0)' : 'translateY(-100px)', 
-            transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            opacity: isPasswordFocused ? 1 : 0
-          }}>
-          <rect x="28" y="46" width="18" height="20" rx="6" fill="#0f172a" />
-          <rect x="54" y="46" width="18" height="20" rx="6" fill="#0f172a" />
-          <circle cx="37" cy="56" r="2" fill="#10b981" />
-          <circle cx="63" cy="56" r="2" fill="#10b981" />
+              {/* LAS PUPILAS DINÁMICAS (Movimiento Suave) */}
+              <g transform={`translate(${eyeOffset.x}, ${eyeOffset.y})`}>
+                {hasError ? (
+                  <>
+                    <path d="M34 53 L40 59 M40 53 L34 59" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M60 53 L66 59 M66 53 L60 59" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" />
+                  </>
+                ) : (
+                  <>
+                    {/* Pupilas normales un poco más grandes y juntas */}
+                    <circle cx="37" cy="56" r="4" fill="#1e293b" />
+                    <circle cx="63" cy="56" r="4" fill="#1e293b" />
+                    {/* Brillo en los ojos para que se vea tierno/natural */}
+                    <circle cx="35.5" cy="54.5" r="1.5" fill="#ffffff" opacity="0.8" />
+                    <circle cx="61.5" cy="54.5" r="1.5" fill="#ffffff" opacity="0.8" />
+                  </>
+                )}
+              </g>
+            </>
+          )}
         </g>
 
         {/* BOCA / EXPRESIÓN - Más amigable */}
