@@ -23,7 +23,6 @@ import ClientProjectsPage from './pages/client/ClientProjectsPage.jsx';
 import ClientQuotationsPage from './pages/client/ClientQuotationsPage.jsx';
 import ClientDocumentsPage from './pages/client/ClientDocumentsPage.jsx';
 import { Store, FileText, Package } from 'lucide-react';
-export const ThemeContext = createContext();
 
 /**
  * Protección de rutas con validación de JWT real.
@@ -78,20 +77,13 @@ const ProtectedRoute = ({ children, requiredRoles }) => {
 };
 
 const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const s = localStorage.getItem('dewatering_theme');
-    if (s) return s === 'dark';
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-  });
-
   useEffect(() => {
-    document.body.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('dewatering_theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
+    // Forzamos el modo oscuro (dark) en toda la aplicación
+    document.body.classList.add('dark');
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme: () => setIsDarkMode(!isDarkMode) }}>
-      <AuthProvider>
+    <AuthProvider>
         <BrowserRouter>
           <Routes>
             {/* Rutas Públicas (Sitio Web Corporativo) */}
@@ -132,8 +124,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </ThemeContext.Provider>
-  );
+    );
 };
 
 export default App;

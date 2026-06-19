@@ -1,11 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Droplets, Phone, Mail, MapPin, Sun, Moon } from 'lucide-react';
-import { ThemeContext } from '../../App.jsx';
+import { Droplets, Phone, Mail, MapPin } from 'lucide-react';
 
 const PublicLayout = ({ children }) => {
   const location = useLocation();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const isActive = (path) => location.pathname === path;
 
   useEffect(() => {
@@ -47,21 +45,6 @@ const PublicLayout = ({ children }) => {
           ))}
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '1px solid var(--border-color)', paddingLeft: '1.75rem' }}>
-            <button 
-              onClick={toggleTheme} 
-              className="btn-ghost" 
-              title={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-              style={{ 
-                width: 40, height: 40, borderRadius: '50%', 
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-                border: '1px solid var(--border-color)',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              {isDarkMode ? <Sun size={18} color="#f59e0b" /> : <Moon size={18} color="#4b5563" />}
-            </button>
-
             <Link to="/login" className="btn btn-primary" style={{ padding: '0.6rem 1.4rem', fontSize: '0.95rem' }}>
               Acceso Clientes
             </Link>

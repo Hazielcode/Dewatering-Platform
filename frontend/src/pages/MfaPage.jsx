@@ -1,6 +1,5 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ThemeContext } from '../App.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ShieldCheck, ArrowLeft } from 'lucide-react';
 import api from '../services/api.js';
@@ -8,7 +7,6 @@ import api from '../services/api.js';
 const MfaPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { login } = useAuth();
   const mfaEmail = location.state?.email || '';
   const mfaUserId = location.state?.userId || null;
@@ -61,9 +59,8 @@ const MfaPage = () => {
       </div>
 
       <div style={{ flex:1, display:'flex', flexDirection:'column', padding:'2.5rem', backgroundColor:'var(--bg-primary)' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'1.5rem' }}>
+        <div style={{ display:'flex', justifyContent:'flex-start', marginBottom:'1.5rem' }}>
           <button onClick={()=>navigate('/')} className="btn-ghost" style={{ display:'flex', alignItems:'center', gap:6, padding:'0.5rem 0.85rem', fontSize:'0.85rem', borderRadius:12 }}><ArrowLeft size={16}/> Volver</button>
-          <button onClick={toggleTheme} className="btn-ghost" style={{ width:40, height:40, borderRadius:12 }}>{isDarkMode?'☀️':'🌙'}</button>
         </div>
         <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center' }}>
           <div className="card animate-fade-in" style={{ width:'100%', maxWidth:480, padding:'3rem', textAlign:'center', borderRadius:28 }}>

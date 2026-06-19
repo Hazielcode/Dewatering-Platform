@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ThemeContext } from '../App.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { 
   LayoutDashboard, ShieldAlert, Users, Package, Store, FileText,
-  LogOut, Sun, Moon, Bell, Search
+  LogOut, Bell, Search
 } from 'lucide-react';
 
 const navItems = [
@@ -33,7 +32,6 @@ const navItems = [
 const DashboardLayout = ({ children, title, subtitle }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { user, logout, hasRole, primaryRole } = useAuth();
 
   const handleLogout = () => {
@@ -131,9 +129,6 @@ const DashboardLayout = ({ children, title, subtitle }) => {
             <button className="btn-ghost" title="Notificaciones" style={{ width: 38, height: 38, position: 'relative' }}>
               <Bell size={18}/>
               <span style={{ position: 'absolute', top: 5, right: 5, width: 8, height: 8, borderRadius: '50%', background: 'var(--accent-gradient)' }}></span>
-            </button>
-            <button onClick={toggleTheme} className="btn-ghost" title="Tema" style={{ width: 38, height: 38 }}>
-              {isDarkMode ? <Sun size={18}/> : <Moon size={18}/>}
             </button>
             <div 
               onClick={() => navigate('/profile')}
