@@ -78,8 +78,8 @@ const ProtectedRoute = ({ children, requiredRoles }) => {
 
 const App = () => {
   useEffect(() => {
-    // Forzamos el modo oscuro (dark) en toda la aplicación
-    document.body.classList.add('dark');
+    // Forzamos el modo claro (light) en toda la aplicación
+    document.body.classList.remove('dark');
   }, []);
 
   return (
