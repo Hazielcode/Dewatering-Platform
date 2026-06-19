@@ -241,18 +241,20 @@ const HomePage = () => {
         <div className="marquee-container" style={{ marginBottom: '2rem' }}>
           <div className="marquee-content">
             {[
-              { id: 'antamina', src: '/clients/antamina.svg', alt: 'Antamina' },
-              { id: 'cerroverde', src: '/clients/cerroverde.svg', alt: 'Cerro Verde' },
-              { id: 'lasbambas', src: '/clients/lasbambas.svg', alt: 'Las Bambas' },
-              { id: 'sedapal', src: '/clients/sedapal.svg', alt: 'Sedapal' },
-              { id: 'southern', src: '/clients/southern.svg', alt: 'Southern Copper' },
-              { id: 'buenaventura', src: '/clients/buenaventura.svg', alt: 'Buenaventura' },
-              { id: 'antamina2', src: '/clients/antamina.svg', alt: 'Antamina' },
-              { id: 'cerroverde2', src: '/clients/cerroverde.svg', alt: 'Cerro Verde' },
-              { id: 'lasbambas2', src: '/clients/lasbambas.svg', alt: 'Las Bambas' },
-              { id: 'sedapal2', src: '/clients/sedapal.svg', alt: 'Sedapal' },
-              { id: 'southern2', src: '/clients/southern.svg', alt: 'Southern Copper' },
-              { id: 'buenaventura2', src: '/clients/buenaventura.svg', alt: 'Buenaventura' }
+              { id: 'antamina', src: '/clients/antamina.png', alt: 'Antamina' },
+              { id: 'cerroverde', src: '/clients/cerroverde.png', alt: 'Cerro Verde' },
+              { id: 'lasbambas', src: '/clients/lasbambas.png', alt: 'Las Bambas' },
+              { id: 'sedapal', src: '/clients/sedapal.png', alt: 'Sedapal' },
+              { id: 'southern', src: '/clients/southern.png', alt: 'Southern Copper' },
+              { id: 'buenaventura', src: '/clients/buenaventura.png', alt: 'Buenaventura' },
+              { id: 'chinalco', src: '/clients/chinalco.png', alt: 'Chinalco' },
+              { id: 'antamina2', src: '/clients/antamina.png', alt: 'Antamina' },
+              { id: 'cerroverde2', src: '/clients/cerroverde.png', alt: 'Cerro Verde' },
+              { id: 'lasbambas2', src: '/clients/lasbambas.png', alt: 'Las Bambas' },
+              { id: 'sedapal2', src: '/clients/sedapal.png', alt: 'Sedapal' },
+              { id: 'southern2', src: '/clients/southern.png', alt: 'Southern Copper' },
+              { id: 'buenaventura2', src: '/clients/buenaventura.png', alt: 'Buenaventura' },
+              { id: 'chinalco2', src: '/clients/chinalco.png', alt: 'Chinalco' }
             ].map((client, idx) => (
               <div key={idx} className="marquee-item" style={{ background: 'transparent', border: 'none', padding: '0 2rem', boxShadow: 'none' }}>
                 <img 

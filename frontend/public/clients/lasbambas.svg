@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 120" width="450" height="120">
-  <rect width="450" height="120" fill="transparent" />
-  <g transform="translate(15, 20)">
-    <rect x="0" y="0" width="80" height="80" rx="15" fill="#e63946" />
-    <path d="M20 60 L40 20 L60 60" stroke="#fff" stroke-width="8" fill="none" stroke-linejoin="round" />
-    <text x="100" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#e63946" letter-spacing="-1">LAS BAMBAS</text>
-  </g>
-</svg>

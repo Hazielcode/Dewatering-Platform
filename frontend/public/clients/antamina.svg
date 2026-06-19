@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
-  <rect width="400" height="120" fill="transparent" />
-  <g transform="translate(20, 20)">
-    <path d="M40 0 L80 80 L0 80 Z" fill="#005a8c" />
-    <path d="M40 25 L65 75 L15 75 Z" fill="#00a3e0" />
-    <text x="100" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="42" fill="#005a8c" letter-spacing="-1">ANTAMINA</text>
-  </g>
-</svg>

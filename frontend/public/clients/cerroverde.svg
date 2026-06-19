@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 120" width="450" height="120">
-  <rect width="450" height="120" fill="transparent" />
-  <g transform="translate(10, 20)">
-    <circle cx="40" cy="40" r="35" fill="#2d6a4f" />
-    <path d="M20 55 L40 15 L60 55 Z" fill="#74c69d" />
-    <text x="95" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#1b4332" letter-spacing="-1">CERRO VERDE</text>
-  </g>
-</svg>
