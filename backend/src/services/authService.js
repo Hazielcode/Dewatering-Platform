@@ -77,6 +77,11 @@ class AuthService {
 
     loginAttempts.delete(attemptKey);
 
+    if (user.mfa_enabled) {
+      // MFA está activado para este usuario, requerir verificación
+      return { mfaRequired: true, userId: user.id };
+    }
+
     const payload = {
       userId: user.id,
       email: user.email,
@@ -93,7 +98,8 @@ class AuthService {
       company: user.company,
       position: user.position,
       role: user.role,
-      avatar_url: user.avatar_url
+      avatar_url: user.avatar_url,
+      mfa_enabled: user.mfa_enabled
     };
 
     return { token, user: userProfile };

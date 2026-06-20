@@ -18,6 +18,11 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ error: 'Email y password son obligatorios.' });
     }
     const result = await authService.login(email, password);
+    
+    if (result.mfaRequired) {
+      return res.status(202).json({ mfaRequired: true, userId: result.userId });
+    }
+
     await auditService.log(req, 'LOGIN', 'USER', result.user.id, null, { email: result.user.email });
     res.json({ message: 'Login exitoso.', token: result.token, user: result.user });
   } catch (error) {
