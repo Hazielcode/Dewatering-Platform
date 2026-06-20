@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // Contexto inicial del sistema (System Prompt RAG simulado)
 const systemContext = `
@@ -21,39 +21,38 @@ export const chatWithBot = async (req, res) => {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío.' });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
-
-    // Preparar el historial en formato Gemini
-    // Formato de Gemini: { role: 'user' | 'model', parts: [{text: '...'}] }
-    const formattedHistory = [
-      { role: "user", parts: [{ text: systemContext }] },
-      { role: "model", parts: [{ text: "Entendido. Soy el Ingeniero Virtual de Dewatering Solutions. ¿En qué puedo ayudarle hoy?" }] },
-    ];
-
+    // El historial que viene del frontend no tiene el formato exacto del nuevo SDK
+    // Convertimos el historial al formato esperado
+    const formattedContents = [];
     if (history && Array.isArray(history)) {
       history.forEach(msg => {
-        formattedHistory.push({
+        formattedContents.push({
           role: msg.role === 'user' ? 'user' : 'model',
           parts: [{ text: msg.text }]
         });
       });
     }
 
-    const chat = model.startChat({
-      history: formattedHistory,
-      generationConfig: {
-        maxOutputTokens: 500,
-        temperature: 0.3, // Respuestas más técnicas y menos creativas
-      },
+    // Añadir el mensaje actual del usuario
+    formattedContents.push({
+      role: 'user',
+      parts: [{ text: message }]
     });
 
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const text = response.text();
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.5-flash',
+      contents: formattedContents,
+      config: {
+        systemInstruction: systemContext,
+        temperature: 0.3,
+        maxOutputTokens: 2048
+      }
+    });
 
-    res.status(200).json({ response: text });
+    res.status(200).json({ response: response.text });
   } catch (error) {
     console.error('[ChatBot Error]:', error);
     res.status(500).json({ error: 'Error al comunicarse con la IA. El servidor de IA podría estar saturado.' });
   }
 };
+
