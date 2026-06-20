@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Droplets, Phone, Mail, MapPin } from 'lucide-react';
+import DewateringChatbot from '../DewateringChatbot.jsx';
 
 const PublicLayout = ({ children }) => {
   const location = useLocation();
@@ -190,6 +191,9 @@ const PublicLayout = ({ children }) => {
           </div>
         </div>
       </footer>
+
+      {/* CHATBOT VIRTUAL PARA VISITANTES */}
+      <DewateringChatbot />
     </div>
   );
 };
