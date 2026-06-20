@@ -22,8 +22,8 @@ pool.on('connect', () => {
 });
 
 pool.on('error', (err) => {
-  console.error('[Dewatering] ❌ Error inesperado en el pool de PostgreSQL:', err);
-  process.exit(-1);
+  console.error('[Dewatering] ❌ Error inesperado en el pool de PostgreSQL:', err.message);
+  // process.exit(-1); // Comentado para evitar que tumbe el servidor en redes restringidas
 });
 
 // Función wrapper para queries seguras

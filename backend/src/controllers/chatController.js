@@ -21,7 +21,7 @@ export const chatWithBot = async (req, res) => {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío.' });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
     // Preparar el historial en formato Gemini
     // Formato de Gemini: { role: 'user' | 'model', parts: [{text: '...'}] }
