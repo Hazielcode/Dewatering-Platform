@@ -22,7 +22,7 @@ export const setupMfa = async (req, res, next) => {
     // Generar el código QR
     const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
 
-    res.json({ qrCodeUrl, secret: secret.base32 });
+    res.json({ qrCode: qrCodeUrl, secret: secret.base32 });
   } catch (error) {
     next(error);
   }
@@ -95,7 +95,8 @@ export const loginMfa = async (req, res, next) => {
       const payload = {
         userId: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        mfa_enabled: user.mfa_enabled
       };
 
       const jwtToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });

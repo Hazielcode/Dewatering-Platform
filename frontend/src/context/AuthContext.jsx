@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }) => {
         userId: userId,
         email: decoded.email,
         roles: parsedRoles,
+        mfa_enabled: decoded.mfa_enabled
       });
       setIsAuthenticated(true);
     } else {
@@ -75,6 +76,7 @@ export const AuthProvider = ({ children }) => {
       nombre_completo: userData?.full_name || userData?.nombre_completo || decoded?.nombre_completo || '',
       company: userData?.company || decoded?.company || '',
       roles: parsedRoles,
+      mfa_enabled: userData?.mfa_enabled || decoded?.mfa_enabled
     });
     setIsAuthenticated(true);
   }, []);

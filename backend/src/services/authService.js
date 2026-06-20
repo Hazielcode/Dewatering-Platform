@@ -79,13 +79,14 @@ class AuthService {
 
     if (user.mfa_enabled) {
       // MFA está activado para este usuario, requerir verificación
-      return { mfaRequired: true, userId: user.id };
+      return { mfaRequired: true, userId: user.id, email: user.email };
     }
 
     const payload = {
       userId: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      mfa_enabled: user.mfa_enabled
     };
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });

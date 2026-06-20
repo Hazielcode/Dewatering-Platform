@@ -16,11 +16,11 @@ const ProfilePage = () => {
   const [success, setSuccess] = useState(null);
 
   useEffect(() => {
-    // Si no hay información sobre el MFA del usuario en el contexto,
-    // asuminos que todavía no está activado hasta que se compruebe o cambie.
-    // (Idealmente el backend enviaría si tiene mfa_habilitado al loguearse)
-    // Por simplicidad, si no lo tiene, mostraremos la opción de configurarlo.
-    setMfaStatus('setup_needed');
+    if (user && user.mfa_enabled) {
+      setMfaStatus('active');
+    } else {
+      setMfaStatus('setup_needed');
+    }
   }, [user]);
 
   const initiateMfaSetup = async () => {

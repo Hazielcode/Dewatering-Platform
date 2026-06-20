@@ -20,7 +20,7 @@ export const login = async (req, res, next) => {
     const result = await authService.login(email, password);
     
     if (result.mfaRequired) {
-      return res.status(202).json({ mfaRequired: true, userId: result.userId });
+      return res.status(202).json({ mfaRequired: true, userId: result.userId, email: result.email });
     }
 
     await auditService.log(req, 'LOGIN', 'USER', result.user.id, null, { email: result.user.email });
