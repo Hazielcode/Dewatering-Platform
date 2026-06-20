@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import api from '../services/api.js';
 import DewateringMascot from '../components/DewateringMascot.jsx';
@@ -14,6 +15,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState(location.state?.password || '');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Mascot states
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -122,11 +124,16 @@ const LoginPage = () => {
               </div>
               <div className="input-group">
                 <label className="input-label">Contraseña</label>
-                <input type="password" className="input-control" placeholder="••••••••" required
-                  value={password} onChange={e => setPassword(e.target.value)}
-                  onFocus={() => setIsPasswordFocused(true)}
-                  onBlur={() => setIsPasswordFocused(false)}
-                  style={{ borderRadius: '14px', padding: '0.8rem 1.1rem' }}/>
+                <div style={{ position: 'relative' }}>
+                  <input type={showPassword ? 'text' : 'password'} className="input-control" placeholder="••••••••" required
+                    value={password} onChange={e => setPassword(e.target.value)}
+                    onFocus={() => setIsPasswordFocused(true)}
+                    onBlur={() => setIsPasswordFocused(false)}
+                    style={{ borderRadius: '14px', padding: '0.8rem 1.1rem', paddingRight: '2.5rem' }}/>
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem' }}>

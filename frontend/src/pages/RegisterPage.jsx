@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Check, X } from 'lucide-react';
+import { Check, X, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api.js';
 import DewateringMascot from '../components/DewateringMascot.jsx';
 
@@ -10,6 +10,8 @@ const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Mascot states
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -112,7 +114,15 @@ const RegisterPage = () => {
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e => handleChange('telefono', e.target.value)} style={{ borderRadius: 14 }} /></div>
               <div className="input-group"><label className="input-label">Fecha de Nacimiento <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>(Opcional)</span></label><input type="date" className="input-control" value={form.fecha_nacimiento} onChange={e => handleChange('fecha_nacimiento', e.target.value)} style={{ borderRadius: 14 }} /></div>
               <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="gerencia@empresa.com" required value={form.email} onChange={e => handleChange('email', e.target.value)} style={{ borderRadius: 14 }} /></div>
-              <div className="input-group"><label className="input-label">Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.password} onChange={e => handleChange('password', e.target.value)} onFocus={() => setIsPasswordFocused(true)} onBlur={() => setIsPasswordFocused(false)} style={{ borderRadius: 14 }} /></div>
+              <div className="input-group">
+                <label className="input-label">Contraseña</label>
+                <div style={{ position: 'relative' }}>
+                  <input type={showPassword ? 'text' : 'password'} className="input-control" placeholder="••••••••" required value={form.password} onChange={e => handleChange('password', e.target.value)} onFocus={() => setIsPasswordFocused(true)} onBlur={() => setIsPasswordFocused(false)} style={{ borderRadius: 14, paddingRight: '2.5rem' }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
 
               {form.password.length > 0 && (
                 <div style={{ marginBottom: '1.25rem', padding: '0.85rem 1rem', borderRadius: 16, backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-color)' }}>
@@ -126,7 +136,15 @@ const RegisterPage = () => {
                 </div>
               )}
 
-              <div className="input-group"><label className="input-label">Confirmar Contraseña</label><input type="password" className="input-control" placeholder="••••••••" required value={form.confirmPassword} onChange={e => handleChange('confirmPassword', e.target.value)} onFocus={() => setIsPasswordFocused(true)} onBlur={() => setIsPasswordFocused(false)} style={{ borderRadius: 14, borderColor: form.confirmPassword.length > 0 ? (match ? 'var(--success)' : 'var(--danger)') : 'var(--border-color)' }} /></div>
+              <div className="input-group">
+                <label className="input-label">Confirmar Contraseña</label>
+                <div style={{ position: 'relative' }}>
+                  <input type={showConfirmPassword ? 'text' : 'password'} className="input-control" placeholder="••••••••" required value={form.confirmPassword} onChange={e => handleChange('confirmPassword', e.target.value)} onFocus={() => setIsPasswordFocused(true)} onBlur={() => setIsPasswordFocused(false)} style={{ borderRadius: 14, paddingRight: '2.5rem', borderColor: form.confirmPassword.length > 0 ? (match ? 'var(--success)' : 'var(--danger)') : 'var(--border-color)' }} />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
 
               <button type="submit" className="btn btn-primary w-full" disabled={isLoading || !allPass || !match} style={{ padding: '0.85rem', fontSize: '0.92rem', borderRadius: 14 }}>
                 {isLoading ? 'Creando...' : 'Registrarse'}
