@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, MessageSquare, Loader2 } from 'lucide-react';
 import api from '../services/api';
 import DewateringMascot from './DewateringMascot';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const DewateringChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -161,7 +163,7 @@ const DewateringChatbot = () => {
                 )}
                 
                 <div style={{
-                  maxWidth: '75%',
+                  maxWidth: '85%',
                   padding: '0.85rem 1rem',
                   borderRadius: '16px',
                   backgroundColor: msg.role === 'user' ? 'var(--accent-primary)' : 'var(--bg-primary)',
@@ -171,9 +173,28 @@ const DewateringChatbot = () => {
                   lineHeight: 1.5,
                   borderBottomRightRadius: msg.role === 'user' ? '4px' : '16px',
                   borderBottomLeftRadius: msg.role === 'model' ? '4px' : '16px',
-                  border: msg.role === 'model' ? '1px solid var(--border-color)' : 'none'
+                  border: msg.role === 'model' ? '1px solid var(--border-color)' : 'none',
+                  overflowX: 'auto'
                 }}>
-                  {msg.text}
+                  {msg.role === 'user' ? (
+                    msg.text
+                  ) : (
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({node, ...props}) => <p style={{ margin: '0 0 8px 0' }} {...props} />,
+                        ul: ({node, ...props}) => <ul style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
+                        ol: ({node, ...props}) => <ol style={{ margin: '0 0 8px 0', paddingLeft: '20px' }} {...props} />,
+                        li: ({node, ...props}) => <li style={{ marginBottom: '4px' }} {...props} />,
+                        h3: ({node, ...props}) => <h3 style={{ margin: '12px 0 8px 0', fontSize: '1rem', color: 'var(--accent-primary)' }} {...props} />,
+                        h4: ({node, ...props}) => <h4 style={{ margin: '10px 0 6px 0', fontSize: '0.95rem' }} {...props} />,
+                        strong: ({node, ...props}) => <strong style={{ fontWeight: 600, color: 'var(--accent-primary)' }} {...props} />,
+                        hr: ({node, ...props}) => <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '12px 0' }} {...props} />
+                      }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  )}
                 </div>
               </div>
             ))}
