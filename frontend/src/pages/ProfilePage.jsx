@@ -125,21 +125,24 @@ const ProfilePage = () => {
           <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
             <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
               {!isEditing ? (
-                <button onClick={() => setIsEditing(true)} className="btn-ghost text-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <button onClick={() => setIsEditing(true)} className="btn-ghost text-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid var(--border-color)', transition: 'all 0.2s' }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   Editar Info
                 </button>
               ) : (
-                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '' }); }} className="btn-ghost text-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '8px' }}>
+                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '' }); }} className="btn-ghost text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.05)', transition: 'all 0.2s' }}>
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   Cancelar
                 </button>
               )}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
               <div style={{
                 width: '90px', height: '90px', borderRadius: '50%', background: 'var(--accent-gradient)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-                fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', boxShadow: 'var(--shadow-glow)'
+                fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', boxShadow: 'var(--shadow-glow)',
+                flexShrink: 0
               }}>
                 {profileData.full_name ? profileData.full_name.charAt(0).toUpperCase() : 'U'}
               </div>
@@ -155,41 +158,56 @@ const ProfilePage = () => {
                     {profileData.role && <span className="badge badge-success">{profileData.role}</span>}
                   </div>
 
-                  <div style={{ width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
-                    <div style={{ marginBottom: '1rem' }}>
-                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Teléfono</p>
+                  <div style={{ width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.2rem', textAlign: 'left' }}>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Teléfono</p>
                       <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.phone || 'No registrado'}</p>
                     </div>
-                    <div style={{ marginBottom: '1rem' }}>
-                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Empresa</p>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Empresa</p>
                       <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.company || 'No registrado'}</p>
                     </div>
                     <div>
-                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Cargo</p>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Cargo</p>
                       <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.position || 'No registrado'}</p>
                     </div>
                   </div>
                 </>
               ) : (
-                <form onSubmit={handleUpdateProfile} style={{ width: '100%', marginTop: '1rem' }}>
-                  <div className="input-group" style={{ marginBottom: '1rem' }}>
-                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Nombre Completo</label>
-                    <input className="input-control" value={editForm.full_name} onChange={e => setEditForm({...editForm, full_name: e.target.value})} required />
+                <form onSubmit={handleUpdateProfile} style={{ width: '100%', marginTop: '0.5rem', textAlign: 'left' }}>
+                  <div style={{ padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border-color)', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+                      <div className="input-group" style={{ marginBottom: 0 }}>
+                        <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Nombre Completo</label>
+                        <input className="input-control" style={{ backgroundColor: 'var(--bg-primary)' }} value={editForm.full_name} onChange={e => setEditForm({...editForm, full_name: e.target.value})} required placeholder="Ej. Juan Pérez" />
+                      </div>
+                      
+                      <div className="input-group" style={{ marginBottom: 0 }}>
+                        <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Teléfono</label>
+                        <input type="tel" className="input-control" style={{ backgroundColor: 'var(--bg-primary)' }} value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} placeholder="Ej. +51 987654321" />
+                      </div>
+
+                      <div className="input-group" style={{ marginBottom: 0 }}>
+                        <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Empresa</label>
+                        <input className="input-control" style={{ backgroundColor: 'var(--bg-primary)' }} value={editForm.company} onChange={e => setEditForm({...editForm, company: e.target.value})} placeholder="Nombre de la empresa" />
+                      </div>
+
+                      <div className="input-group" style={{ marginBottom: 0 }}>
+                        <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Cargo / Puesto</label>
+                        <input className="input-control" style={{ backgroundColor: 'var(--bg-primary)' }} value={editForm.position} onChange={e => setEditForm({...editForm, position: e.target.value})} placeholder="Ej. Ingeniero de Planta" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="input-group" style={{ marginBottom: '1rem' }}>
-                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Teléfono</label>
-                    <input type="tel" className="input-control" value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} />
-                  </div>
-                  <div className="input-group" style={{ marginBottom: '1rem' }}>
-                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Empresa</label>
-                    <input className="input-control" value={editForm.company} onChange={e => setEditForm({...editForm, company: e.target.value})} />
-                  </div>
-                  <div className="input-group" style={{ marginBottom: '1.5rem' }}>
-                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Cargo</label>
-                    <input className="input-control" value={editForm.position} onChange={e => setEditForm({...editForm, position: e.target.value})} />
-                  </div>
-                  <button type="submit" disabled={isSaving} className="btn btn-primary w-full" style={{ padding: '0.7rem' }}>
-                    {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                  
+                  <button type="submit" disabled={isSaving} className="btn btn-primary" style={{ width: '100%', padding: '0.8rem', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                    {isSaving ? (
+                      <>Guardando...</>
+                    ) : (
+                      <>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Guardar Cambios
+                      </>
+                    )}
                   </button>
                 </form>
               )}

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, MessageSquare, Loader2 } from 'lucide-react';
 import api from '../services/api';
-import DewateringMascot from './DewateringMascot';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -80,7 +79,25 @@ const DewateringChatbot = () => {
           onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
           onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <MessageSquare size={28} />
+          <style>
+            {`
+              @keyframes floatAnimation {
+                0% { transform: translateY(0px) scale(1); }
+                50% { transform: translateY(-5px) scale(1.05); }
+                100% { transform: translateY(0px) scale(1); }
+              }
+            `}
+          </style>
+          <img 
+            src="/chatbot-mascot.png" 
+            alt="Chatbot" 
+            style={{ 
+              width: '80%', 
+              height: '80%', 
+              objectFit: 'contain',
+              animation: 'floatAnimation 3s ease-in-out infinite'
+            }} 
+          />
         </button>
       )}
 
@@ -118,7 +135,7 @@ const DewateringChatbot = () => {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 overflow: 'hidden'
               }}>
-                <DewateringMascot isPasswordFocused={false} hasError={false} mouseX={0} mouseY={0} />
+                <img src="/chatbot-mascot.png" alt="Ingeniero Virtual" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600 }}>Ingeniero Virtual</h3>
