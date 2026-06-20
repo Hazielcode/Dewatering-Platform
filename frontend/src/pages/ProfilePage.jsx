@@ -14,6 +14,31 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  
+  // Estados de Perfil
+  const [profileData, setProfileData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ full_name: '', phone: '', company: '', position: '' });
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await api.get('/auth/profile');
+      setProfileData(response.data.user);
+      setEditForm({
+        full_name: response.data.user.full_name || '',
+        phone: response.data.user.phone || '',
+        company: response.data.user.company || '',
+        position: response.data.user.position || ''
+      });
+    } catch (error) {
+      console.error('Error fetching profile', error);
+    }
+  };
 
   useEffect(() => {
     if (user && user.mfa_enabled) {
@@ -68,7 +93,24 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user) return null;
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const response = await api.put('/auth/profile', editForm);
+      setProfileData(response.data.user);
+      setSuccess('Perfil actualizado correctamente.');
+      setIsEditing(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al actualizar perfil');
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (!user || !profileData) return null;
 
   return (
     <DashboardLayout title="Mi Perfil" subtitle="Configuración de cuenta y seguridad">
@@ -80,37 +122,77 @@ const ProfilePage = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
           {/* Tarjeta de Información Personal */}
-          <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{
-              width: '90px', height: '90px', borderRadius: '50%', background: 'var(--accent-gradient)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-              fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', boxShadow: 'var(--shadow-glow)'
-            }}>
-              {user.nombres ? user.nombres.charAt(0).toUpperCase() : (user.nombre_completo ? user.nombre_completo.charAt(0).toUpperCase() : 'U')}
-            </div>
-            
-            <h2 style={{ fontSize: '1.3rem', color: 'var(--text-primary)', marginBottom: '0.2rem', textAlign: 'center' }}>
-              {user.nombre_completo}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>{user.email}</p>
-            
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '2rem' }}>
-              {user.roles?.map(rol => (
-                <span key={rol} className="badge badge-success">{rol}</span>
-              ))}
+          <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
+              {!isEditing ? (
+                <button onClick={() => setIsEditing(true)} className="btn-ghost text-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  Editar Info
+                </button>
+              ) : (
+                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '' }); }} className="btn-ghost text-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '8px' }}>
+                  Cancelar
+                </button>
+              )}
             </div>
 
-            <div style={{ width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
-              <div style={{ marginBottom: '1rem' }}>
-                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Teléfono</p>
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{user.telefono || 'No registrado'}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                width: '90px', height: '90px', borderRadius: '50%', background: 'var(--accent-gradient)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+                fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', boxShadow: 'var(--shadow-glow)'
+              }}>
+                {profileData.full_name ? profileData.full_name.charAt(0).toUpperCase() : 'U'}
               </div>
-              <div>
-                <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>F. Nacimiento</p>
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-                  {user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString('es-PE') : 'No registrado'}
-                </p>
-              </div>
+              
+              {!isEditing ? (
+                <>
+                  <h2 style={{ fontSize: '1.3rem', color: 'var(--text-primary)', marginBottom: '0.2rem', textAlign: 'center' }}>
+                    {profileData.full_name}
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>{profileData.email}</p>
+                  
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '2rem' }}>
+                    {profileData.role && <span className="badge badge-success">{profileData.role}</span>}
+                  </div>
+
+                  <div style={{ width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Teléfono</p>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.phone || 'No registrado'}</p>
+                    </div>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Empresa</p>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.company || 'No registrado'}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Cargo</p>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.position || 'No registrado'}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <form onSubmit={handleUpdateProfile} style={{ width: '100%', marginTop: '1rem' }}>
+                  <div className="input-group" style={{ marginBottom: '1rem' }}>
+                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Nombre Completo</label>
+                    <input className="input-control" value={editForm.full_name} onChange={e => setEditForm({...editForm, full_name: e.target.value})} required />
+                  </div>
+                  <div className="input-group" style={{ marginBottom: '1rem' }}>
+                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Teléfono</label>
+                    <input type="tel" className="input-control" value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} />
+                  </div>
+                  <div className="input-group" style={{ marginBottom: '1rem' }}>
+                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Empresa</label>
+                    <input className="input-control" value={editForm.company} onChange={e => setEditForm({...editForm, company: e.target.value})} />
+                  </div>
+                  <div className="input-group" style={{ marginBottom: '1.5rem' }}>
+                    <label className="input-label" style={{ fontSize: '0.8rem' }}>Cargo</label>
+                    <input className="input-control" value={editForm.position} onChange={e => setEditForm({...editForm, position: e.target.value})} />
+                  </div>
+                  <button type="submit" disabled={isSaving} className="btn btn-primary w-full" style={{ padding: '0.7rem' }}>
+                    {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 
