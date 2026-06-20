@@ -153,8 +153,8 @@ const LoginPage = () => {
             </form>
 
             <div style={{ marginTop: '1.75rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              ¿No tiene cuenta?{' '}
-              <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: 600, textDecoration: 'none' }}>Regístrese aquí</Link>
+              ¿Aún no es cliente?{' '}
+              <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: 600, textDecoration: 'none' }}>Solicitar acceso</Link>
             </div>
           </div>
         </div>

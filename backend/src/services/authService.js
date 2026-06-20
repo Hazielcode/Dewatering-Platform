@@ -36,9 +36,13 @@ class AuthService {
 
     const password_hash = await bcrypt.hash(password, 12);
 
+    // Si el rol es CLIENT (registro web), nace inactivo para requerir validación B2B
+    const is_active = targetRole === 'CLIENT' ? false : true;
+
     const newUser = await userModel.create({
       email, password_hash, full_name,
-      phone, company, position, role: targetRole
+      phone, company, position, role: targetRole,
+      is_active
     });
 
     return newUser;
@@ -66,7 +70,11 @@ class AuthService {
     }
 
     if (!user.is_active) {
-      throw new Error('La cuenta de usuario está desactivada.');
+      if (user.role === 'CLIENT') {
+        throw new Error('Su solicitud de cuenta está en proceso de validación por nuestro equipo comercial.');
+      } else {
+        throw new Error('Su cuenta de empleado ha sido desactivada por el administrador.');
+      }
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);

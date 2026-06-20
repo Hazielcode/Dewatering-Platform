@@ -4,15 +4,16 @@ class UserModel {
   // ==================== CRUD ====================
 
   async create(user) {
-    const { email, password_hash, full_name, phone, company, position, role } = user;
+    const { email, password_hash, full_name, phone, company, position, role, is_active } = user;
     const sql = `
-      INSERT INTO users (email, password_hash, full_name, phone, company, position, role)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO users (email, password_hash, full_name, phone, company, position, role, is_active)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id, email, full_name, phone, company, position, role, is_active, created_at;
     `;
     const result = await query(sql, [
       email, password_hash, full_name, phone || null,
-      company || null, position || null, role || 'CLIENT'
+      company || null, position || null, role || 'CLIENT',
+      is_active !== undefined ? is_active : true
     ]);
     return result.rows[0];
   }

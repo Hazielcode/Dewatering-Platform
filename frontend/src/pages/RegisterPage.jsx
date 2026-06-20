@@ -46,8 +46,8 @@ const RegisterPage = () => {
     setIsLoading(true);
     try {
       await api.post('/auth/register', { email: form.email, password: form.password, full_name: `${form.nombres} ${form.apellidos}`, phone: form.telefono });
-      setSuccessMsg('Cuenta creada. Redirigiendo a Iniciar Sesión...');
-      setTimeout(() => navigate('/login', { state: { email: form.email, password: form.password } }), 2000);
+      setSuccessMsg('Solicitud enviada exitosamente. Su cuenta está en proceso de validación comercial.');
+      setTimeout(() => navigate('/login'), 4000);
     } catch (err) { setErrorMsg(err.response?.data?.error || 'Error al registrar'); }
     finally { setIsLoading(false); }
   };
@@ -67,10 +67,10 @@ const RegisterPage = () => {
           </div>
 
           <h1 style={{ fontSize: '3.2rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.08, letterSpacing: '-0.03em' }}>
-            Registro<br />Personal o Corporativo.
+            Acceso<br />Corporativo.
           </h1>
           <p style={{ fontSize: '1.1rem', opacity: 0.85, lineHeight: 1.7, maxWidth: '420px', fontWeight: 400 }}>
-            Cree su cuenta Personal/orporativa con total seguridad y confianza.
+            Solicite su cuenta corporativa para acceder a nuestro catálogo exclusivo, cotizaciones en línea y manuales técnicos.
           </p>
         </div>
 
@@ -100,8 +100,8 @@ const RegisterPage = () => {
             />
 
             <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '0.4rem', letterSpacing: '-0.02em' }}>Crear Cuenta</h2>
-              <p className="text-secondary" style={{ fontSize: '0.88rem' }}>Complete sus datos para el registro</p>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '0.4rem', letterSpacing: '-0.02em' }}>Solicitud de Acceso</h2>
+              <p className="text-secondary" style={{ fontSize: '0.88rem' }}>Envíe sus datos para evaluación B2B</p>
             </div>
             {errorMsg && <div style={{ background: 'rgba(239,68,68,0.08)', color: 'var(--danger)', padding: '0.75rem 1rem', borderRadius: 14, marginBottom: '1rem', fontSize: '0.85rem', border: '1px solid rgba(239,68,68,0.15)', fontWeight: 500 }}>{errorMsg}</div>}
             {successMsg && <div style={{ background: 'rgba(16,185,129,0.08)', color: 'var(--success)', padding: '0.75rem 1rem', borderRadius: 14, marginBottom: '1rem', fontSize: '0.85rem', border: '1px solid rgba(16,185,129,0.15)', fontWeight: 500 }}>{successMsg}</div>}
@@ -147,7 +147,7 @@ const RegisterPage = () => {
               </div>
 
               <button type="submit" className="btn btn-primary w-full" disabled={isLoading || !allPass || !match} style={{ padding: '0.85rem', fontSize: '0.92rem', borderRadius: 14 }}>
-                {isLoading ? 'Creando...' : 'Registrarse'}
+                {isLoading ? 'Enviando Solicitud...' : 'Enviar Solicitud'}
               </button>
             </form>
             <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
