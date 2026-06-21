@@ -90,10 +90,10 @@ const App = () => {
             {/* Rutas Públicas (Sitio Web Corporativo) */}
             <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
             <Route path="/nosotros" element={<PublicLayout><NosotrosPage /></PublicLayout>} />
-            {/* Login, Registration, Recovery (Public) */}
-            <Route path="/login" element={<PublicLayout><LoginPage /></PublicLayout>} />
-            <Route path="/register" element={<PublicLayout><RegisterPage /></PublicLayout>} />
-            <Route path="/forgot-password" element={<PublicLayout><ForgotPasswordPage /></PublicLayout>} />
+            {/* Login, Registration, Recovery (Full Screen Auth Layout) */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/servicios" element={<PublicLayout><ServiciosPage /></PublicLayout>} />
             <Route path="/productos" element={<PublicLayout><ProductosPage /></PublicLayout>} />
             <Route path="/capacitaciones" element={<PublicLayout><CapacitacionesPage /></PublicLayout>} />
@@ -102,10 +102,8 @@ const App = () => {
             <Route path="/blog" element={<PublicLayout><BlogPage /></PublicLayout>} />
             <Route path="/contacto" element={<PublicLayout><ContactoPage /></PublicLayout>} />
 
-            {/* Acceso Clientes y Auth */}
-            <Route path="/login" element={<LoginPage />} />
+            {/* Autenticación MFA */}
             <Route path="/mfa" element={<MfaPage />} />
-            <Route path="/register" element={<RegisterPage />} />
             
             {/* Rutas Protegidas — Acceso según RBAC */}
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />

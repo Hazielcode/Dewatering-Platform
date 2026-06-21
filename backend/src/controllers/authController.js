@@ -47,7 +47,7 @@ export const updateProfile = async (req, res, next) => {
     const userId = req.user.userId;
     
     // We extract only the fields that are allowed to be updated by the user
-    const { full_name, phone, company, position, backup_email } = req.body;
+    const { full_name, phone, company, position, backup_email, avatar_url } = req.body;
     
     const updateData = {};
     if (full_name !== undefined) updateData.full_name = full_name;
@@ -55,6 +55,7 @@ export const updateProfile = async (req, res, next) => {
     if (company !== undefined) updateData.company = company;
     if (position !== undefined) updateData.position = position;
     if (backup_email !== undefined) updateData.backup_email = backup_email;
+    if (avatar_url !== undefined) updateData.avatar_url = avatar_url;
 
     const updatedUser = await userModel.update(userId, updateData);
     if (!updatedUser) return res.status(404).json({ error: 'Usuario no encontrado.' });

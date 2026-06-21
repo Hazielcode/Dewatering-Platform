@@ -18,7 +18,7 @@ const ProfilePage = () => {
   // Estados de Perfil
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ full_name: '', phone: '', company: '', position: '', backup_email: '' });
+  const [editForm, setEditForm] = useState({ full_name: '', phone: '', company: '', position: '', backup_email: '', avatar_url: '' });
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,8 @@ const ProfilePage = () => {
         phone: response.data.user.phone || '',
         company: response.data.user.company || '',
         position: response.data.user.position || '',
-        backup_email: response.data.user.backup_email || ''
+        backup_email: response.data.user.backup_email || '',
+        avatar_url: response.data.user.avatar_url || ''
       });
     } catch (error) {
       console.error('Error fetching profile', error);
@@ -111,6 +112,22 @@ const ProfilePage = () => {
     }
   };
 
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        setError('La imagen es demasiado grande. Máximo 2MB.');
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditForm({ ...editForm, avatar_url: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (!user || !profileData) return null;
 
   return (
@@ -123,15 +140,15 @@ const ProfilePage = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
           {/* Tarjeta de Información Personal */}
-          <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem' }}>
+          <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
               {!isEditing ? (
                 <button onClick={() => setIsEditing(true)} className="btn-ghost text-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid var(--border-color)', transition: 'all 0.2s' }}>
                   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   Editar Info
                 </button>
               ) : (
-                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '', backup_email: profileData.backup_email || '' }); }} className="btn-ghost text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.05)', transition: 'all 0.2s' }}>
+                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '', backup_email: profileData.backup_email || '', avatar_url: profileData.avatar_url || '' }); }} className="btn-ghost text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.05)', transition: 'all 0.2s' }}>
                   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   Cancelar
                 </button>
@@ -139,13 +156,35 @@ const ProfilePage = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              <div style={{
-                width: '90px', height: '90px', borderRadius: '50%', background: 'var(--accent-gradient)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-                fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', boxShadow: 'var(--shadow-glow)',
-                flexShrink: 0
-              }}>
-                {profileData.full_name ? profileData.full_name.charAt(0).toUpperCase() : 'U'}
+              
+              <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+                <div style={{
+                  width: '100px', height: '100px', borderRadius: '50%', background: 'var(--accent-gradient)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+                  fontSize: '2.5rem', fontWeight: 'bold', boxShadow: 'var(--shadow-glow)',
+                  flexShrink: 0, overflow: 'hidden'
+                }}>
+                  {isEditing && editForm.avatar_url ? (
+                    <img src={editForm.avatar_url} alt="Avatar Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : profileData.avatar_url ? (
+                    <img src={profileData.avatar_url} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    profileData.full_name ? profileData.full_name.charAt(0).toUpperCase() : 'U'
+                  )}
+                </div>
+                
+                {isEditing && (
+                  <label style={{
+                    position: 'absolute', bottom: '0', right: '0', background: 'white',
+                    width: '32px', height: '32px', borderRadius: '50%', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)', border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)'
+                  }}>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <input type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+                  </label>
+                )}
               </div>
               
               {!isEditing ? (
