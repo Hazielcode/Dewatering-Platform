@@ -128,7 +128,18 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user || !profileData) return null;
+  if (!user || !profileData) {
+    return (
+      <DashboardLayout title="Mi Perfil" subtitle="Configuración de cuenta y seguridad">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%', border: '4px solid var(--border-color)',
+            borderTopColor: 'var(--accent-primary)', animation: 'spin 1s linear infinite'
+          }} />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout title="Mi Perfil" subtitle="Configuración de cuenta y seguridad">
