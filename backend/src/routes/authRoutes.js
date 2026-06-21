@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getProfile, updateProfile } from '../controllers/authController.js';
+import { register, login, getProfile, updateProfile, checkRecoveryOptions } from '../controllers/authController.js';
 import { setupMfa, verifySetupMfa, disableMfa, loginMfa } from '../controllers/mfaController.js';
 import { requireAuth } from '../middlewares/authMiddleware.js';
 
@@ -7,6 +7,9 @@ const router = Router();
 
 router.post('/register', register);
 router.post('/login', login);
+
+// Recuperación de Contraseña
+router.post('/check-recovery', checkRecoveryOptions);
 
 // Rutas de Autenticación de Dos Pasos (MFA)
 router.post('/mfa/validate', loginMfa);

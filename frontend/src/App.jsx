@@ -10,6 +10,7 @@ import {
 } from './pages/PublicPages.jsx';
 import MfaPage from './pages/MfaPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import InventoryPage from './pages/InventoryPage.jsx';
 import StoresPage from './pages/StoresPage.jsx';
@@ -89,6 +90,10 @@ const App = () => {
             {/* Rutas Públicas (Sitio Web Corporativo) */}
             <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
             <Route path="/nosotros" element={<PublicLayout><NosotrosPage /></PublicLayout>} />
+            {/* Login, Registration, Recovery (Public) */}
+            <Route path="/login" element={<PublicLayout><LoginPage /></PublicLayout>} />
+            <Route path="/register" element={<PublicLayout><RegisterPage /></PublicLayout>} />
+            <Route path="/forgot-password" element={<PublicLayout><ForgotPasswordPage /></PublicLayout>} />
             <Route path="/servicios" element={<PublicLayout><ServiciosPage /></PublicLayout>} />
             <Route path="/productos" element={<PublicLayout><ProductosPage /></PublicLayout>} />
             <Route path="/capacitaciones" element={<PublicLayout><CapacitacionesPage /></PublicLayout>} />
