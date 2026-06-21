@@ -47,7 +47,7 @@ const PublicLayout = ({ children }) => {
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '1px solid var(--border-color)', paddingLeft: '1.75rem' }}>
             <Link to="/login" className="btn btn-primary" style={{ padding: '0.6rem 1.4rem', fontSize: '0.95rem' }}>
-              Acceso Clientes
+              Portal Corporativo
             </Link>
           </div>
         </div>

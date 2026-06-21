@@ -18,7 +18,7 @@ const ProfilePage = () => {
   // Estados de Perfil
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ full_name: '', phone: '', company: '', position: '' });
+  const [editForm, setEditForm] = useState({ full_name: '', phone: '', company: '', position: '', backup_email: '' });
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,8 @@ const ProfilePage = () => {
         full_name: response.data.user.full_name || '',
         phone: response.data.user.phone || '',
         company: response.data.user.company || '',
-        position: response.data.user.position || ''
+        position: response.data.user.position || '',
+        backup_email: response.data.user.backup_email || ''
       });
     } catch (error) {
       console.error('Error fetching profile', error);
@@ -130,7 +131,7 @@ const ProfilePage = () => {
                   Editar Info
                 </button>
               ) : (
-                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '' }); }} className="btn-ghost text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.05)', transition: 'all 0.2s' }}>
+                <button onClick={() => { setIsEditing(false); setEditForm({ full_name: profileData.full_name || '', phone: profileData.phone || '', company: profileData.company || '', position: profileData.position || '', backup_email: profileData.backup_email || '' }); }} className="btn-ghost text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', backgroundColor: 'rgba(239, 68, 68, 0.05)', transition: 'all 0.2s' }}>
                   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   Cancelar
                 </button>
@@ -171,6 +172,10 @@ const ProfilePage = () => {
                       <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Cargo</p>
                       <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 500 }}>{profileData.position || 'No registrado'}</p>
                     </div>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Correo de Respaldo</p>
+                      <p style={{ fontSize: '0.95rem', color: 'var(--accent-primary)', fontWeight: 600 }}>{profileData.backup_email || 'No configurado (Recomendado)'}</p>
+                    </div>
                   </div>
                 </>
               ) : (
@@ -195,6 +200,11 @@ const ProfilePage = () => {
                       <div className="input-group" style={{ marginBottom: 0 }}>
                         <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Cargo / Puesto</label>
                         <input className="input-control" style={{ backgroundColor: 'var(--bg-primary)' }} value={editForm.position} onChange={e => setEditForm({...editForm, position: e.target.value})} placeholder="Ej. Ingeniero de Planta" />
+                      </div>
+                      
+                      <div className="input-group" style={{ marginBottom: 0 }}>
+                        <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent-primary)' }}>Correo de Respaldo (Opcional)</label>
+                        <input type="email" className="input-control" style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--accent-light)' }} value={editForm.backup_email} onChange={e => setEditForm({...editForm, backup_email: e.target.value})} placeholder="correo.personal@gmail.com" />
                       </div>
                     </div>
                   </div>

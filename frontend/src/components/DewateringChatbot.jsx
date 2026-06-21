@@ -62,29 +62,31 @@ const DewateringChatbot = () => {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            width: '60px',
-            height: '60px',
+            width: '65px',
+            height: '65px',
             borderRadius: '50%',
-            background: 'var(--accent-gradient)',
-            color: 'white',
+            backgroundColor: 'white',
             border: 'none',
-            boxShadow: '0 4px 15px rgba(54, 124, 252, 0.4)',
+            boxShadow: '0 4px 20px rgba(54, 124, 252, 0.4)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
-            transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            overflow: 'hidden',
+            padding: 0,
+            animation: 'floatAnimation 3s ease-in-out infinite'
           }}
-          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
-          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+          onMouseOver={e => e.currentTarget.style.animationPlayState = 'paused'}
+          onMouseOut={e => e.currentTarget.style.animationPlayState = 'running'}
         >
           <style>
             {`
               @keyframes floatAnimation {
-                0% { transform: translateY(0px) scale(1); }
-                50% { transform: translateY(-5px) scale(1.05); }
-                100% { transform: translateY(0px) scale(1); }
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-8px); }
+                100% { transform: translateY(0px); }
               }
             `}
           </style>
@@ -92,10 +94,9 @@ const DewateringChatbot = () => {
             src="/chatbot-mascot.png" 
             alt="Chatbot" 
             style={{ 
-              width: '80%', 
-              height: '80%', 
-              objectFit: 'contain',
-              animation: 'floatAnimation 3s ease-in-out infinite'
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover'
             }} 
           />
         </button>

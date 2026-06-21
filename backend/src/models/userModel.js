@@ -25,7 +25,7 @@ class UserModel {
   }
 
   async findById(id) {
-    const sql = `SELECT id, email, full_name, phone, company, position, role, is_active, mfa_enabled, avatar_url, created_at, updated_at FROM users WHERE id = $1;`;
+    const sql = `SELECT id, email, full_name, phone, company, position, role, is_active, mfa_enabled, backup_email, avatar_url, created_at, updated_at FROM users WHERE id = $1;`;
     const result = await query(sql, [id]);
     return result.rows[0];
   }
@@ -72,7 +72,7 @@ class UserModel {
     const values = [];
     let idx = 1;
 
-    const allowedFields = ['full_name', 'phone', 'company', 'position', 'role', 'is_active', 'avatar_url', 'mfa_enabled', 'mfa_secret'];
+    const allowedFields = ['full_name', 'phone', 'company', 'position', 'role', 'is_active', 'avatar_url', 'mfa_enabled', 'mfa_secret', 'backup_email'];
     for (const field of allowedFields) {
       if (data[field] !== undefined) {
         fields.push(`${field} = $${idx++}`);
