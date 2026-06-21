@@ -141,9 +141,9 @@ const LoginPage = () => {
                   <input type="checkbox" style={{ accentColor: 'var(--accent-primary)', width: 16, height: 16 }} />
                   Recordar sesión
                 </label>
-                <Link to="/forgot-password" style={{ color: 'var(--accent-primary)', fontSize: '0.82rem', textDecoration: 'none', fontWeight: 600 }}>
+                <button type="button" onClick={(e) => { e.preventDefault(); navigate('/forgot-password'); }} style={{ color: 'var(--accent-primary)', fontSize: '0.82rem', textDecoration: 'none', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                   ¿Olvidó su contraseña?
-                </Link>
+                </button>
               </div>
 
               <button type="submit" className="btn btn-primary w-full" disabled={isLoading}

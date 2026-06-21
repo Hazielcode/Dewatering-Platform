@@ -11,8 +11,8 @@ router.get('/', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.getAll);
 router.get('/stats', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.getStats);
 router.get('/:id', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.getById);
 router.put('/:id', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.update);
-router.patch('/:id/toggle', requireRole(['SUPER_ADMIN']), userCtrl.toggleActive);
-router.patch('/:id/password', requireRole(['SUPER_ADMIN']), userCtrl.changePassword);
-router.delete('/:id', requireRole(['SUPER_ADMIN']), userCtrl.remove);
+router.patch('/:id/toggle', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.toggleActive);
+router.patch('/:id/password', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.changePassword);
+router.delete('/:id', requireRole(['SUPER_ADMIN', 'ADMIN']), userCtrl.remove);
 
 export default router;

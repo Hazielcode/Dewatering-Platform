@@ -25,8 +25,9 @@ const navItems = [
     { label: 'Mis Documentos', icon: Package, path: '/client/documents', roles: ['CLIENT'] },
   ]},
   { section: 'Configuración', items: [
-    { label: 'Auditoría', icon: ShieldAlert, path: '/audit', roles: ['SUPER_ADMIN'] },
-    { label: 'Roles y Usuarios', icon: Users, path: '/roles', roles: ['SUPER_ADMIN'] },
+    { label: 'Aprobación Clientes', icon: ShieldAlert, path: '/approvals', roles: ['SUPER_ADMIN', 'ADMIN'] },
+    { label: 'Auditoría', icon: ShieldAlert, path: '/audit', roles: ['SUPER_ADMIN', 'ADMIN'] },
+    { label: 'Roles y Usuarios', icon: Users, path: '/roles', roles: ['SUPER_ADMIN', 'ADMIN'] },
   ]},
 ];
 
