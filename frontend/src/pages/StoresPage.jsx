@@ -12,7 +12,7 @@ const StoresPage = () => {
   const [error, setError] = useState('');
 
   const fetchStores = async () => {
-    try { const res = await api.get('/stores'); setStores(res.data || []); }
+    try { const res = await api.get('/stores'); setStores(res.data?.stores || res.data || []); }
     catch { setStores([]); }
     finally { setLoading(false); }
   };

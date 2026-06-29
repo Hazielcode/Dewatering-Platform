@@ -12,7 +12,7 @@ const StaffPage = () => {
   const fetchData = async () => {
     try {
       const [uRes, rRes] = await Promise.all([api.get('/users'), api.get('/roles')]);
-      setUsers(uRes.data || []); setRoles(rRes.data || []);
+      setUsers(uRes.data?.users || uRes.data || []); setRoles(rRes.data?.roles || rRes.data || []);
     } catch { setUsers([]); setRoles([]); }
     finally { setLoading(false); }
   };

@@ -12,8 +12,9 @@ const RolesPage = () => {
   const [error, setError] = useState('');
 
   const fetch = async () => {
-    try { const r = await api.get('/roles'); setRoles(r.data||[]); }
+    try { const r = await api.get('/roles'); setRoles(r.data.roles || r.data || []); }
     catch { setRoles([]); }
+    finally { setLoading(false); }
     finally { setLoading(false); }
   };
   useEffect(() => { fetch(); }, []);

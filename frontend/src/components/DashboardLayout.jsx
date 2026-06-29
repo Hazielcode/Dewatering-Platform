@@ -12,12 +12,12 @@ const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   ]},
   { section: 'CRM / Comercial', items: [
-    { label: 'Leads (Prospectos)', icon: Users, path: '/leads', roles: ['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL'] },
-    { label: 'Cotizaciones', icon: FileText, path: '/quotations', roles: ['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL'] },
+    { label: 'Leads (Prospectos)', icon: Users, path: '/leads', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
   ]},
   { section: 'Operaciones', items: [
-    { label: 'Proyectos', icon: Store, path: '/projects', roles: ['SUPER_ADMIN', 'ADMIN', 'ENGINEER'] },
-    { label: 'Documentos', icon: Package, path: '/documents', roles: ['SUPER_ADMIN', 'ADMIN', 'ENGINEER'] },
+    { label: 'Inventario', icon: Package, path: '/inventory', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
+    { label: 'Sucursales', icon: Store, path: '/stores', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
+    { label: 'Personal', icon: Users, path: '/staff', roles: ['SUPER_ADMIN', 'ADMIN'] },
   ]},
   { section: 'Área del Cliente', items: [
     { label: 'Mis Proyectos', icon: Store, path: '/client/projects', roles: ['CLIENT'] },
@@ -56,8 +56,7 @@ const DashboardLayout = ({ children, title, subtitle }) => {
   const roleColors = {
     SUPER_ADMIN: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444' },
     ADMIN: { bg: 'rgba(139,92,246,0.1)', color: '#8b5cf6' },
-    COMMERCIAL: { bg: 'rgba(37,99,235,0.1)', color: '#2563eb' },
-    ENGINEER: { bg: 'rgba(245,158,11,0.1)', color: '#f59e0b' },
+    OPERATOR: { bg: 'rgba(37,99,235,0.1)', color: '#2563eb' },
     CLIENT: { bg: 'rgba(16,185,129,0.1)', color: '#10b981' },
   };
   const roleBadge = roleColors[primaryRole] || { bg: 'rgba(100,100,100,0.08)', color: 'var(--text-secondary)' };

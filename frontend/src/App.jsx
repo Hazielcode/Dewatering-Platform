@@ -108,10 +108,10 @@ const App = () => {
             
             {/* Rutas Protegidas — Acceso según RBAC */}
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-            <Route path="/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-            <Route path="/stores" element={<ProtectedRoute requiredRoles={['Admin', 'Gerente', 'Empleado', 'Auditor']}><StoresPage /></ProtectedRoute>} />
-            <Route path="/staff" element={<ProtectedRoute requiredRoles={['Admin']}><StaffPage /></ProtectedRoute>} />
-            <Route path="/audit" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'Auditor']}><AuditPage /></ProtectedRoute>} />
+            <Route path="/inventory" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'OPERATOR']}><InventoryPage /></ProtectedRoute>} />
+            <Route path="/stores" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'OPERATOR']}><StoresPage /></ProtectedRoute>} />
+            <Route path="/staff" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><StaffPage /></ProtectedRoute>} />
+            <Route path="/audit" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><AuditPage /></ProtectedRoute>} />
             <Route path="/roles" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><RolesPage /></ProtectedRoute>} />
             <Route path="/approvals" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><ApprovalsPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
@@ -122,7 +122,7 @@ const App = () => {
             <Route path="/client/documents" element={<ProtectedRoute requiredRoles={['CLIENT']}><ClientDocumentsPage /></ProtectedRoute>} />
 
             {/* Rutas CRM */}
-            <Route path="/leads" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL']}><LeadsPage /></ProtectedRoute>} />
+            <Route path="/leads" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'OPERATOR']}><LeadsPage /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" />} />

@@ -15,7 +15,7 @@ const InventoryPage = () => {
   const fetchProducts = async () => {
     try {
       const res = await api.get('/products');
-      setProducts(res.data || []);
+      setProducts(res.data.products || res.data || []);
     } catch { setProducts([]); }
     finally { setLoading(false); }
   };

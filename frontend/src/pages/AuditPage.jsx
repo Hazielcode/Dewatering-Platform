@@ -31,8 +31,8 @@ const AuditPage = () => {
         api.get(`/audit?${params.toString()}`),
         api.get('/audit/stats'),
       ]);
-      setLogs(logsRes.data || []);
-      setStats(statsRes.data || null);
+      setLogs(logsRes.data?.logs || logsRes.data || []);
+      setStats(statsRes.data?.stats || statsRes.data || null);
     } catch { setLogs([]); }
     finally { setLoading(false); }
   };

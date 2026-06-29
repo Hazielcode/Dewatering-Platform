@@ -105,11 +105,11 @@ const DashboardPage = () => {
         api.get('/audit/stats'),
       ]);
 
-      if (results[0].status === 'fulfilled') setUserStats(results[0].value.data);
-      if (results[1].status === 'fulfilled') setProductStats(results[1].value.data);
-      if (results[2].status === 'fulfilled') setStoreCount(results[2].value.data?.length || 0);
-      if (results[3].status === 'fulfilled') setAuditLogs(results[3].value.data || []);
-      if (results[4].status === 'fulfilled') setAuditStats(results[4].value.data);
+      if (results[0].status === 'fulfilled') setUserStats(results[0].value.data.stats || results[0].value.data);
+      if (results[1].status === 'fulfilled') setProductStats(results[1].value.data.stats || results[1].value.data);
+      if (results[2].status === 'fulfilled') setStoreCount(results[2].value.data.length || 0);
+      if (results[3].status === 'fulfilled') setAuditLogs(results[3].value.data.logs || results[3].value.data || []);
+      if (results[4].status === 'fulfilled') setAuditStats(results[4].value.data.stats || results[4].value.data);
 
       // Si al menos una petición tuvo éxito, marcar como live
       if (results.some(r => r.status === 'fulfilled')) setIsLive(true);
@@ -124,14 +124,14 @@ const DashboardPage = () => {
   const kpis = [
     { 
       label: 'Usuarios Activos', 
-      value: userStats ? userStats.activos.toLocaleString() : '—', 
-      change: userStats ? `${userStats.con_mfa} con MFA` : '—', 
+      value: userStats?.activos !== undefined ? userStats.activos.toLocaleString() : '—', 
+      change: userStats?.con_mfa !== undefined ? `${userStats.con_mfa} con MFA` : '—', 
       up: true, icon: Users, color: '#2563eb', bg: 'rgba(37,99,235,0.08)' 
     },
     { 
       label: 'Ítems Inventario', 
-      value: productStats ? productStats.total.toLocaleString() : '—',
-      change: productStats ? `${productStats.bajo_stock} bajo stock` : '—', 
+      value: productStats?.total !== undefined ? productStats.total.toLocaleString() : '—',
+      change: productStats?.bajo_stock !== undefined ? `${productStats.bajo_stock} bajo stock` : '—', 
       up: productStats ? productStats.bajo_stock === 0 : true, 
       icon: Package, color: '#10b981', bg: 'rgba(16,185,129,0.08)' 
     },
@@ -143,8 +143,8 @@ const DashboardPage = () => {
     },
     { 
       label: 'Eventos Auditoría', 
-      value: auditStats ? auditStats.total.toLocaleString() : '—', 
-      change: auditStats ? `${auditStats.last24h} últimas 24h` : '—', 
+      value: auditStats?.total !== undefined ? auditStats.total.toLocaleString() : '—', 
+      change: auditStats?.last24h !== undefined ? `${auditStats.last24h} últimas 24h` : '—', 
       up: false, icon: ShieldAlert, color: '#ef4444', bg: 'rgba(239,68,68,0.08)' 
     },
   ];

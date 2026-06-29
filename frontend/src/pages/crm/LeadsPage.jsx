@@ -20,7 +20,7 @@ const LeadsPage = () => {
   const fetchLeads = async () => {
     try {
       const res = await api.get('/leads');
-      setLeads(res.data || []);
+      setLeads(res.data?.leads || res.data || []);
     } catch (error) {
       console.error('Error fetching leads:', error);
     } finally {
