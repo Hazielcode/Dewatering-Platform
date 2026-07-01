@@ -11,10 +11,8 @@ const errorHandler = (err, req, res, _next) => {
 
   if (err.name === 'ValidationError') return res.status(400).json({ error: err.message });
 
-  const statusCode = err.statusCode || 500;
-  const message = process.env.NODE_ENV === 'production'
-    ? 'Error interno del servidor.'
-    : err.message || 'Error interno del servidor.';
+  const statusCode = err.statusCode || (err.message ? 400 : 500);
+  const message = err.message || 'Error interno del servidor.';
 
   res.status(statusCode).json({ error: message });
 };
