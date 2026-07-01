@@ -259,35 +259,6 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Audit Table — Datos Reales */}
-      <div className={`card ${loaded ? 'animate-fade-in' : ''}`} style={{ animationDelay: '0.5s' }}>
-        <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div><h3 style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><FileText size={18} color="var(--accent-primary)"/> Actividad Reciente</h3><p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Últimas acciones del Gran Ojo {isLive && `(${auditStats?.total || 0} registros totales)`}</p></div>
-          <button className="btn" onClick={() => navigate('/audit')} style={{ background: 'transparent', color: 'var(--accent-primary)', fontSize: '0.85rem', border: 'none', cursor: 'pointer' }}>Ver todo <ChevronRight size={16}/></button>
-        </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead><tr style={{ borderBottom: '1px solid var(--border-color)' }}>{['Acción','Entidad','Detalle','Usuario','Fecha'].map(h=><th key={h} style={{ textAlign: 'left', padding: '0.75rem 1.5rem', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>)}</tr></thead>
-            <tbody>
-              {displayLogs.length === 0 ? (
-                <tr><td colSpan={5} style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                  {isLive ? 'Sin registros de auditoría aún' : 'Conecte PostgreSQL para ver la actividad en tiempo real'}
-                </td></tr>
-              ) : displayLogs.map((log, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)', transition: 'all 0.2s', cursor: 'pointer' }} onMouseEnter={e=>e.currentTarget.style.backgroundColor='var(--accent-light)'} onMouseLeave={e=>e.currentTarget.style.backgroundColor='transparent'}>
-                  <td style={{ padding: '0.85rem 1.5rem' }}><ActionBadge action={log.accion}/></td>
-                  <td style={{ padding: '0.85rem 1.5rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)' }}>{log.entidad}</td>
-                  <td style={{ padding: '0.85rem 1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {log.datos_nuevos ? JSON.stringify(log.datos_nuevos).slice(0, 50) : log.datos_anteriores ? JSON.stringify(log.datos_anteriores).slice(0, 50) : `Entidad #${log.entidad_id}`}
-                  </td>
-                  <td style={{ padding: '0.85rem 1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{log.usuario_email || '—'}</td>
-                  <td style={{ padding: '0.85rem 1.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{log.fecha ? new Date(log.fecha).toLocaleString('es-PE') : '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </DashboardLayout>
   );
 };
