@@ -2,8 +2,13 @@ import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
+const apiKey = process.env.GEMINI_API_KEY;
+let ai;
+if (apiKey) {
+  ai = new GoogleGenAI({ apiKey });
+} else {
+  console.warn('[Dewatering] ⚠️ GEMINI_API_KEY no está configurada en el entorno.');
+}
 // Contexto inicial del sistema (System Prompt RAG simulado)
 const systemContext = `
 Eres el "Ingeniero Virtual" de Dewatering Solutions.
@@ -20,6 +25,10 @@ export const chatWithBot = async (req, res) => {
     
     if (!message) {
       return res.status(400).json({ error: 'El mensaje no puede estar vacío.' });
+    }
+
+    if (!ai) {
+      return res.status(503).json({ error: 'El servicio de IA no está configurado en el servidor (GEMINI_API_KEY faltante).' });
     }
 
     // El historial que viene del frontend no tiene el formato exacto del nuevo SDK
