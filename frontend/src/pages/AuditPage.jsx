@@ -4,12 +4,12 @@ import { Search, Filter, Download, ShieldAlert } from 'lucide-react';
 import api from '../services/api.js';
 
 const badgeMap = { 
-  CREATE: { bg:'rgba(16,185,129,0.1)', color:'#10b981', label:'Creación' }, 
-  UPDATE: { bg:'rgba(37,99,235,0.1)', color:'#2563eb', label:'Edición' }, 
-  DELETE: { bg:'rgba(239,68,68,0.1)', color:'#ef4444', label:'Eliminación' },
-  ASSIGN_ROLE: { bg:'rgba(139,92,246,0.1)', color:'#8b5cf6', label:'Asignación' },
-  REVOKE_ROLE: { bg:'rgba(245,158,11,0.1)', color:'#f59e0b', label:'Revocación' },
-  TOGGLE_STATUS: { bg:'rgba(6,182,212,0.1)', color:'#06b6d4', label:'Estado' },
+  CREATE: { bg:'rgba(16,185,129,0.1)', color:'#10b981', label:'CREATE' }, 
+  UPDATE: { bg:'rgba(37,99,235,0.1)', color:'#2563eb', label:'UPDATE' }, 
+  DELETE: { bg:'rgba(239,68,68,0.1)', color:'#ef4444', label:'DELETE' },
+  ASSIGN_ROLE: { bg:'rgba(139,92,246,0.1)', color:'#8b5cf6', label:'ASSIGN_ROLE' },
+  REVOKE_ROLE: { bg:'rgba(245,158,11,0.1)', color:'#f59e0b', label:'REVOKE_ROLE' },
+  TOGGLE_STATUS: { bg:'rgba(6,182,212,0.1)', color:'#06b6d4', label:'TOGGLE_STATUS' },
 };
 
 const AuditPage = () => {
@@ -41,9 +41,22 @@ const AuditPage = () => {
 
   const filtered = logs.filter(l => JSON.stringify(l).toLowerCase().includes(search.toLowerCase()));
 
-  // Obtener valores únicos para los filtros
-  const uniqueEntities = [...new Set(logs.map(l => l.entidad).filter(Boolean))];
-  const uniqueActions = [...new Set(logs.map(l => l.accion).filter(Boolean))];
+  const entityNameMap = { 
+    'users': 'Usuarios', 'user': 'Usuarios',
+    'products': 'Inventario', 'product': 'Inventario', 
+    'stores': 'Sucursales', 'store': 'Sucursales', 
+    'leads': 'Prospectos', 'lead': 'Prospectos',
+    'roles': 'Roles y Permisos', 'role': 'Roles y Permisos',
+    'approvals': 'Aprobaciones', 'approval': 'Aprobaciones'
+  };
+
+  // Obtener valores únicos para los filtros, ya traducidos
+  const uniqueEntities = [...new Set(logs.map(l => {
+    const raw = String(l.entity || l.entidad || '').toLowerCase().trim();
+    return entityNameMap[raw] || raw;
+  }).filter(Boolean))];
+  
+  const uniqueActions = [...new Set(logs.map(l => (l.action || l.accion || '').toUpperCase()).filter(Boolean))];
 
   return (
     <DashboardLayout title="Auditoría" subtitle="Registro inmutable de acciones del sistema (Gran Ojo)">
@@ -69,14 +82,15 @@ const AuditPage = () => {
             </div>
           </div>
           {stats.byAction?.slice(0, 2).map((a, i) => {
-            const badge = badgeMap[a.accion] || { bg:'rgba(100,100,100,0.08)', color:'#666' };
+            const actionKey = (a.action || a.accion || '').toUpperCase();
+            const badge = badgeMap[actionKey] || { bg:'rgba(100,100,100,0.08)', color:'#666', label: actionKey };
             return (
               <div key={i} className="card" style={{ padding: '1.25rem 1.5rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
                 <div style={{ width:40, height:40, borderRadius:'10px', backgroundColor:badge.bg, display:'flex', alignItems:'center', justifyContent:'center' }}>
                   <ShieldAlert size={20} color={badge.color}/>
                 </div>
                 <div>
-                  <p style={{ fontSize:'0.72rem', color:'var(--text-secondary)', textTransform:'uppercase', fontWeight:600, letterSpacing:'0.05em' }}>{a.accion}</p>
+                  <p style={{ fontSize:'0.72rem', color:'var(--text-secondary)', textTransform:'uppercase', fontWeight:600, letterSpacing:'0.05em' }}>{badge.label}</p>
                   <h4 style={{ fontSize:'1.3rem', fontWeight:700, color:'var(--text-primary)' }}>{a.count}</h4>
                 </div>
               </div>
@@ -93,11 +107,11 @@ const AuditPage = () => {
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
           <Filter size={15} color="var(--text-secondary)"/>
-          <select className="input-control" value={filterEntity} onChange={e => { setFilterEntity(e.target.value); setLoading(true); }} style={{ padding:'0.5rem', fontSize:'0.82rem', maxWidth:160 }}>
+          <select className="input-control" value={filterEntity} onChange={e => { setFilterEntity(e.target.value); setLoading(true); }} style={{ padding:'0.5rem 2.2rem 0.5rem 0.75rem', fontSize:'0.85rem', minWidth:170, cursor:'pointer', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>
             <option value="">Todas las entidades</option>
             {uniqueEntities.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
-          <select className="input-control" value={filterAction} onChange={e => { setFilterAction(e.target.value); setLoading(true); }} style={{ padding:'0.5rem', fontSize:'0.82rem', maxWidth:160 }}>
+          <select className="input-control" value={filterAction} onChange={e => { setFilterAction(e.target.value); setLoading(true); }} style={{ padding:'0.5rem 2.2rem 0.5rem 0.75rem', fontSize:'0.85rem', minWidth:170, cursor:'pointer', whiteSpace:'nowrap', textOverflow:'ellipsis' }}>
             <option value="">Todas las acciones</option>
             {uniqueActions.map(a => <option key={a} value={a}>{a}</option>)}
           </select>
@@ -108,25 +122,37 @@ const AuditPage = () => {
       <div className="card"><div style={{ overflowX:'auto' }}>
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead><tr style={{ borderBottom:'1px solid var(--border-color)' }}>
-            {['Acción','Entidad','ID','Usuario','IP','Datos Anteriores','Datos Nuevos','Fecha'].map(h=><th key={h} style={{ textAlign:'left',padding:'0.75rem 1.25rem',fontSize:'0.72rem',fontWeight:600,color:'var(--text-secondary)',textTransform:'uppercase',letterSpacing:'0.06em' }}>{h}</th>)}
+            {['Acción','Módulo Afectado','ID Registro','Responsable','Detalle del Cambio','Fecha'].map(h=><th key={h} style={{ textAlign:'left',padding:'0.75rem 1.25rem',fontSize:'0.72rem',fontWeight:600,color:'var(--text-secondary)',textTransform:'uppercase',letterSpacing:'0.06em' }}>{h}</th>)}
           </tr></thead>
           <tbody>
-            {loading ? <tr><td colSpan={8} style={{ padding:'3rem',textAlign:'center',color:'var(--text-secondary)' }}>Cargando logs...</td></tr>
-            : filtered.length===0 ? <tr><td colSpan={8} style={{ padding:'3rem',textAlign:'center',color:'var(--text-secondary)' }}>Sin registros de auditoría.</td></tr>
+            {loading ? <tr><td colSpan={6} style={{ padding:'3rem',textAlign:'center',color:'var(--text-secondary)' }}>Cargando logs...</td></tr>
+            : filtered.length===0 ? <tr><td colSpan={6} style={{ padding:'3rem',textAlign:'center',color:'var(--text-secondary)' }}>Sin registros de auditoría.</td></tr>
             : filtered.map((l,i)=>{
-              const b = badgeMap[l.accion] || { bg:'rgba(100,100,100,0.1)',color:'#666',label:l.accion };
+              const actionKey = (l.action || l.accion || '').toUpperCase();
+              const b = badgeMap[actionKey] || { bg:'rgba(100,100,100,0.1)',color:'#666',label:actionKey };
+              
+              const formatJson = (data) => {
+                if (!data) return '—';
+                if (typeof data !== 'object') return data;
+                return Object.entries(data).map(([k,v]) => `${k}: ${v}`).join(' | ');
+              };
+
+              const newDataStr = formatJson(l.new_data || l.datos_nuevos || l.old_data || l.datos_anteriores);
+              const entityId = (l.entity_id || l.entidad_id || '').toString();
+              
+              const entityRaw = String(l.entity || l.entidad || '').toLowerCase().trim();
+              const friendlyEntity = entityNameMap[entityRaw] || entityRaw;
+
               return (
                 <tr key={i} style={{ borderBottom:'1px solid var(--border-color)',transition:'background 0.15s' }}
                   onMouseEnter={e=>e.currentTarget.style.backgroundColor='var(--accent-light)'}
                   onMouseLeave={e=>e.currentTarget.style.backgroundColor='transparent'}>
                   <td style={{ padding:'0.85rem 1.25rem' }}><span style={{ display:'inline-flex',alignItems:'center',gap:4,padding:'0.2rem 0.55rem',borderRadius:100,fontSize:'0.72rem',fontWeight:600,backgroundColor:b.bg,color:b.color }}><span style={{ width:5,height:5,borderRadius:'50%',backgroundColor:b.color }}></span>{b.label}</span></td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.85rem',fontWeight:500,color:'var(--text-primary)' }}>{l.entidad}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.82rem',color:'var(--text-secondary)',fontFamily:'monospace' }}>#{l.entidad_id || '—'}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.85rem',color:'var(--text-secondary)',fontFamily:'monospace' }}>{l.usuario_email||l.usuario_id||'—'}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.8rem',color:'var(--text-secondary)',fontFamily:'monospace' }}>{l.ip_address||'—'}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.75rem',color:'var(--text-secondary)',maxWidth:180,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={l.datos_anteriores ? JSON.stringify(l.datos_anteriores) : ''}>{l.datos_anteriores ? JSON.stringify(l.datos_anteriores).slice(0,50)+'...' : '—'}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.75rem',color:'var(--text-secondary)',maxWidth:180,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={l.datos_nuevos ? JSON.stringify(l.datos_nuevos) : ''}>{l.datos_nuevos ? JSON.stringify(l.datos_nuevos).slice(0,50)+'...' : '—'}</td>
-                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.8rem',color:'var(--text-secondary)' }}>{l.fecha ? new Date(l.fecha).toLocaleString('es-PE') : '—'}</td>
+                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.85rem',fontWeight:600,color:'var(--text-primary)', textTransform:'uppercase' }}>{friendlyEntity || '—'}</td>
+                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.82rem',color:'var(--text-secondary)',fontFamily:'monospace' }}>{entityId ? `#${entityId.slice(0,8)}...` : '—'}</td>
+                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.85rem',color:'var(--text-primary)', fontWeight:500 }}>{l.user_email || l.usuario_email || l.user_id || l.usuario_id || '—'}</td>
+                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.8rem',color:'var(--text-secondary)',maxWidth:300,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }} title={newDataStr}>{newDataStr}</td>
+                  <td style={{ padding:'0.85rem 1.25rem',fontSize:'0.8rem',color:'var(--text-secondary)' }}>{(l.created_at || l.fecha) ? new Date(l.created_at || l.fecha).toLocaleString('es-PE') : '—'}</td>
                 </tr>
               );
             })}
