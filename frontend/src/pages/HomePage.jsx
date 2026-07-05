@@ -5,6 +5,7 @@ import {
   Factory, Filter, Layers, Waves, Droplets, Target, Users, Settings, Award 
 } from 'lucide-react';
 import axios from 'axios';
+import HeroBackground from '../components/HeroBackground.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -52,11 +53,13 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* 1. SECTION: HERO (BANNER PRINCIPAL CON PARALLAX) */}
-      <section className="parallax-bg" style={{
+      {/* 1. SECTION: HERO (ANIMATED INTERACTIVE BACKGROUND) */}
+      <section style={{
         padding: '8rem 5%', display: 'flex', flexDirection: 'column',
-        alignItems: 'center', textAlign: 'center', minHeight: '85vh', justifyContent: 'center'
+        alignItems: 'center', textAlign: 'center', minHeight: '85vh', justifyContent: 'center',
+        position: 'relative', overflow: 'hidden'
       }}>
+        <HeroBackground />
         <div style={{ position: 'relative', zIndex: 1, maxWidth: '900px' }} className="animate-fade-in">
           <div className="glass-panel" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '0.5rem 1.25rem', borderRadius: '99px', color: '#ffffff', fontWeight: 600, fontSize: '0.9rem', marginBottom: '2rem' }}>
             <Award size={18} color="#3b82f6" /> Certificados con ISO 9001 & ISO 45001:2018
