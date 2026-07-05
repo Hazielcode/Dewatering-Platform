@@ -89,7 +89,6 @@ const ServiciosPage = () => {
                   src={cat.img} 
                   alt={cat.titulo} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1200&q=80'; }}
                 />
               </div>
               <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>

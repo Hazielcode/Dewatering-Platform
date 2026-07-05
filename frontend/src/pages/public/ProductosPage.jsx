@@ -78,7 +78,6 @@ const ProductosPage = () => {
                   src={marca.img} 
                   alt={marca.nombre} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80'; }} 
                 />
                 <span style={{ position: 'absolute', top: '15px', right: '15px', fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'rgba(255,255,255,0.9)', padding: '0.4rem 1rem', borderRadius: '20px', color: 'var(--text-primary)', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
                   {marca.pais}

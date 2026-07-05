@@ -62,15 +62,7 @@ const PublicLayout = ({ children }) => {
       <footer style={{ backgroundColor: '#0f172a', color: '#f8fafc', padding: '5rem 5% 2rem', marginTop: 'auto' }}>
         <div style={{ maxWidth: '1300px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
           
-          {/* Logo Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', gridColumn: '1 / -1', '@media (minWidth: 1024px)': { gridColumn: 'span 2' } }}>
-            <div style={{ display: 'flex', alignItems: 'center', margin: '-10px 0' }}>
-              <img className="logo-dark-bg" src="/logodewatering.png" alt="Dewatering Solutions" style={{ height: '130px', width: 'auto', objectFit: 'contain', transform: 'scale(1.2)', transformOrigin: 'left center' }} />
-            </div>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '300px' }}>
-              Especialistas en separación sólido-líquido, procesos metalúrgicos y tratamiento de aguas para la gran industria minera.
-            </p>
-          </div>
+
 
           {/* Col 1: Nosotros */}
           <div>

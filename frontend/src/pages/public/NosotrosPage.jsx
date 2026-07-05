@@ -7,7 +7,7 @@ const NosotrosPage = () => {
       
       {/* HERO SECTION */}
       <section style={{
-        background: 'linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url("https://images.unsplash.com/photo-1574684065660-84dc096eeb85?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        background: 'linear-gradient(rgba(10, 22, 40, 0.8), rgba(10, 22, 40, 0.9)), url("/images/nosotros-hero.webp")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: '6rem 5%',
@@ -48,7 +48,7 @@ const NosotrosPage = () => {
             height: '100%', minHeight: '400px', position: 'relative'
           }}>
             <img 
-              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+              src="/images/laboratorio-equipo.webp" 
               alt="Ingeniería en planta" 
               style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
             />

@@ -86,7 +86,6 @@ const ProyectosPage = () => {
                   src={proy.img} 
                   alt={proy.titulo} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1578319439584-10402039a0e1?auto=format&fit=crop&w=800&q=80'; }} 
                 />
               </div>
               <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>

@@ -110,9 +110,9 @@ const HomePage = () => {
             </ul>
             <Link to="/nosotros" className="btn btn-primary">Descubra Nuestra Historia <ArrowRight size={16}/></Link>
           </div>
-          <div style={{ flex: '1 1 400px', height: '400px', borderRadius: 'var(--radius-xl)', background: 'var(--accent-gradient)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Users size={80} color="rgba(255,255,255,0.2)" />
-            <div style={{ position: 'absolute', bottom: 0, width: '100%', padding: '2rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+          <div style={{ flex: '1 1 400px', height: '400px', borderRadius: 'var(--radius-xl)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-md)' }}>
+            <img src="/images/equipo-dewatering.webp" alt="Equipo Dewatering Solutions" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', bottom: 0, width: '100%', padding: '2rem', background: 'linear-gradient(to top, rgba(15,23,42,0.9), transparent)' }}>
               <p style={{ color: 'white', fontWeight: 600, fontSize: '1.1rem' }}>"Innovación y eficiencia para la industria del futuro."</p>
             </div>
           </div>
@@ -168,8 +168,14 @@ const HomePage = () => {
             <div className="grid-2">
               {products.map(product => (
                 <div key={product.id} className="card hover-float" style={{ display: 'flex', padding: '1.5rem', gap: '2rem', alignItems: 'center' }}>
-                  <div style={{ width: '120px', height: '120px', background: 'var(--bg-primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)' }}>
-                    <Factory size={48} color="var(--text-secondary)" opacity={0.3} />
+                  <div style={{ width: '120px', height: '120px', background: 'var(--bg-primary)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+                    <img 
+                      src={`/images/${product.slug === 'filtro-prensa-dewatering' ? 'filtro-prensa' : product.slug === 'espesador-clarificador-roytec' ? 'espesador-roytec' : product.slug === 'bomba-centrifuga-pemo' ? 'bomba-pemo' : 'centrifuga'}.webp`} 
+                      alt={product.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }}
+                    />
+                    <Factory size={48} color="var(--text-secondary)" opacity={0.3} style={{ display: 'none' }} />
                   </div>
                   <div>
                     <span className="badge badge-success" style={{ marginBottom: '0.5rem' }}>{product.category}</span>
@@ -192,14 +198,18 @@ const HomePage = () => {
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem' }}>Experiencia Comprobada</h2>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 3rem' }}>Conozca cómo hemos resuelto desafíos complejos en plantas mineras de primer nivel.</p>
           <div className="grid-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-            {[1, 2, 3].map(i => (
+            {[
+              { title: 'Planta de Filtrado', desc: 'Instalación en mina Chungar.', img: 'chungar.webp' },
+              { title: 'Planta Piloto', desc: 'Tratamiento de tierras raras en Chile.', img: 'biolantanidos.webp' },
+              { title: 'Tratamiento de Aguas', desc: 'Sistema de neutralización y filtrado.', img: 'shahuindo.webp' }
+            ].map((proj, i) => (
               <div key={i} className="card hover-float" style={{ overflow: 'hidden', padding: 0 }}>
-                <div style={{ height: '200px', background: 'var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Target size={48} color="var(--text-secondary)" opacity={0.2} />
+                <div style={{ height: '200px', background: 'var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  <img src={`/images/${proj.img}`} alt={proj.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Proyecto Industrial #{i}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Instalación y puesta en marcha de planta de filtración de relaves a gran escala.</p>
+                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{proj.title}</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{proj.desc}</p>
                 </div>
               </div>
             ))}
