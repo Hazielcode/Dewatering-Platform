@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
 import { FileText, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const ClientQuotationsPage = () => {
   const [quotations, setQuotations] = useState([
@@ -32,16 +33,38 @@ const ClientQuotationsPage = () => {
 
   const handleApprove = (id) => {
     setQuotations(prev => prev.map(q => q.id === id ? { ...q, status: 'approved' } : q));
-    alert('Cotización ' + id + ' aprobada exitosamente. El equipo ha sido notificado.');
+    Swal.fire({
+      title: 'Aprobada',
+      text: `Cotización ${id} aprobada exitosamente. El equipo ha sido notificado.`,
+      icon: 'success',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)',
+      confirmButtonColor: '#10b981'
+    });
   };
 
   const handleReject = (id) => {
     setQuotations(prev => prev.map(q => q.id === id ? { ...q, status: 'rejected' } : q));
-    alert('Cotización ' + id + ' rechazada. Nos pondremos en contacto para reevaluar la propuesta.');
+    Swal.fire({
+      title: 'Rechazada',
+      text: `Cotización ${id} rechazada. Nos pondremos en contacto para reevaluar la propuesta.`,
+      icon: 'error',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)',
+      confirmButtonColor: '#ef4444'
+    });
   };
 
   const handleDownload = (id) => {
-    alert('Descargando archivo encriptado: ' + id + '_Propuesta_Tecnica.pdf');
+    Swal.fire({
+      title: 'Descargando',
+      text: `Descargando archivo encriptado: ${id}_Propuesta_Tecnica.pdf`,
+      icon: 'info',
+      timer: 2000,
+      showConfirmButton: false,
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
   };
 
   return (

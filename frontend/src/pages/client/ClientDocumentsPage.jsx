@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
 import { FileText, Download, FileArchive, Search, Filter, ShieldCheck, Activity } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const ClientDocumentsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,7 +56,15 @@ const ClientDocumentsPage = () => {
   };
 
   const handleDownload = (id) => {
-    alert('Conectando al repositorio seguro...\nDescargando archivo: ' + id + '.pdf');
+    Swal.fire({
+      title: 'Conectando...',
+      text: `Descargando archivo seguro: ${id}.pdf`,
+      icon: 'info',
+      timer: 2000,
+      showConfirmButton: false,
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
   };
 
   const filteredDocuments = documents.filter(doc => 
