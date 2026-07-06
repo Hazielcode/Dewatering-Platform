@@ -2,7 +2,7 @@ import { query } from '../config/db.js';
 import { GoogleGenAI } from '@google/genai';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse-new';
 const mammoth = require('mammoth');
 import dotenv from 'dotenv';
 import { supabase } from '../config/supabase.js';
