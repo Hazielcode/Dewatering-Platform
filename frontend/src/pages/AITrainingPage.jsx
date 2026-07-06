@@ -156,18 +156,18 @@ const AITrainingPage = () => {
           {activeTab === 'text' ? (
             <form onSubmit={handleTrainText} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>Título de la Información</label>
+                <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Título de la Información</label>
                 <input 
                   type="text" value={sourceName} onChange={e => setSourceName(e.target.value)}
                   placeholder="Ej. Promoción Filtros 2026" className="input-field" required
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>Contenido Técnico (Texto Plano)</label>
+                <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Contenido Técnico (Texto Plano)</label>
                 <textarea 
                   value={textContent} onChange={e => setTextContent(e.target.value)}
                   placeholder="Pega aquí especificaciones, preguntas frecuentes, políticas..."
-                  className="input-field" style={{ minHeight: '200px', resize: 'vertical', fontFamily: 'monospace' }} required
+                  className="input-field" style={{ minHeight: '220px', resize: 'vertical' }} required
                 />
               </div>
               <button type="submit" className="btn btn-primary" disabled={isTraining || !sourceName || !textContent} style={{ width: '100%', padding: '1rem', display: 'flex', justifyContent: 'center', gap: '10px' }}>
@@ -177,7 +177,7 @@ const AITrainingPage = () => {
           ) : (
             <form onSubmit={handleTrainFile} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>Título (Opcional, si está vacío usa el nombre del archivo)</label>
+                <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Título (Opcional, si está vacío usa el nombre del archivo)</label>
                 <input 
                   type="text" value={sourceName} onChange={e => setSourceName(e.target.value)}
                   placeholder="Ej. Manual Bombas PEMO" className="input-field"
@@ -186,11 +186,13 @@ const AITrainingPage = () => {
               
               <div 
                 style={{
-                  border: '2px dashed var(--border-color)', borderRadius: '12px', padding: '3rem',
+                  border: '2px dashed var(--accent-primary)', borderRadius: '16px', padding: '3.5rem 2rem',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  backgroundColor: 'var(--bg-secondary)', cursor: 'pointer', textAlign: 'center',
-                  transition: 'all 0.2s'
+                  backgroundColor: 'var(--accent-light)', cursor: 'pointer', textAlign: 'center',
+                  transition: 'all 0.3s ease', boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.02)'
                 }}
+                onMouseOver={(e) => { e.currentTarget.style.backgroundColor = 'rgba(37, 99, 235, 0.1)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'var(--accent-light)'; e.currentTarget.style.transform = 'translateY(0)' }}
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input 
@@ -198,13 +200,13 @@ const AITrainingPage = () => {
                   accept=".pdf,.docx,.jpg,.jpeg,.png"
                   onChange={e => setSelectedFile(e.target.files[0])}
                 />
-                <div style={{ width: 64, height: 64, borderRadius: '50%', backgroundColor: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                  <FileImage size={32} color="var(--accent-primary)" />
+                <div style={{ width: 72, height: 72, borderRadius: '50%', backgroundColor: '#ffffff', boxShadow: 'var(--shadow-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                  <FileImage size={36} color="var(--accent-primary)" />
                 </div>
-                <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--accent-secondary)', fontSize: '1.1rem' }}>
                   {selectedFile ? selectedFile.name : 'Haz clic o arrastra un archivo aquí'}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                   {selectedFile ? `(${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)` : 'Soporta PDF, Word (docx), JPG y PNG'}
                 </p>
               </div>
@@ -218,20 +220,6 @@ const AITrainingPage = () => {
 
         {/* SIDEBAR DERECHO */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="card" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, #1e293b, #0f172a)', color: 'white', border: 'none' }}>
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Database size={18} color="var(--accent-primary)" /> Estado Vectorial
-            </h3>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ color: '#94a3b8' }}>Total de Fragmentos:</span>
-              <span style={{ fontWeight: 700 }}>~{trainedDocs.reduce((acc, d) => acc + (d.tokens/250), 0)} chunks</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: '#94a3b8' }}>Dimensión Vectorial:</span>
-              <span style={{ fontWeight: 700 }}>768 (Gemini)</span>
-            </div>
-          </div>
-
           {jobs.length > 0 && (
             <div className="card" style={{ padding: '1.5rem', border: '2px solid var(--accent-light)' }}>
               <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
