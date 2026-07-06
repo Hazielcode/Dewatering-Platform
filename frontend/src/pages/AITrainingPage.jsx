@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrainCircuit, Database, FileText, Upload, Plus, Trash2, CheckCircle, AlertTriangle, FileUp, FileImage } from 'lucide-react';
 import api from '../services/api';
+import DashboardLayout from '../components/DashboardLayout.jsx';
 
 const AITrainingPage = () => {
   const [sourceName, setSourceName] = useState('');
@@ -82,9 +83,13 @@ const AITrainingPage = () => {
   };
 
   return (
-    <div className="fade-in" style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem', alignItems: 'start', gridTemplateColumns: 'minmax(0, 1fr) 300px' }}>
+    <DashboardLayout 
+      title="Centro de Entrenamiento IA" 
+      subtitle="Memoria Base y Conocimiento Institucional para el Chatbot"
+    >
+      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '2rem', alignItems: 'start' }}>
         
         {/* FORMULARIO DE ENTRENAMIENTO */}
         <div className="card" style={{ padding: '2rem' }}>
@@ -234,8 +239,9 @@ const AITrainingPage = () => {
           </div>
         </div>
 
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
