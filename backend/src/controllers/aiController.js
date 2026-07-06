@@ -252,7 +252,7 @@ const processBackgroundTraining = async (jobId, file, sourceName, userId) => {
       if (chunk.length < 10) continue;
 
       const embeddingRes = await ai.models.embedContent({
-          model: 'embedding-001',
+          model: 'gemini-embedding-2',
           contents: chunk
       });
       const vector = embeddingRes.embeddings[0].values; 
