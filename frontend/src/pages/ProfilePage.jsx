@@ -115,8 +115,8 @@ const ProfilePage = () => {
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) { // 2MB limit
-        setError('La imagen es demasiado grande. Máximo 2MB.');
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        setError('La imagen es demasiado grande. Máximo 10MB.');
         setTimeout(() => setError(null), 3000);
         return;
       }
