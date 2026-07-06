@@ -65,7 +65,7 @@ export const trainAI = async (req, res) => {
       if (chunk.length < 10) continue; // skip very small chunks
 
       const embeddingRes = await ai.models.embedContent({
-          model: 'text-embedding-004',
+          model: 'embedding-001',
           contents: chunk
       });
       const vector = embeddingRes.embeddings[0].values; 
@@ -229,7 +229,7 @@ const processBackgroundTraining = async (jobId, file, sourceName, userId) => {
       if (chunk.length < 10) continue;
 
       const embeddingRes = await ai.models.embedContent({
-          model: 'text-embedding-004',
+          model: 'embedding-001',
           contents: chunk
       });
       const vector = embeddingRes.embeddings[0].values; 
