@@ -114,6 +114,18 @@ export const getTrainedDocs = async (req, res) => {
   }
 };
 
+export const deleteTrainedDoc = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await query(`DELETE FROM document_embeddings WHERE document_id = $1`, [id]);
+    await query(`DELETE FROM documents WHERE id = $1`, [id]);
+    res.status(200).json({ message: 'Conocimiento eliminado correctamente.' });
+  } catch (error) {
+    console.error('[Delete Trained Doc Error]:', error);
+    res.status(500).json({ error: 'Error al eliminar el documento.' });
+  }
+};
+
 export const getTrainingJobs = async (req, res) => {
   try {
     const result = await query(`SELECT * FROM ai_training_jobs ORDER BY created_at DESC LIMIT 10`);

@@ -101,6 +101,17 @@ const AITrainingPage = () => {
     }
   };
 
+  const handleDeleteDoc = async (id) => {
+    if (!window.confirm("¿Estás seguro de que quieres eliminar este conocimiento?")) return;
+    try {
+      await api.delete(`/ai/trained-docs/${id}`);
+      fetchTrainedDocs();
+    } catch (error) {
+      console.error('Error al eliminar el documento', error);
+      alert('Error al eliminar el documento.');
+    }
+  };
+
   return (
     <DashboardLayout 
       title="Centro de Entrenamiento IA" 
@@ -260,9 +271,9 @@ const AITrainingPage = () => {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {trainedDocs.map(doc => (
-                <div key={doc.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <div key={doc.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)', position: 'relative' }}>
                   <FileText size={18} color="var(--accent-primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                  <div style={{ flex: 1, overflow: 'hidden' }}>
+                  <div style={{ flex: 1, overflow: 'hidden', paddingRight: '20px' }}>
                     <p style={{ margin: '0 0 4px 0', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                       {doc.name}
                     </p>
@@ -271,6 +282,15 @@ const AITrainingPage = () => {
                       <span>{doc.date}</span>
                     </div>
                   </div>
+                  <button 
+                    onClick={() => handleDeleteDoc(doc.id)}
+                    style={{ position: 'absolute', right: '10px', top: '10px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)', opacity: 0.7, padding: '4px' }}
+                    title="Eliminar este conocimiento"
+                    onMouseOver={e => e.currentTarget.style.opacity = 1}
+                    onMouseOut={e => e.currentTarget.style.opacity = 0.7}
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               ))}
               {trainedDocs.length === 0 && (
