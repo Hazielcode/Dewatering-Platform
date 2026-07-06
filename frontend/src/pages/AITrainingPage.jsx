@@ -40,7 +40,7 @@ const AITrainingPage = () => {
       });
       setSourceName('');
       setTextContent('');
-      setStatus({ type: 'success', message: \`¡Conocimiento inyectado exitosamente! (\${response.data.chunksProcessed} fragmentos)\` });
+      setStatus({ type: 'success', message: `¡Conocimiento inyectado exitosamente! (${response.data.chunksProcessed} fragmentos)` });
       fetchTrainedDocs();
     } catch (error) {
       setStatus({ type: 'error', message: error.response?.data?.error || 'Error al entrenar la IA' });
@@ -71,7 +71,7 @@ const AITrainingPage = () => {
       setSourceName('');
       if (fileInputRef.current) fileInputRef.current.value = '';
       
-      setStatus({ type: 'success', message: \`¡Archivo procesado e inyectado! (\${response.data.chunksProcessed} fragmentos)\` });
+      setStatus({ type: 'success', message: `¡Archivo procesado e inyectado! (${response.data.chunksProcessed} fragmentos)` });
       fetchTrainedDocs();
     } catch (error) {
       setStatus({ type: 'error', message: error.response?.data?.error || 'Error al procesar el archivo' });
@@ -122,7 +122,7 @@ const AITrainingPage = () => {
             <div style={{ 
               padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px',
               backgroundColor: status.type === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-              color: status.type === 'success' ? '#10b981' : '#ef4444', border: \`1px solid \${status.type === 'success' ? '#10b981' : '#ef4444'}\`
+              color: status.type === 'success' ? '#10b981' : '#ef4444', border: `1px solid ${status.type === 'success' ? '#10b981' : '#ef4444'}`
             }}>
               {status.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
               <span style={{ fontWeight: 600 }}>{status.message}</span>
@@ -181,7 +181,7 @@ const AITrainingPage = () => {
                   {selectedFile ? selectedFile.name : 'Haz clic o arrastra un archivo aquí'}
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  {selectedFile ? \`(\${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)\` : 'Soporta PDF, Word (docx), JPG y PNG'}
+                  {selectedFile ? `(${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)` : 'Soporta PDF, Word (docx), JPG y PNG'}
                 </p>
               </div>
 
