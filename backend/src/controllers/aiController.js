@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import dotenv from 'dotenv';
+import { supabase } from '../config/supabase.js';
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -111,6 +112,15 @@ export const getTrainedDocs = async (req, res) => {
   }
 };
 
+export const getTrainingJobs = async (req, res) => {
+  try {
+    const result = await query(`SELECT * FROM ai_training_jobs ORDER BY created_at DESC LIMIT 10`);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener trabajos de entrenamiento' });
+  }
+};
+
 export const trainFromFile = async (req, res) => {
   try {
     const file = req.file;
@@ -120,8 +130,55 @@ export const trainFromFile = async (req, res) => {
     if (!file) return res.status(400).json({ error: 'No se envió ningún archivo.' });
     if (!ai) return res.status(503).json({ error: 'GEMINI_API_KEY no configurada.' });
 
-    let extractedText = '';
+    // 1. Subir a Supabase Storage
+    const fileExt = file.originalname.split('.').pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+    
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('dewatering-documents')
+      .upload(`ai_training/${fileName}`, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false
+      });
 
+    if (uploadError) {
+      console.error("Error subiendo a Supabase:", uploadError);
+      return res.status(500).json({ error: 'Error al guardar el archivo seguro en la nube.' });
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('dewatering-documents')
+      .getPublicUrl(`ai_training/${fileName}`);
+    
+    const fileUrl = publicUrlData.publicUrl;
+
+    // 2. Registrar el Trabajo en Segundo Plano (Job)
+    const jobRes = await query(
+      `INSERT INTO ai_training_jobs (file_name, file_url, status) VALUES ($1, $2, 'PENDING') RETURNING id`,
+      [sourceName, fileUrl]
+    );
+    const jobId = jobRes.rows[0].id;
+
+    // 3. Responder Inmediatamente al Cliente (202 Accepted)
+    res.status(202).json({ 
+      message: 'Archivo subido. El entrenamiento ha comenzado en segundo plano.', 
+      jobId 
+    });
+
+    // 4. Procesar en Segundo Plano (Sin bloquear la petición)
+    processBackgroundTraining(jobId, file, sourceName, userId).catch(err => console.error("Error en background job:", err));
+
+  } catch (error) {
+    console.error('[AI File Training Error]:', error);
+    res.status(500).json({ error: 'Error procesando el archivo.' });
+  }
+};
+
+const processBackgroundTraining = async (jobId, file, sourceName, userId) => {
+  try {
+    await query(`UPDATE ai_training_jobs SET status = 'EXTRACTING', progress = 10 WHERE id = $1`, [jobId]);
+
+    let extractedText = '';
     const mimeType = file.mimetype;
     
     if (mimeType === 'application/pdf') {
@@ -134,7 +191,6 @@ export const trainFromFile = async (req, res) => {
       const result = await mammoth.extractRawText({ buffer: file.buffer });
       extractedText = result.value;
     } else if (mimeType.startsWith('image/')) {
-      // Usar Gemini Visión para extraer texto de imágenes
       const response = await ai.models.generateContent({
         model: 'gemini-3.5-flash',
         contents: [
@@ -146,28 +202,26 @@ export const trainFromFile = async (req, res) => {
       });
       extractedText = response.text;
     } else {
-      return res.status(400).json({ error: 'Formato de archivo no soportado. Usa PDF, Word o Imágenes.' });
+      throw new Error('Formato de archivo no soportado. Usa PDF, Word o Imágenes.');
     }
 
     if (!extractedText || extractedText.trim().length === 0) {
-      return res.status(400).json({ error: 'No se pudo extraer texto del archivo.' });
+      throw new Error('No se pudo extraer texto del archivo.');
     }
 
-    // 0. Ensure embedding column is 768
+    await query(`UPDATE ai_training_jobs SET status = 'EMBEDDING', progress = 40 WHERE id = $1`, [jobId]);
+
     try { await query(`ALTER TABLE document_embeddings ALTER COLUMN embedding TYPE vector(768)`); } catch (e) {}
 
-    // 1. Crear documento
     const docRes = await query(
       `INSERT INTO documents (title, description, category, file_url, is_public, uploaded_by) 
        VALUES ($1, $2, 'RAG_KNOWLEDGE', 'FILE_UPLOAD', true, $3) RETURNING id`,
-      [sourceName, 'Conocimiento inyectado vía archivo', userId]
+      [sourceName, 'Conocimiento inyectado vía archivo en segundo plano', userId]
     );
     const docId = docRes.rows[0].id;
 
-    // 2. Dividir texto
     const chunks = chunkText(extractedText, 1000);
-
-    // 3. Generar embeddings
+    
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       if (chunk.length < 10) continue;
@@ -184,16 +238,16 @@ export const trainFromFile = async (req, res) => {
          VALUES ($1, $2, $3, $4, $5)`,
         [docId, i, chunk, vectorStr, JSON.stringify({ source: sourceName })]
       );
+      
+      // Actualizar progreso
+      const progress = 40 + Math.floor(((i + 1) / chunks.length) * 60);
+      await query(`UPDATE ai_training_jobs SET progress = $1 WHERE id = $2`, [progress, jobId]);
     }
 
-    res.status(200).json({ 
-      message: 'Archivo procesado e inyectado con éxito', 
-      chunksProcessed: chunks.length,
-      docId
-    });
+    await query(`UPDATE ai_training_jobs SET status = 'COMPLETED', progress = 100, completed_at = NOW() WHERE id = $1`, [jobId]);
 
   } catch (error) {
-    console.error('[AI File Training Error]:', error);
-    res.status(500).json({ error: 'Error procesando el archivo.' });
+    console.error("Background Training Error:", error);
+    await query(`UPDATE ai_training_jobs SET status = 'FAILED', error_message = $1 WHERE id = $2`, [error.message || 'Error desconocido', jobId]);
   }
 };

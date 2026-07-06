@@ -13,9 +13,19 @@ const AITrainingPage = () => {
   const fileInputRef = useRef(null);
 
   const [trainedDocs, setTrainedDocs] = useState([]);
+  const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     fetchTrainedDocs();
+    fetchJobs();
+    
+    // Polling cada 5 segundos para actualizar los trabajos en segundo plano
+    const intervalId = setInterval(() => {
+      fetchJobs();
+      fetchTrainedDocs();
+    }, 5000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchTrainedDocs = async () => {
@@ -24,6 +34,15 @@ const AITrainingPage = () => {
       setTrainedDocs(response.data);
     } catch (error) {
       console.error('Error fetching docs', error);
+    }
+  };
+
+  const fetchJobs = async () => {
+    try {
+      const response = await api.get('/ai/jobs');
+      setJobs(response.data);
+    } catch (error) {
+      console.error('Error fetching jobs', error);
     }
   };
 
@@ -72,10 +91,10 @@ const AITrainingPage = () => {
       setSourceName('');
       if (fileInputRef.current) fileInputRef.current.value = '';
       
-      setStatus({ type: 'success', message: `¡Archivo procesado e inyectado! (${response.data.chunksProcessed} fragmentos)` });
-      fetchTrainedDocs();
+      setStatus({ type: 'success', message: response.data.message });
+      fetchJobs();
     } catch (error) {
-      setStatus({ type: 'error', message: error.response?.data?.error || 'Error al procesar el archivo' });
+      setStatus({ type: 'error', message: error.response?.data?.error || 'Error al subir el archivo' });
     } finally {
       setIsTraining(false);
       setTimeout(() => setStatus(null), 6000);
@@ -191,7 +210,7 @@ const AITrainingPage = () => {
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={isTraining || !selectedFile} style={{ width: '100%', padding: '1rem', display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                {isTraining ? <><BrainCircuit size={20} className="animate-spin" /> Analizando Archivo con Visión IA...</> : <><Database size={20} /> Extraer y Entrenar IA</>}
+                {isTraining ? <><BrainCircuit size={20} className="animate-spin" /> Subiendo al Storage...</> : <><Database size={20} /> Subir y Entrenar IA (Segundo Plano)</>}
               </button>
             </form>
           )}
@@ -212,6 +231,40 @@ const AITrainingPage = () => {
               <span style={{ fontWeight: 700 }}>768 (Gemini)</span>
             </div>
           </div>
+
+          {jobs.length > 0 && (
+            <div className="card" style={{ padding: '1.5rem', border: '2px solid var(--accent-light)' }}>
+              <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BrainCircuit size={18} color="var(--accent-primary)" /> Procesos en Segundo Plano
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {jobs.map(job => (
+                  <div key={job.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                        {job.file_name}
+                      </span>
+                      <span style={{ 
+                        fontSize: '0.7rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
+                        backgroundColor: job.status === 'COMPLETED' ? 'rgba(16,185,129,0.1)' : job.status === 'FAILED' ? 'rgba(239,68,68,0.1)' : 'rgba(54,124,252,0.1)',
+                        color: job.status === 'COMPLETED' ? '#10b981' : job.status === 'FAILED' ? '#ef4444' : 'var(--accent-primary)'
+                      }}>
+                        {job.status}
+                      </span>
+                    </div>
+                    {job.status !== 'COMPLETED' && job.status !== 'FAILED' && (
+                      <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ width: `${job.progress}%`, height: '100%', backgroundColor: 'var(--accent-primary)', transition: 'width 0.5s' }} />
+                      </div>
+                    )}
+                    {job.error_message && (
+                      <span style={{ fontSize: '0.75rem', color: 'var(--danger)' }}>{job.error_message}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="card" style={{ padding: '1.5rem' }}>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
