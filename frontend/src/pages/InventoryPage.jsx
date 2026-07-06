@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import { Plus, Pencil, Trash2, Search, X, Star, Package } from 'lucide-react';
+import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const InventoryPage = () => {
@@ -54,9 +55,28 @@ const InventoryPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Está seguro de eliminar este producto?')) return;
-    try { await api.delete(`/products/${id}`); fetchProducts(); }
-    catch (err) { alert(err.response?.data?.error || 'Error al eliminar'); }
+    const result = await Swal.fire({
+      title: '¿Eliminar producto?',
+      text: '¿Está seguro de eliminar este producto? Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+
+    try { 
+      await api.delete(`/products/${id}`); 
+      fetchProducts(); 
+      Swal.fire({ title: 'Eliminado', text: 'El producto ha sido eliminado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
+    catch (err) { 
+      Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al eliminar', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
   };
 
   const filtered = products.filter(p => 

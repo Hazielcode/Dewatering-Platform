@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import { CheckCircle, XCircle, Clock, Building, Mail, Phone, Shield } from 'lucide-react';
+import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const ApprovalsPage = () => {
@@ -24,22 +25,50 @@ const ApprovalsPage = () => {
   }, []);
 
   const handleApprove = async (id, name) => {
-    if (!window.confirm(`¿Aprobar el acceso corporativo para ${name}?`)) return;
+    const result = await Swal.fire({
+      title: '¿Aprobar acceso corporativo?',
+      text: `¿Estás seguro de aprobar a ${name}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, aprobar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+
     try {
       await api.patch(`/users/${id}/toggle`, { is_active: true });
       fetchUsers();
+      Swal.fire({ title: 'Aprobado!', text: 'El usuario ya tiene acceso al sistema.', icon: 'success', timer: 2000, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al aprobar usuario.');
+      Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al aprobar usuario.', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     }
   };
 
   const handleReject = async (id, name) => {
-    if (!window.confirm(`¿Rechazar y eliminar la solicitud de ${name}? Esta acción es irreversible.`)) return;
+    const result = await Swal.fire({
+      title: '¿Rechazar solicitud?',
+      text: `¿Estás seguro de rechazar y eliminar la solicitud de ${name}? Esta acción es irreversible.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, rechazar y eliminar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+
     try {
       await api.delete(`/users/${id}`);
       fetchUsers();
+      Swal.fire({ title: 'Eliminado', text: 'La solicitud ha sido rechazada y eliminada.', icon: 'success', timer: 2000, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al eliminar usuario.');
+      Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al eliminar usuario.', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import { UserCheck, UserX, Search, ShieldAlert, Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const StaffPage = () => {
@@ -19,14 +20,35 @@ const StaffPage = () => {
   useEffect(() => { fetchData(); }, []);
 
   const assignRole = async (uid, rid) => {
-    try { await api.post(`/users/${uid}/roles`, { rol_id: rid }); fetchData(); }
-    catch (err) { alert(err.response?.data?.error || 'Error al asignar rol'); }
+    try { 
+      await api.post(`/users/${uid}/roles`, { rol_id: rid }); 
+      fetchData(); 
+      Swal.fire({ title: 'Asignado', text: 'Rol asignado correctamente.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al asignar rol', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
   const revokeRole = async (uid, rolId) => {
-    if (!window.confirm('¿Revocar este rol del usuario?')) return;
-    try { await api.delete(`/users/${uid}/roles/${rolId}`); fetchData(); }
-    catch (err) { alert(err.response?.data?.error || 'Error al revocar rol'); }
+    const result = await Swal.fire({
+      title: '¿Revocar rol?',
+      text: '¿Está seguro de revocar este rol del usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, revocar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+
+    try { 
+      await api.delete(`/users/${uid}/roles/${rolId}`); 
+      fetchData(); 
+      Swal.fire({ title: 'Revocado', text: 'Rol revocado correctamente.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al revocar rol', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
   // FIX: Enviar el booleano correcto (invertir estado actual)
@@ -35,8 +57,9 @@ const StaffPage = () => {
     try { 
       await api.patch(`/users/${uid}/status`, { activo: newStatus }); 
       fetchData(); 
+      Swal.fire({ title: 'Actualizado', text: 'Estado cambiado correctamente.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     }
-    catch (err) { alert(err.response?.data?.error || 'Error al cambiar estado'); }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al cambiar estado', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
   const filtered = users.filter(u => (u.email||'').toLowerCase().includes(searchTerm.toLowerCase()) || (u.nombre_completo||'').toLowerCase().includes(searchTerm.toLowerCase()));

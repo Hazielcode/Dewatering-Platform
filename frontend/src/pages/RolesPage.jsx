@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import { Plus, Pencil, Trash2, X, Shield } from 'lucide-react';
+import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const RolesPage = () => {
@@ -30,9 +31,25 @@ const RolesPage = () => {
     } catch (err) { setError(err.response?.data?.error||'Error'); }
   };
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar rol? Solo posible si no tiene usuarios asignados.')) return;
-    try { await api.delete(`/roles/${id}`); fetch(); }
-    catch (err) { alert(err.response?.data?.error||'Error'); }
+    const result = await Swal.fire({
+      title: '¿Eliminar rol?',
+      text: 'Solo es posible si no tiene usuarios asignados. Esta acción es irreversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+    try { 
+      await api.delete(`/roles/${id}`); 
+      fetch(); 
+      Swal.fire({ title: 'Eliminado', text: 'El rol ha sido eliminado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error||'Error al eliminar rol', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
   const colors = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import { Plus, Pencil, Trash2, MapPin, X, Store } from 'lucide-react';
+import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const StoresPage = () => {
@@ -33,9 +34,26 @@ const StoresPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar esta sucursal? Solo es posible si no tiene productos ni personal asignado.')) return;
-    try { await api.delete(`/stores/${id}`); fetchStores(); }
-    catch (err) { alert(err.response?.data?.error || 'Error al eliminar'); }
+    const result = await Swal.fire({
+      title: '¿Eliminar sucursal?',
+      text: 'Solo es posible si no tiene productos ni personal asignado. Esta acción es irreversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      background: 'var(--bg-primary)',
+      color: 'var(--text-primary)'
+    });
+    if (!result.isConfirmed) return;
+
+    try { 
+      await api.delete(`/stores/${id}`); 
+      fetchStores(); 
+      Swal.fire({ title: 'Eliminado', text: 'La sucursal ha sido eliminada.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al eliminar', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
   return (
