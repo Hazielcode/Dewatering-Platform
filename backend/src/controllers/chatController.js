@@ -64,7 +64,7 @@ export const chatWithBot = async (req, res) => {
     }
 
     // 3. Inyectar el contexto RAG al System Prompt
-    const dynamicSystemContext = \`\${baseSystemContext}\\n\\n--- MEMORIA RAG ENCONTRADA ---\\n\${ragContext ? ragContext : '(No se encontraron documentos específicos. Usa tu conocimiento general)'}\\n------------------------------\`;
+    const dynamicSystemContext = `${baseSystemContext}\n\n--- MEMORIA RAG ENCONTRADA ---\n${ragContext ? ragContext : '(No se encontraron documentos específicos. Usa tu conocimiento general)'}\n------------------------------`;
 
     // 4. Formatear historial
     const formattedContents = [];

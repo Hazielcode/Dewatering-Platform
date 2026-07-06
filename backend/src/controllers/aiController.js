@@ -1,7 +1,9 @@
 import { query } from '../config/db.js';
 import { GoogleGenAI } from '@google/genai';
-import pdfParse from 'pdf-parse';
-import mammoth from 'mammoth';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 import dotenv from 'dotenv';
 import { supabase } from '../config/supabase.js';
 dotenv.config();
