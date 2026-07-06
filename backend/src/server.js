@@ -17,7 +17,7 @@ const startServer = async () => {
   }
 
   // Iniciar la API siempre, incluso si la base de datos falla por red de la universidad
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`[Dewatering] 🚀 API iniciada en puerto ${PORT}`);
     console.log(`[Dewatering] 🛡️  Entorno: ${process.env.NODE_ENV || 'development'}`);
     console.log(`[Dewatering] 📋 Health: http://localhost:${PORT}/api/health`);
