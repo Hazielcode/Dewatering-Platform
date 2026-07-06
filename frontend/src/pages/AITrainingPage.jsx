@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrainCircuit, Database, FileText, Upload, Plus, Trash2, CheckCircle, AlertTriangle, FileUp, FileImage } from 'lucide-react';
+import { BrainCircuit, Database, FileText, Upload, Plus, Trash2, CheckCircle, AlertTriangle, FileUp, FileImage, ChevronDown, ChevronRight } from 'lucide-react';
 import api from '../services/api';
 import DashboardLayout from '../components/DashboardLayout.jsx';
 import Swal from 'sweetalert2';
@@ -15,6 +15,7 @@ const AITrainingPage = () => {
 
   const [trainedDocs, setTrainedDocs] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [isJobsVisible, setIsJobsVisible] = useState(false);
 
   useEffect(() => {
     fetchTrainedDocs();
@@ -280,10 +281,17 @@ const AITrainingPage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {jobs.length > 0 && (
             <div className="card" style={{ padding: '1.5rem', border: '2px solid var(--accent-light)' }}>
-              <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <BrainCircuit size={18} color="var(--accent-primary)" /> Procesos en Segundo Plano
-              </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div 
+                onClick={() => setIsJobsVisible(!isJobsVisible)}
+                style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: isJobsVisible ? '1px solid var(--border-color)' : 'none', paddingBottom: isJobsVisible ? '0.5rem' : '0' }}
+              >
+                <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <BrainCircuit size={18} color="var(--accent-primary)" /> Procesos en Segundo Plano
+                </h3>
+                {isJobsVisible ? <ChevronDown size={20} color="var(--text-secondary)"/> : <ChevronRight size={20} color="var(--text-secondary)"/>}
+              </div>
+              {isJobsVisible && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
                 {jobs.map(job => (
                   <div key={job.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)', position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -322,12 +330,13 @@ const AITrainingPage = () => {
                         overflow: 'hidden', 
                         textOverflow: 'ellipsis' 
                       }}>
-                        {job.error_message.includes('code":404') ? 'El modelo de IA solicitado no está disponible temporalmente.' : job.error_message}
+                        {job.error_message.includes('code":404') ? 'El modelo de IA solicitado no está disponible temporalmente.' : job.error_message.includes('dimensions') ? 'Error de compatibilidad de dimensiones con la BD.' : job.error_message}
                       </span>
                     )}
                   </div>
                 ))}
               </div>
+              )}
             </div>
           )}
 
