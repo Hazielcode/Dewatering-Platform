@@ -114,27 +114,29 @@ const RegisterPage = () => {
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e => handleChange('telefono', e.target.value)} style={{ borderRadius: 14 }} /></div>
               
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Empresa Minera/Industrial</label>
-                  <select className="input-control" value={form.empresa} onChange={e => handleChange('empresa', e.target.value)} style={{ borderRadius: 14, backgroundColor: 'var(--bg-primary)' }} required>
-                    <option value="">Seleccione su empresa...</option>
-                    <option value="Antamina">Compañía Minera Antamina</option>
-                    <option value="Cerro Verde">Sociedad Minera Cerro Verde</option>
-                    <option value="Las Bambas">Minera Las Bambas</option>
-                    <option value="Southern Copper">Southern Copper Corporation</option>
-                    <option value="Yanacocha">Minera Yanacocha</option>
-                    <option value="Quellaveco">Anglo American Quellaveco</option>
-                    <option value="Hudbay">Hudbay Perú</option>
-                    <option value="Minsur">Minsur S.A.</option>
-                    <option value="Chinalco">Minera Chinalco Perú</option>
-                    <option value="Buenaventura">Cía. de Minas Buenaventura</option>
-                    <option value="Nexa">Nexa Resources</option>
-                    <option value="Glencore">Glencore (Antapaccay / Los Quenuales)</option>
-                    <option value="Otra">Otra / Contratista</option>
-                  </select>
+                <div className="input-group" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                  <label className="input-label" style={{ whiteSpace: 'nowrap' }}>Empresa</label>
+                  <input type="text" list="empresas-list" className="input-control" placeholder="Escriba o seleccione..." required value={form.empresa} onChange={e => handleChange('empresa', e.target.value)} style={{ borderRadius: 14 }} />
+                  <datalist id="empresas-list">
+                    <option value="Compañía Minera Antamina" />
+                    <option value="Sociedad Minera Cerro Verde" />
+                    <option value="Minera Las Bambas" />
+                    <option value="Southern Copper Corporation" />
+                    <option value="Minera Yanacocha" />
+                    <option value="Anglo American Quellaveco" />
+                    <option value="Hudbay Perú" />
+                    <option value="Minsur S.A." />
+                    <option value="Minera Chinalco Perú" />
+                    <option value="Cía. de Minas Buenaventura" />
+                    <option value="Nexa Resources" />
+                    <option value="Glencore (Antapaccay / Los Quenuales)" />
+                    <option value="Volcan Compañía Minera" />
+                    <option value="Compañía Minera Poderosa" />
+                    <option value="Marcobre (Mina Justa)" />
+                  </datalist>
                 </div>
-                <div className="input-group" style={{ flex: 1 }}>
-                  <label className="input-label">Cargo o Puesto</label>
+                <div className="input-group" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                  <label className="input-label" style={{ whiteSpace: 'nowrap' }}>Cargo o Puesto</label>
                   <input className="input-control" placeholder="Ej. Ing. de Procesos" required value={form.cargo} onChange={e => handleChange('cargo', e.target.value)} style={{ borderRadius: 14 }} />
                 </div>
               </div>
