@@ -37,8 +37,9 @@ export const chatWithBot = async (req, res) => {
     let ragContext = '';
     try {
       const embeddingRes = await ai.models.embedContent({
-        model: 'text-embedding-004',
-        contents: message
+        model: 'gemini-embedding-2',
+        contents: message,
+        config: { outputDimensionality: 768 }
       });
       const vector = embeddingRes.embeddings[0].values;
       const vectorStr = `[${vector.join(',')}]`;
