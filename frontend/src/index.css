@@ -548,3 +548,27 @@ table td, table th {
 body.dark .hover-float:hover {
   box-shadow: 0 12px 32px rgba(96, 165, 250, 0.15);
 }
+
+/* ======== INPUTS ======== */
+.input-field {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-light);
+  background-color: var(--bg-secondary);
+}
+
+body.dark .input-field:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
