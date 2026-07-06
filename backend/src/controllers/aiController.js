@@ -65,7 +65,7 @@ export const trainAI = async (req, res) => {
       if (chunk.length < 10) continue; // skip very small chunks
 
       const embeddingRes = await ai.models.embedContent({
-          model: 'embedding-001',
+          model: 'gemini-embedding-2',
           contents: chunk
       });
       const vector = embeddingRes.embeddings[0].values; 
