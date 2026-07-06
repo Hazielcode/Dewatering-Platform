@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BrainCircuit, Database, FileText, Upload, Plus, Trash2, CheckCircle, AlertTriangle, FileUp, FileImage } from 'lucide-react';
 import api from '../services/api';
 import DashboardLayout from '../components/DashboardLayout.jsx';
+import Swal from 'sweetalert2';
 
 const AITrainingPage = () => {
   const [sourceName, setSourceName] = useState('');
@@ -102,13 +103,36 @@ const AITrainingPage = () => {
   };
 
   const handleDeleteDoc = async (id) => {
-    if (!window.confirm("¿Estás seguro de que quieres eliminar este conocimiento?")) return;
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Eliminarás este conocimiento permanentemente de la IA.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       await api.delete(`/ai/trained-docs/${id}`);
       fetchTrainedDocs();
+      Swal.fire({
+        title: 'Eliminado',
+        text: 'El documento fue borrado del conocimiento.',
+        icon: 'success',
+        confirmButtonColor: '#3b82f6'
+      });
     } catch (error) {
       console.error('Error al eliminar el documento', error);
-      alert('Error al eliminar el documento.');
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar el documento.',
+        icon: 'error',
+        confirmButtonColor: '#3b82f6'
+      });
     }
   };
 
