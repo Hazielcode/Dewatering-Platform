@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { 
   LayoutDashboard, ShieldAlert, Users, Package, Store, FileText,
-  LogOut, Bell, Search
+  LogOut, Bell, Search, BrainCircuit
 } from 'lucide-react';
 import DewateringChatbot from './DewateringChatbot.jsx';
 
@@ -25,6 +25,7 @@ const navItems = [
     { label: 'Mis Documentos', icon: Package, path: '/client/documents', roles: ['CLIENT'] },
   ]},
   { section: 'Configuración', items: [
+    { label: 'Centro Entrenamiento IA', icon: BrainCircuit, path: '/ai-training', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { label: 'Aprobación Clientes', icon: ShieldAlert, path: '/approvals', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { label: 'Auditoría', icon: ShieldAlert, path: '/audit', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { label: 'Roles y Usuarios', icon: Users, path: '/roles', roles: ['SUPER_ADMIN', 'ADMIN'] },

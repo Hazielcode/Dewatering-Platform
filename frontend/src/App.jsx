@@ -18,6 +18,7 @@ import StaffPage from './pages/StaffPage.jsx';
 import AuditPage from './pages/AuditPage.jsx';
 import RolesPage from './pages/RolesPage.jsx';
 import ApprovalsPage from './pages/ApprovalsPage.jsx';
+import AITrainingPage from './pages/AITrainingPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import LeadsPage from './pages/crm/LeadsPage.jsx';
 import ClientModulePage from './pages/client/ClientModulePage.jsx';
@@ -114,6 +115,7 @@ const App = () => {
             <Route path="/audit" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><AuditPage /></ProtectedRoute>} />
             <Route path="/roles" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><RolesPage /></ProtectedRoute>} />
             <Route path="/approvals" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><ApprovalsPage /></ProtectedRoute>} />
+            <Route path="/ai-training" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN']}><AITrainingPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             
             {/* Rutas Cliente Exclusivas */}

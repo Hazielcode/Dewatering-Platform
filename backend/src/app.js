@@ -15,6 +15,7 @@ import projectRoutes from './routes/projectRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import auditRoutes from './routes/auditRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {
