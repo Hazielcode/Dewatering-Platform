@@ -1,5 +1,7 @@
 import { query } from '../config/db.js';
 import { GoogleGenAI } from '@google/genai';
+import pdfParse from 'pdf-parse';
+import mammoth from 'mammoth';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -106,5 +108,92 @@ export const getTrainedDocs = async (req, res) => {
   } catch (error) {
     console.error('[Get Trained Docs Error]:', error);
     res.status(500).json({ error: 'Error al obtener documentos entrenados' });
+  }
+};
+
+export const trainFromFile = async (req, res) => {
+  try {
+    const file = req.file;
+    const sourceName = req.body.sourceName || file.originalname;
+    const userId = req.user.id;
+
+    if (!file) return res.status(400).json({ error: 'No se envió ningún archivo.' });
+    if (!ai) return res.status(503).json({ error: 'GEMINI_API_KEY no configurada.' });
+
+    let extractedText = '';
+
+    const mimeType = file.mimetype;
+    
+    if (mimeType === 'application/pdf') {
+      const pdfData = await pdfParse(file.buffer);
+      extractedText = pdfData.text;
+    } else if (
+      mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+      mimeType === 'application/msword'
+    ) {
+      const result = await mammoth.extractRawText({ buffer: file.buffer });
+      extractedText = result.value;
+    } else if (mimeType.startsWith('image/')) {
+      // Usar Gemini Visión para extraer texto de imágenes
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.5-flash',
+        contents: [
+          { role: 'user', parts: [
+            { text: 'Extrae todo el texto técnico y datos de esta imagen con la mayor precisión posible. Formatea como texto limpio.' },
+            { inlineData: { data: file.buffer.toString('base64'), mimeType: file.mimetype } }
+          ]}
+        ]
+      });
+      extractedText = response.text;
+    } else {
+      return res.status(400).json({ error: 'Formato de archivo no soportado. Usa PDF, Word o Imágenes.' });
+    }
+
+    if (!extractedText || extractedText.trim().length === 0) {
+      return res.status(400).json({ error: 'No se pudo extraer texto del archivo.' });
+    }
+
+    // 0. Ensure embedding column is 768
+    try { await query(`ALTER TABLE document_embeddings ALTER COLUMN embedding TYPE vector(768)`); } catch (e) {}
+
+    // 1. Crear documento
+    const docRes = await query(
+      `INSERT INTO documents (title, description, category, file_url, is_public, uploaded_by) 
+       VALUES ($1, $2, 'RAG_KNOWLEDGE', 'FILE_UPLOAD', true, $3) RETURNING id`,
+      [sourceName, 'Conocimiento inyectado vía archivo', userId]
+    );
+    const docId = docRes.rows[0].id;
+
+    // 2. Dividir texto
+    const chunks = chunkText(extractedText, 1000);
+
+    // 3. Generar embeddings
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      if (chunk.length < 10) continue;
+
+      const embeddingRes = await ai.models.embedContent({
+          model: 'text-embedding-004',
+          contents: chunk
+      });
+      const vector = embeddingRes.embeddings[0].values; 
+      const vectorStr = `[${vector.join(',')}]`;
+
+      await query(
+        `INSERT INTO document_embeddings (document_id, chunk_index, chunk_text, embedding, metadata)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [docId, i, chunk, vectorStr, JSON.stringify({ source: sourceName })]
+      );
+    }
+
+    res.status(200).json({ 
+      message: 'Archivo procesado e inyectado con éxito', 
+      chunksProcessed: chunks.length,
+      docId
+    });
+
+  } catch (error) {
+    console.error('[AI File Training Error]:', error);
+    res.status(500).json({ error: 'Error procesando el archivo.' });
   }
 };
