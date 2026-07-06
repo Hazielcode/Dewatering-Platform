@@ -6,7 +6,7 @@ import DewateringMascot from '../components/DewateringMascot.jsx';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ nombres: '', apellidos: '', telefono: '', fecha_nacimiento: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ nombres: '', apellidos: '', telefono: '', fecha_nacimiento: '', empresa: '', cargo: '', email: '', password: '', confirmPassword: '' });
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +45,7 @@ const RegisterPage = () => {
     if (!match) { setErrorMsg('Las contraseñas no coinciden.'); return; }
     setIsLoading(true);
     try {
-      await api.post('/auth/register', { email: form.email, password: form.password, full_name: `${form.nombres} ${form.apellidos}`, phone: form.telefono });
+      await api.post('/auth/register', { email: form.email, password: form.password, full_name: `${form.nombres} ${form.apellidos}`, phone: form.telefono, company: form.empresa, position: form.cargo });
       setSuccessMsg('Solicitud enviada exitosamente. Su cuenta está en proceso de validación comercial.');
       setTimeout(() => navigate('/login'), 4000);
     } catch (err) { setErrorMsg(err.response?.data?.error || 'Error al registrar'); }
@@ -112,7 +112,32 @@ const RegisterPage = () => {
                 <div className="input-group" style={{ flex: 1 }}><label className="input-label">Apellidos</label><input className="input-control" placeholder="Pérez Gómez" required value={form.apellidos} onChange={e => handleChange('apellidos', e.target.value)} style={{ borderRadius: 14 }} /></div>
               </div>
               <div className="input-group"><label className="input-label">Teléfono Móvil <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>(Opcional)</span></label><input type="tel" className="input-control" placeholder="+51 987 654 321" value={form.telefono} onChange={e => handleChange('telefono', e.target.value)} style={{ borderRadius: 14 }} /></div>
-              <div className="input-group"><label className="input-label">Fecha de Nacimiento <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>(Opcional)</span></label><input type="date" className="input-control" value={form.fecha_nacimiento} onChange={e => handleChange('fecha_nacimiento', e.target.value)} style={{ borderRadius: 14 }} /></div>
+              
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Empresa Minera/Industrial</label>
+                  <select className="input-control" value={form.empresa} onChange={e => handleChange('empresa', e.target.value)} style={{ borderRadius: 14, backgroundColor: 'var(--bg-primary)' }} required>
+                    <option value="">Seleccione su empresa...</option>
+                    <option value="Antamina">Compañía Minera Antamina</option>
+                    <option value="Cerro Verde">Sociedad Minera Cerro Verde</option>
+                    <option value="Las Bambas">Minera Las Bambas</option>
+                    <option value="Southern Copper">Southern Copper Corporation</option>
+                    <option value="Yanacocha">Minera Yanacocha</option>
+                    <option value="Quellaveco">Anglo American Quellaveco</option>
+                    <option value="Hudbay">Hudbay Perú</option>
+                    <option value="Minsur">Minsur S.A.</option>
+                    <option value="Chinalco">Minera Chinalco Perú</option>
+                    <option value="Buenaventura">Cía. de Minas Buenaventura</option>
+                    <option value="Nexa">Nexa Resources</option>
+                    <option value="Glencore">Glencore (Antapaccay / Los Quenuales)</option>
+                    <option value="Otra">Otra / Contratista</option>
+                  </select>
+                </div>
+                <div className="input-group" style={{ flex: 1 }}>
+                  <label className="input-label">Cargo o Puesto</label>
+                  <input className="input-control" placeholder="Ej. Ing. de Procesos" required value={form.cargo} onChange={e => handleChange('cargo', e.target.value)} style={{ borderRadius: 14 }} />
+                </div>
+              </div>
               <div className="input-group"><label className="input-label">Correo Electrónico</label><input type="email" className="input-control" placeholder="gerencia@empresa.com" required value={form.email} onChange={e => handleChange('email', e.target.value)} style={{ borderRadius: 14 }} /></div>
               <div className="input-group">
                 <label className="input-label">Contraseña</label>
