@@ -135,6 +135,17 @@ export const getTrainingJobs = async (req, res) => {
   }
 };
 
+export const deleteJob = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await query(`DELETE FROM ai_training_jobs WHERE id = $1`, [id]);
+    res.status(200).json({ message: 'Trabajo eliminado correctamente.' });
+  } catch (error) {
+    console.error('[Delete Job Error]:', error);
+    res.status(500).json({ error: 'Error al eliminar el trabajo.' });
+  }
+};
+
 export const trainFromFile = async (req, res) => {
   try {
     const file = req.file;

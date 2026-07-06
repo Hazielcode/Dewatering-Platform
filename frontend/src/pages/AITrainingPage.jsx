@@ -136,6 +136,29 @@ const AITrainingPage = () => {
     }
   };
 
+  const handleDeleteJob = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Eliminar proceso?',
+      text: "Quitarás este proceso de la lista de pendientes/fallidos.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Sí, limpiar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await api.delete(`/ai/jobs/${id}`);
+      fetchJobs();
+    } catch (error) {
+      console.error('Error al eliminar el job', error);
+      Swal.fire({ title: 'Error', text: 'No se pudo eliminar el proceso.', icon: 'error' });
+    }
+  };
+
   return (
     <DashboardLayout 
       title="Centro de Entrenamiento IA" 
@@ -262,18 +285,27 @@ const AITrainingPage = () => {
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {jobs.map(job => (
-                  <div key={job.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  <div key={job.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)', position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '70%' }}>
                         {job.file_name}
                       </span>
-                      <span style={{ 
-                        fontSize: '0.7rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
-                        backgroundColor: job.status === 'COMPLETED' ? 'rgba(16,185,129,0.1)' : job.status === 'FAILED' ? 'rgba(239,68,68,0.1)' : 'rgba(54,124,252,0.1)',
-                        color: job.status === 'COMPLETED' ? '#10b981' : job.status === 'FAILED' ? '#ef4444' : 'var(--accent-primary)'
-                      }}>
-                        {job.status}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ 
+                          fontSize: '0.7rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px',
+                          backgroundColor: job.status === 'COMPLETED' ? 'rgba(16,185,129,0.1)' : job.status === 'FAILED' ? 'rgba(239,68,68,0.1)' : 'rgba(54,124,252,0.1)',
+                          color: job.status === 'COMPLETED' ? '#10b981' : job.status === 'FAILED' ? '#ef4444' : 'var(--accent-primary)'
+                        }}>
+                          {job.status}
+                        </span>
+                        <button 
+                          onClick={() => handleDeleteJob(job.id)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '2px' }}
+                          title="Limpiar de la lista"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </div>
                     {job.status !== 'COMPLETED' && job.status !== 'FAILED' && (
                       <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -281,7 +313,17 @@ const AITrainingPage = () => {
                       </div>
                     )}
                     {job.error_message && (
-                      <span style={{ fontSize: '0.75rem', color: 'var(--danger)' }}>{job.error_message}</span>
+                      <span style={{ 
+                        fontSize: '0.75rem', 
+                        color: 'var(--danger)', 
+                        display: '-webkit-box', 
+                        WebkitLineClamp: 2, 
+                        WebkitBoxOrient: 'vertical', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis' 
+                      }}>
+                        {job.error_message.includes('code":404') ? 'El modelo de IA solicitado no está disponible temporalmente.' : job.error_message}
+                      </span>
                     )}
                   </div>
                 ))}
