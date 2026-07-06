@@ -66,7 +66,8 @@ export const trainAI = async (req, res) => {
 
       const embeddingRes = await ai.models.embedContent({
           model: 'gemini-embedding-2',
-          contents: chunk
+          contents: chunk,
+          config: { outputDimensionality: 768 }
       });
       const vector = embeddingRes.embeddings[0].values; 
       const vectorStr = `[${vector.join(',')}]`;
@@ -253,7 +254,8 @@ const processBackgroundTraining = async (jobId, file, sourceName, userId) => {
 
       const embeddingRes = await ai.models.embedContent({
           model: 'gemini-embedding-2',
-          contents: chunk
+          contents: chunk,
+          config: { outputDimensionality: 768 }
       });
       const vector = embeddingRes.embeddings[0].values; 
       const vectorStr = `[${vector.join(',')}]`;
