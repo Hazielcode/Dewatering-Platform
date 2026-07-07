@@ -318,15 +318,15 @@ const HomePage = () => {
       <section id="contacto" style={{ padding: '6rem 5%', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '4rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 400px' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem' }}>Impulsamos la eficiencia de su planta</h2>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem' }}>¿Requiere cotizar un servicio o equipo?</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: 1.6 }}>
-              Déjenos sus datos y un ingeniero especializado se pondrá en contacto para evaluar sus requerimientos técnicos.
+              Cuéntenos su problema técnico operativo (caudal, tipo de lodo, metas de filtración) y nuestros ingenieros le prepararán una propuesta técnico-económica a medida.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                 <div style={{ width: 48, height: 48, borderRadius: '12px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Mail size={20} /></div>
                 <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Correo Comercial</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Correo Comercial Directo</div>
                   ventas@dewateringsolutions.com.pe
                 </div>
               </div>
@@ -335,12 +335,25 @@ const HomePage = () => {
 
           <div style={{ flex: '1 1 400px' }}>
             <div className="card" style={{ padding: '2.5rem', background: 'var(--bg-primary)' }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>Solicitar Evaluación</h3>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>Solicitud de Cotización y Evaluación</h3>
               
               {formStatus.status === 'success' ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--success)', background: 'rgba(16,185,129,0.1)', borderRadius: '12px' }}>
-                  <CheckCircle2 size={48} style={{ margin: '0 auto 1rem' }} />
-                  <h4>{formStatus.message}</h4>
+                <div style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', animation: 'fade-in 0.5s ease-out' }}>
+                  <div style={{ color: 'var(--success)', background: 'rgba(16,185,129,0.1)', padding: '1.5rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                    <CheckCircle2 size={48} style={{ margin: '0 auto 1rem' }} />
+                    <h4 style={{ marginBottom: '0.5rem', fontSize: '1.2rem' }}>¡Solicitud Recibida!</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{formStatus.message}</p>
+                  </div>
+                  
+                  <div style={{ borderTop: '1px dashed var(--border-color)', paddingTop: '1.5rem' }}>
+                    <h5 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>¿Desea hacer seguimiento a su cotización?</h5>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                      Cree una cuenta corporativa gratuita para acceder al portal de clientes, descargar su PDF oficial cuando esté listo y gestionar sus proyectos.
+                    </p>
+                    <Link to="/register" className="btn btn-primary w-full" style={{ justifyContent: 'center' }}>
+                      Crear Cuenta de Cliente
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleFormSubmit}>
