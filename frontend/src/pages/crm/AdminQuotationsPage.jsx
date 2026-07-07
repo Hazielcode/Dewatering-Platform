@@ -36,7 +36,11 @@ const AdminQuotationsPage = () => {
       await api.post('/quotations', {
         title: quoteTitle,
         description: quoteDesc,
-        amount: parseFloat(quoteAmount),
+        items: [{ description: quoteTitle, quantity: 1, unit_price: parseFloat(quoteAmount), subtotal: parseFloat(quoteAmount) }],
+        subtotal: parseFloat(quoteAmount),
+        tax: 0,
+        total: parseFloat(quoteAmount),
+        currency: 'USD',
       });
       Swal.fire('¡Éxito!', 'Cotización enviada. El cliente la verá en su portal.', 'success');
       setShowForm(false);
