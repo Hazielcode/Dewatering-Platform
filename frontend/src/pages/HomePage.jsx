@@ -78,7 +78,7 @@ const HomePage = () => {
       </section>
 
       {/* 2. SECTION: INDICADORES CORPORATIVOS */}
-      <section style={{ padding: '4rem 5%', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+      <section style={{ padding: '4rem 5%', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', backgroundImage: 'radial-gradient(var(--accent-light) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' }}>
           {[
             { value: '+25', label: 'Años de Experiencia' },
@@ -193,29 +193,29 @@ const HomePage = () => {
       </section>
 
       {/* 6. SECTION: EXPERIENCIA Y PROYECTOS */}
-      <section style={{ padding: '6rem 5%', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+      <section style={{ padding: '6rem 5%', backgroundColor: '#0f172a', color: 'white' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem' }}>Experiencia Comprobada</h2>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 3rem' }}>Conozca cómo hemos resuelto desafíos complejos en plantas mineras de primer nivel.</p>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'white', marginBottom: '1rem' }}>Experiencia Comprobada</h2>
+          <p style={{ color: '#94a3b8', maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.1rem' }}>Conozca cómo hemos resuelto desafíos complejos en plantas mineras de primer nivel.</p>
           <div className="grid-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
             {[
               { title: 'Planta de Filtrado', desc: 'Instalación en mina Chungar.', img: 'chungar.webp' },
               { title: 'Planta Piloto', desc: 'Tratamiento de tierras raras en Chile.', img: 'biolantanidos.webp' },
               { title: 'Tratamiento de Aguas', desc: 'Sistema de neutralización y filtrado.', img: 'shahuindo.webp' }
             ].map((proj, i) => (
-              <div key={i} className="card hover-float" style={{ overflow: 'hidden', padding: 0 }}>
-                <div style={{ height: '200px', background: 'var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <div key={i} className="card hover-float" style={{ overflow: 'hidden', padding: 0, backgroundColor: '#1e293b', border: '1px solid #334155' }}>
+                <div style={{ height: '200px', background: '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                   <img src={`/images/${proj.img}`} alt={proj.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{proj.title}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{proj.desc}</p>
+                  <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: 'white' }}>{proj.title}</h4>
+                  <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{proj.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: '3rem' }}>
-            <Link to="/proyectos" className="btn btn-ghost">Ver Galería de Proyectos</Link>
+          <div style={{ marginTop: '3.5rem' }}>
+            <Link to="/proyectos" className="btn btn-primary" style={{ padding: '0.8rem 2rem' }}>Explorar Casos de Éxito</Link>
           </div>
         </div>
       </section>
@@ -315,27 +315,31 @@ const HomePage = () => {
       </section>
 
       {/* 9. SECTION: CONTACTO RÁPIDO */}
-      <section id="contacto" style={{ padding: '6rem 5%', backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+      <section id="contacto" style={{ padding: '6rem 5%', backgroundColor: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}>
+        {/* Decorative background element */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '40%', height: '120%', background: 'linear-gradient(135deg, var(--accent-light) 0%, transparent 100%)', transform: 'rotate(-10deg)', borderRadius: '100px', zIndex: 0 }}></div>
+        
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '4rem', alignItems: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           <div style={{ flex: '1 1 400px' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1rem' }}>¿Requiere cotizar un servicio o equipo?</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: 1.6 }}>
+            <div style={{ display: 'inline-block', padding: '0.3rem 1rem', background: 'var(--accent-primary)', color: 'white', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '1.5rem' }}>Contáctenos</div>
+            <h2 style={{ fontSize: '2.8rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '1.5rem', lineHeight: 1.1 }}>¿Requiere cotizar un <span style={{ color: 'var(--accent-primary)' }}>servicio o equipo?</span></h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2.5rem', lineHeight: 1.7 }}>
               Cuéntenos su problema técnico operativo (caudal, tipo de lodo, metas de filtración) y nuestros ingenieros le prepararán una propuesta técnico-económica a medida.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-primary)', fontWeight: 500 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-primary)', fontWeight: 500, backgroundColor: 'var(--bg-secondary)', padding: '1rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
                 <div style={{ width: 48, height: 48, borderRadius: '12px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Mail size={20} /></div>
                 <div>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Correo Comercial Directo</div>
-                  ventas@dewateringsolutions.com.pe
+                  <div style={{ fontWeight: 700 }}>ventas@dewateringsolutions.com.pe</div>
                 </div>
               </div>
             </div>
           </div>
 
           <div style={{ flex: '1 1 400px' }}>
-            <div className="card" style={{ padding: '2.5rem', background: 'var(--bg-primary)' }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>Solicitud de Cotización y Evaluación</h3>
+            <div className="card" style={{ padding: '2.5rem', background: 'var(--bg-secondary)', boxShadow: 'var(--shadow-lg)', border: 'none' }}>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>Solicitud de Evaluación</h3>
               
               {formStatus.status === 'success' ? (
                 <div style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', animation: 'fade-in 0.5s ease-out' }}>
@@ -385,7 +389,7 @@ const HomePage = () => {
                     <textarea className="input-control" name="message" value={formData.message} onChange={handleInputChange} rows="3" placeholder="Detalle su requerimiento..."></textarea>
                   </div>
                   <button type="submit" className="btn btn-primary w-full" disabled={formStatus.status === 'loading'} style={{ marginTop: '1rem', padding: '0.85rem' }}>
-                    {formStatus.status === 'loading' ? 'Enviando...' : 'Enviar Solicitud'}
+                    {formStatus.status === 'loading' ? 'Enviando...' : 'Enviar Solicitud'} <ArrowRight size={16}/>
                   </button>
                   {formStatus.status === 'error' && <p style={{ color: 'var(--danger)', fontSize: '0.85rem', marginTop: '1rem', textAlign: 'center' }}>{formStatus.message}</p>}
                 </form>
