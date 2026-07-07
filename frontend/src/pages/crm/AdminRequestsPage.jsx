@@ -24,9 +24,15 @@ const AdminRequestsPage = () => {
   };
 
   const handleRespond = (email, name) => {
-    const subject = encodeURIComponent('Respuesta a su solicitud - Dewatering Solutions');
-    const body = encodeURIComponent(`Hola ${name},\n\nHemos recibido su solicitud técnica a través de nuestro portal web.\n\n`);
-    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`, '_blank');
+    const subject = encodeURIComponent('Cotización de Servicios - Dewatering Solutions');
+    const body = encodeURIComponent(`Estimado ${name},\n\n`);
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${email}&su=${subject}&body=${body}`;
+    // Abrir en una ventana popup limpia centrada para que se vea profesional y no estirada
+    const width = 800;
+    const height = 600;
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
+    window.open(url, 'Responder', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
   };
 
   const handleDelete = async (id) => {
