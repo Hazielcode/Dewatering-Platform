@@ -14,7 +14,6 @@ const navItems = [
   { section: 'CRM / Comercial', items: [
     { label: 'Solicitudes Web', icon: Users, path: '/admin/requests', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
     { label: 'Gestión Cotizaciones', icon: FileText, path: '/admin/quotations', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
-    { label: 'Inventario Equipos', icon: Package, path: '/admin/products', roles: ['SUPER_ADMIN', 'ADMIN'] },
   ]},
   { section: 'Operaciones', items: [
     { label: 'Inventario', icon: Package, path: '/inventory', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },

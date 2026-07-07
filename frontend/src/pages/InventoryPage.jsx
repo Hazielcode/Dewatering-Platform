@@ -1,174 +1,245 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
-import { Plus, Pencil, Trash2, Search, X, Star, Package } from 'lucide-react';
+import { Package, Plus, Edit2, Trash2, Tag, Search, Image as ImageIcon } from 'lucide-react';
 import Swal from 'sweetalert2';
-import api from '../services/api.js';
+import api from '../services/api';
 
 const InventoryPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [form, setForm] = useState({ name: '', category: '', origin: '', short_description: '' });
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    id: null,
+    name: '',
+    category: '',
+    short_description: '',
+    origin: '',
+    slug: ''
+  });
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const fetchProducts = async () => {
     try {
-      const res = await api.get('/products');
-      setProducts(res.data.products || res.data || []);
-    } catch { setProducts([]); }
-    finally { setLoading(false); }
+      const { data } = await api.get('/products');
+      setProducts(data.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      Swal.fire('Error', 'No se pudo cargar el inventario.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { fetchProducts(); }, []);
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const openCreate = () => { 
-    setEditingProduct(null); 
-    setForm({ name: '', category: '', origin: '', short_description: '' }); 
-    setError(''); setShowModal(true); 
+  const openModal = (product = null) => {
+    if (product) {
+      setFormData({
+        id: product.id,
+        name: product.name,
+        category: product.category || '',
+        short_description: product.short_description || '',
+        origin: product.origin || '',
+        slug: product.slug || ''
+      });
+    } else {
+      setFormData({ id: null, name: '', category: '', short_description: '', origin: '', slug: '' });
+    }
+    setShowModal(true);
   };
-  const openEdit = (p) => { 
-    setEditingProduct(p); 
-    setForm({ 
-      name: p.name, category: p.category || '', origin: p.origin || '', short_description: p.short_description || ''
-    }); 
-    setError(''); setShowModal(true); 
-  };
+
+  const closeModal = () => setShowModal(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     try {
-      const slug = form.name.toLowerCase().trim().replace(/[\s_]+/g, '-').replace(/[^\w-]+/g, '');
-      const payload = { ...form, slug };
-      if (editingProduct) {
-        await api.put(`/products/${editingProduct.id}`, payload);
+      if (formData.id) {
+        await api.put(`/products/${formData.id}`, formData);
+        Swal.fire('Éxito', 'Producto actualizado correctamente.', 'success');
       } else {
-        await api.post('/products', payload);
+        await api.post('/products', formData);
+        Swal.fire('Éxito', 'Producto añadido al inventario.', 'success');
       }
-      setShowModal(false);
+      closeModal();
       fetchProducts();
-      Swal.fire({ title: 'Éxito', text: 'Producto guardado correctamente.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
-    } catch (err) {
-      setError(err.response?.data?.error || 'Error al guardar');
+    } catch (error) {
+      console.error('Error saving product:', error);
+      Swal.fire('Error', 'No se pudo guardar el producto.', 'error');
     }
   };
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: '¿Eliminar producto?',
-      text: '¿Está seguro de eliminar este producto? Esta acción no se puede deshacer.',
+      text: "Esta acción lo borrará del catálogo público y del inventario.",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#64748b',
+      cancelButtonColor: '#94a3b8',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      background: 'var(--bg-primary)',
-      color: 'var(--text-primary)'
+      cancelButtonText: 'Cancelar'
     });
-    if (!result.isConfirmed) return;
 
-    try { 
-      await api.delete(`/products/${id}`); 
-      fetchProducts(); 
-      Swal.fire({ title: 'Eliminado', text: 'El producto ha sido eliminado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
-    }
-    catch (err) { 
-      Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al eliminar', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/products/${id}`);
+        fetchProducts();
+        Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+      }
     }
   };
 
-  const filtered = products.filter(p => 
-    (p.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (p.category || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.origin || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <DashboardLayout title="Inventario" subtitle="Catálogo de equipos y productos industriales">
-      {/* Toolbar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'1rem', flex:1 }}>
-          <div style={{ position: 'relative', flex: '1', maxWidth: '360px' }}>
-            <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}/>
-            <input className="input-control" placeholder="Buscar por nombre, categoría u origen..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: '2.2rem' }}/>
-          </div>
-          <div style={{ display:'flex', gap:'0.75rem', fontSize:'0.78rem' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:4, padding:'0.2rem 0.6rem', borderRadius:100, backgroundColor:'rgba(37,99,235,0.08)', color:'var(--accent-primary)', fontWeight:600 }}>
-              <Package size={13}/> {products.length} productos
-            </span>
-          </div>
+    <DashboardLayout role="admin">
+      <div className="topbar">
+        <div className="topbar-left">
+          <h1>Inventario de Equipos</h1>
+          <p>Gestione el catálogo de maquinaria industrial y repuestos.</p>
         </div>
-        <button className="btn btn-primary" onClick={openCreate}><Plus size={18}/> Nuevo Equipo</button>
-      </div>
-
-      {/* Tabla */}
-      <div className="card">
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                {['Equipo / Producto', 'Categoría', 'Origen', 'Estado', 'Acciones'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', padding: '0.75rem 1.25rem', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Cargando productos...</td></tr>
-              ) : filtered.length === 0 ? (
-                <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No se encontraron productos. {!products.length && '(El backend puede estar apagado)'}</td></tr>
-              ) : filtered.map(p => (
-                <tr key={p.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--accent-light)'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                  <td style={{ padding: '0.85rem 1.25rem', fontWeight: 500, color: 'var(--text-primary)' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
-                      {p.name}
-                    </div>
-                  </td>
-                  <td style={{ padding: '0.85rem 1.25rem', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{p.category || '—'}</td>
-                  <td style={{ padding: '0.85rem 1.25rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{p.origin || '—'}</td>
-                  <td style={{ padding: '0.85rem 1.25rem' }}>
-                    <span style={{ padding: '0.15rem 0.5rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 600, backgroundColor: p.is_active ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: p.is_active ? 'var(--success)' : 'var(--danger)' }}>
-                      {p.is_active ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </td>
-                  <td style={{ padding: '0.85rem 1.25rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn-ghost" onClick={() => openEdit(p)} style={{ width: 32, height: 32 }}><Pencil size={15}/></button>
-                      <button className="btn-ghost" onClick={() => handleDelete(p.id)} style={{ width: 32, height: 32, color: 'var(--danger)' }}><Trash2 size={15}/></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="topbar-right">
+          <button onClick={() => openModal()} className="btn btn-primary">
+            <Plus size={18} /> Agregar Producto
+          </button>
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: '1rem' }} onClick={() => setShowModal(false)}>
-          <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '500px', padding: '2rem' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ color: 'var(--text-primary)' }}>{editingProduct ? 'Editar Producto' : 'Nuevo Producto'}</h3>
-              <button className="btn-ghost" onClick={() => setShowModal(false)} style={{ width: 32, height: 32 }}><X size={18}/></button>
-            </div>
-            {error && <div style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '0.6rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</div>}
-            <form onSubmit={handleSubmit}>
-              <div className="input-group"><label className="input-label">Nombre del Equipo / Producto</label><input className="input-control" required value={form.name} onChange={e => setForm({...form, name: e.target.value})}/></div>
-              <div className="grid-2">
-                <div className="input-group"><label className="input-label">Categoría</label><input className="input-control" required value={form.category} onChange={e => setForm({...form, category: e.target.value})}/></div>
-                <div className="input-group"><label className="input-label">Origen (Opcional)</label><input className="input-control" value={form.origin} onChange={e => setForm({...form, origin: e.target.value})}/></div>
+      <div className="page-content">
+        <div className="card">
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)' }}>Catálogo Actual</h3>
+          </div>
+          
+          <div style={{ overflowX: 'auto' }}>
+            {loading ? (
+              <div style={{ padding: '3rem', textAlign: 'center' }}>Cargando inventario...</div>
+            ) : products.length === 0 ? (
+              <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                <Package size={48} style={{ opacity: 0.2, margin: '0 auto 1rem' }} />
+                <p>No hay productos en el inventario.</p>
               </div>
-              <div className="input-group"><label className="input-label">Descripción Corta</label><textarea className="input-control" rows="3" value={form.short_description} onChange={e => setForm({...form, short_description: e.target.value})}></textarea></div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+                    <th style={{ padding: '1rem 1.5rem', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.85rem' }}>FOTO / EQUIPO</th>
+                    <th style={{ padding: '1rem 1.5rem', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.85rem' }}>CATEGORÍA</th>
+                    <th style={{ padding: '1rem 1.5rem', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.85rem' }}>ORIGEN</th>
+                    <th style={{ padding: '1rem 1.5rem', textAlign: 'left', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.85rem' }}>DESCRIPCIÓN BREVE</th>
+                    <th style={{ padding: '1rem 1.5rem', textAlign: 'right', color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.85rem' }}>ACCIONES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map(product => {
+                    const imgName = product.slug === 'filtro-prensa-dewatering' ? 'filtro-prensa' 
+                                  : product.slug === 'espesador-clarificador-roytec' ? 'espesador-roytec' 
+                                  : product.slug === 'bomba-centrifuga-pemo' ? 'bomba-pemo' 
+                                  : 'centrifuga';
+                    return (
+                      <tr key={product.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s' }}>
+                        <td style={{ padding: '1rem 1.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ width: '50px', height: '50px', borderRadius: '8px', overflow: 'hidden', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', flexShrink: 0 }}>
+                              <img 
+                                src={`/images/${imgName}.webp`} 
+                                alt={product.name} 
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => { e.target.style.display='none'; }}
+                              />
+                            </div>
+                            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{product.name}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: '1rem 1.5rem' }}>
+                          <span className="badge" style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent-primary)' }}>
+                            <Tag size={12} /> {product.category || 'General'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1rem 1.5rem', color: 'var(--text-secondary)' }}>{product.origin || 'N/A'}</td>
+                        <td style={{ padding: '1rem 1.5rem', color: 'var(--text-secondary)', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {product.short_description || 'Sin descripción'}
+                        </td>
+                        <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                            <button onClick={() => openModal(product)} className="btn-ghost" title="Editar" style={{ padding: '0.5rem', borderRadius: '8px' }}>
+                              <Edit2 size={18} color="var(--accent-primary)" />
+                            </button>
+                            <button onClick={() => handleDelete(product.id)} className="btn-ghost" title="Eliminar" style={{ padding: '0.5rem', borderRadius: '8px' }}>
+                              <Trash2 size={18} color="var(--danger)" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      </div>
 
-              <button type="submit" className="btn btn-primary w-full" style={{ marginTop: '1rem' }}>{editingProduct ? 'Guardar Cambios' : 'Crear Equipo'}</button>
-            </form>
+      {/* Modal para Agregar/Editar Producto */}
+      {showModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }}>
+          <div className="card" style={{ width: '100%', maxWidth: '600px', margin: '2rem', animation: 'modalSlideIn 0.3s ease-out', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="card-header" style={{ padding: '1.5rem 2rem' }}>
+              <h3 style={{ fontSize: '1.3rem', color: 'var(--text-primary)' }}>
+                {formData.id ? 'Editar Equipo' : 'Nuevo Equipo al Inventario'}
+              </h3>
+            </div>
+            <div className="card-body" style={{ padding: '2rem' }}>
+              <form onSubmit={handleSubmit}>
+                <div className="input-group">
+                  <label className="input-label">Nombre del Equipo</label>
+                  <input type="text" className="input-control" name="name" value={formData.name} onChange={handleInputChange} required placeholder="Ej. Filtro Prensa de Alta Presión" />
+                </div>
+                
+                <div className="grid-2">
+                  <div className="input-group">
+                    <label className="input-label">Categoría</label>
+                    <select className="input-control" name="category" value={formData.category} onChange={handleInputChange} required>
+                      <option value="">Seleccione...</option>
+                      <option value="Separación Sólido-Líquido">Separación Sólido-Líquido</option>
+                      <option value="Bombeo Industrial">Bombeo Industrial</option>
+                      <option value="Clasificación">Clasificación</option>
+                      <option value="Repuestos">Repuestos</option>
+                    </select>
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">Origen (Fabricación)</label>
+                    <input type="text" className="input-control" name="origin" value={formData.origin} onChange={handleInputChange} placeholder="Ej. Italia, Sudáfrica, Perú" />
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label">Identificador URL (Slug)</label>
+                  <input type="text" className="input-control" name="slug" value={formData.slug} onChange={handleInputChange} required placeholder="ej. filtro-prensa-dewatering" />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Sin espacios, use guiones (ej. bomba-pemo)</span>
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label">Descripción Breve</label>
+                  <textarea className="input-control" name="short_description" value={formData.short_description} onChange={handleInputChange} rows="3" required placeholder="Describe la capacidad y utilidad del equipo..."></textarea>
+                </div>
+
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '2rem' }}>
+                  <button type="button" onClick={closeModal} className="btn btn-ghost" style={{ padding: '0.75rem 1.5rem' }}>Cancelar</button>
+                  <button type="submit" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>{formData.id ? 'Guardar Cambios' : 'Agregar Equipo'}</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
