@@ -98,23 +98,26 @@ const AdminQuotationsPage = () => {
       </div>
 
       {showForm && (
-        <div className="card animate-fade-in" style={{ marginBottom: '2rem', border: '1px solid var(--accent-primary)', backgroundColor: 'var(--bg-secondary)' }}>
-          <h3 style={{ marginBottom: '1rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <FileText size={18}/> Crear y Enviar Cotización (PDF)
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="form-group" style={{ marginBottom: '1rem' }}>
-              <label style={{ fontSize: '0.85rem' }}>Título de la Propuesta</label>
-              <input type="text" className="input-control" value={quoteTitle} onChange={e => setQuoteTitle(e.target.value)} placeholder="Ej. Suministro de Bomba PEMO" />
+        <div className="animate-fade-in" style={{ marginBottom: '2rem', border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'var(--bg-primary)', padding: '2rem', boxShadow: 'var(--shadow-sm)' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.25rem' }}>
+            <div style={{ width: 36, height: 36, borderRadius: '8px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FileText size={18}/>
             </div>
-            <div className="form-group" style={{ marginBottom: '1rem' }}>
-              <label style={{ fontSize: '0.85rem' }}>Monto Total (USD)</label>
-              <input type="number" className="input-control" value={quoteAmount} onChange={e => setQuoteAmount(e.target.value)} placeholder="Ej. 15000" />
+            Generar Nueva Cotización Oficial
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            <div className="form-group">
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Título de la Propuesta</label>
+              <input type="text" className="input-control" value={quoteTitle} onChange={e => setQuoteTitle(e.target.value)} placeholder="Ej. Suministro de Bomba PEMO" style={{ width: '100%' }} />
+            </div>
+            <div className="form-group">
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Monto Total (USD)</label>
+              <input type="number" className="input-control" value={quoteAmount} onChange={e => setQuoteAmount(e.target.value)} placeholder="Ej. 15000" style={{ width: '100%' }} />
             </div>
           </div>
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-            <label style={{ fontSize: '0.85rem' }}>Descripción / Especificaciones Técnicas</label>
-            <textarea className="input-control" rows="3" value={quoteDesc} onChange={e => setQuoteDesc(e.target.value)} placeholder="Detalles extra del equipo o servicio..."></textarea>
+          <div className="form-group" style={{ marginBottom: '2rem' }}>
+            <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Descripción / Especificaciones Técnicas</label>
+            <textarea className="input-control" rows="4" value={quoteDesc} onChange={e => setQuoteDesc(e.target.value)} placeholder="Detalles extra del equipo o servicio (Esto aparecerá en el PDF)..." style={{ width: '100%', resize: 'vertical' }}></textarea>
           </div>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
             <button className="btn btn-ghost" onClick={() => setShowForm(false)}>Cancelar</button>
