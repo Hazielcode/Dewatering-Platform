@@ -133,7 +133,6 @@ const StoresPage = () => {
             <form onSubmit={handleSubmit}>
               <div className="input-group"><label className="input-label">Nombre</label><input className="input-control" required value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})}/></div>
               <div className="input-group"><label className="input-label">Ubicación</label><input className="input-control" placeholder="Ej: Av. Javier Prado 1520, Lima" value={form.ubicacion} onChange={e => setForm({...form, ubicacion: e.target.value})}/></div>
-              <div className="input-group"><label className="input-label">URL de Imagen</label><input className="input-control" placeholder="/images/sucursal.webp" value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})}/></div>
               <button type="submit" className="btn btn-primary w-full" style={{ marginTop: '1rem' }}>{editingStore ? 'Guardar Cambios' : 'Crear Sucursal'}</button>
             </form>
           </div>
