@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
-import { Mail, Briefcase, Clock, Building, ArrowRight, MessageSquare } from 'lucide-react';
+import { Mail, Briefcase, Clock, Building, MessageSquare, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../../services/api';
 
@@ -24,7 +24,32 @@ const AdminRequestsPage = () => {
   };
 
   const handleRespond = (email, name) => {
-    window.location.href = `mailto:${email}?subject=Respuesta a su solicitud - Dewatering Solutions&body=Hola ${name}, hemos recibido su solicitud técnica.`;
+    const subject = encodeURIComponent('Respuesta a su solicitud - Dewatering Solutions');
+    const body = encodeURIComponent(`Hola ${name},\n\nHemos recibido su solicitud técnica a través de nuestro portal web.\n\n`);
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`, '_blank');
+  };
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: '¿Eliminar solicitud?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await api.delete(`/leads/${id}`);
+        fetchRequests();
+        Swal.fire('Eliminado!', 'La solicitud ha sido eliminada.', 'success');
+      } catch (error) {
+        Swal.fire('Error', 'No se pudo eliminar la solicitud.', 'error');
+      }
+    }
   };
 
   const handleViewMessage = (req) => {
@@ -81,7 +106,10 @@ const AdminRequestsPage = () => {
                 <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                     <button onClick={() => handleViewMessage(req)} className="btn-ghost" title="Leer Mensaje" style={{ padding: '0.5rem', borderRadius: '8px' }}>
-                      <MessageSquare size={18} color="var(--text-secondary)" />
+                      <MessageSquare size={18} color="var(--accent-primary)" />
+                    </button>
+                    <button onClick={() => handleDelete(req.id)} className="btn-ghost" title="Eliminar" style={{ padding: '0.5rem', borderRadius: '8px' }}>
+                      <Trash2 size={18} color="var(--danger)" />
                     </button>
                     <button onClick={() => handleRespond(req.contact_email, req.contact_name)} className="btn" style={{ padding: '0.5rem 1rem', backgroundColor: 'var(--accent-primary)', color: 'white', borderRadius: '8px', fontSize: '0.85rem' }}>
                       <Mail size={16} style={{ marginRight: '6px' }}/> Responder
