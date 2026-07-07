@@ -98,21 +98,41 @@ const DashboardPage = () => {
   const loadLiveData = useCallback(async () => {
     try {
       const results = await Promise.allSettled([
-        api.get('/users/stats'),
-        api.get('/products/stats'),
-        api.get('/stores'),
-        api.get('/audit?limit=5'),
-        api.get('/audit/stats'),
+        api.get('/users'),
+        api.get('/products'),
+        api.get('/audit')
       ]);
 
-      if (results[0].status === 'fulfilled') setUserStats(results[0].value.data.stats || results[0].value.data);
-      if (results[1].status === 'fulfilled') setProductStats(results[1].value.data.stats || results[1].value.data);
-      if (results[2].status === 'fulfilled') setStoreCount(results[2].value.data.length || 0);
-      if (results[3].status === 'fulfilled') setAuditLogs(results[3].value.data.logs || results[3].value.data || []);
-      if (results[4].status === 'fulfilled') setAuditStats(results[4].value.data.stats || results[4].value.data);
+      let isConnected = false;
+      if (results[0].status === 'fulfilled') {
+        const users = results[0].value.data.users || [];
+        setUserStats({ activos: users.length, con_mfa: 0 });
+        isConnected = true;
+      }
+      if (results[1].status === 'fulfilled') {
+        const products = results[1].value.data.products || [];
+        
+        // Calcular categorias manualmente
+        const catMap = {};
+        products.forEach(p => {
+          const c = p.category || 'Otros';
+          catMap[c] = (catMap[c] || 0) + 1;
+        });
+        const byCategory = Object.keys(catMap).map(k => ({ categoria: k, count: catMap[k] }));
 
-      // Si al menos una petición tuvo éxito, marcar como live
-      if (results.some(r => r.status === 'fulfilled')) setIsLive(true);
+        setProductStats({ total: products.length, bajo_stock: 0, byCategory, byStore: [{ sucursal: 'Lima', stock: products.length }] });
+        isConnected = true;
+      }
+      setStoreCount(2); // Hardcoded to 2 since StoresPage uses local state with 2 branches
+      
+      if (results[2].status === 'fulfilled') {
+        const logs = results[2].value.data.logs || results[2].value.data || [];
+        setAuditLogs(logs);
+        setAuditStats({ total: logs.length, last24h: logs.length });
+        isConnected = true;
+      }
+
+      setIsLive(isConnected);
     } catch {
       setIsLive(false);
     }
@@ -124,15 +144,15 @@ const DashboardPage = () => {
   const kpis = [
     { 
       label: 'Usuarios Activos', 
-      value: userStats?.activos !== undefined ? userStats.activos.toLocaleString() : '—', 
-      change: userStats?.con_mfa !== undefined ? `${userStats.con_mfa} con MFA` : '—', 
+      value: userStats?.activos !== undefined ? userStats.activos.toLocaleString() : '0', 
+      change: 'Registrados', 
       up: true, icon: Users, color: '#2563eb', bg: 'rgba(37,99,235,0.08)' 
     },
     { 
       label: 'Ítems Inventario', 
-      value: productStats?.total !== undefined ? productStats.total.toLocaleString() : '—',
-      change: productStats?.bajo_stock !== undefined ? `${productStats.bajo_stock} bajo stock` : '—', 
-      up: productStats ? productStats.bajo_stock === 0 : true, 
+      value: productStats?.total !== undefined ? productStats.total.toLocaleString() : '0',
+      change: 'En catálogo', 
+      up: true, 
       icon: Package, color: '#10b981', bg: 'rgba(16,185,129,0.08)' 
     },
     { 
@@ -143,8 +163,8 @@ const DashboardPage = () => {
     },
     { 
       label: 'Eventos Auditoría', 
-      value: auditStats?.total !== undefined ? auditStats.total.toLocaleString() : '—', 
-      change: auditStats?.last24h !== undefined ? `${auditStats.last24h} últimas 24h` : '—', 
+      value: auditStats?.total !== undefined ? auditStats.total.toLocaleString() : '0', 
+      change: 'Registrados', 
       up: false, icon: ShieldAlert, color: '#ef4444', bg: 'rgba(239,68,68,0.08)' 
     },
   ];
@@ -202,37 +222,7 @@ const DashboardPage = () => {
         ))}
       </div>
 
-      {/* Area Chart — Telemetría de Accesos */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <div className={`card ${loaded ? 'animate-fade-in' : ''}`} style={{ animationDelay: '0.25s' }}>
-          <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <h3 style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}><Activity size={18} color="var(--accent-primary)"/> Telemetría de Accesos — Últimas 24h</h3>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Accesos autorizados vs bloqueos del Shield JWT</p>
-            </div>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', fontSize: '0.8rem' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: 'var(--accent-primary)', display: 'inline-block' }}></span> Accesos</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: 'var(--danger)', display: 'inline-block' }}></span> Bloqueos</span>
-            </div>
-          </div>
-          <div className="card-body" style={{ height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={fallbackAccessData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="gradAccesos" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#2563eb" stopOpacity={0.3}/><stop offset="100%" stopColor="#2563eb" stopOpacity={0.02}/></linearGradient>
-                  <linearGradient id="gradBloqueos" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ef4444" stopOpacity={0.2}/><stop offset="100%" stopColor="#ef4444" stopOpacity={0}/></linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false}/>
-                <XAxis dataKey="hour" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false}/>
-                <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} axisLine={false} tickLine={false}/>
-                <RechartsTooltip content={<CustomTooltip/>} cursor={{ stroke: 'var(--accent-primary)', strokeWidth: 1, strokeDasharray: '4 4' }}/>
-                <Area type="monotone" name="Accesos" dataKey="accesos" stroke="#2563eb" strokeWidth={2.5} fill="url(#gradAccesos)" animationDuration={1500} dot={false} activeDot={{ r: 6, strokeWidth: 2, stroke: '#fff', fill: '#2563eb' }}/>
-                <Area type="monotone" name="Bloqueos" dataKey="bloqueos" stroke="#ef4444" strokeWidth={2} fill="url(#gradBloqueos)" animationDuration={1500} dot={false} activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff', fill: '#ef4444' }}/>
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+
 
       {/* Pie + Bar */}
       <div className="grid-2" style={{ marginBottom: '1.5rem' }}>
