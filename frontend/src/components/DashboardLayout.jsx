@@ -12,7 +12,7 @@ const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   ]},
   { section: 'CRM / Comercial', items: [
-    { label: 'Leads (Prospectos)', icon: Users, path: '/leads', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
+    { label: 'Gestión Cotizaciones', icon: FileText, path: '/admin/quotations', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
   ]},
   { section: 'Operaciones', items: [
     { label: 'Inventario', icon: Package, path: '/inventory', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },

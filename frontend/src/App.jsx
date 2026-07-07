@@ -21,6 +21,7 @@ import ApprovalsPage from './pages/ApprovalsPage.jsx';
 import AITrainingPage from './pages/AITrainingPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import LeadsPage from './pages/crm/LeadsPage.jsx';
+import AdminQuotationsPage from './pages/crm/AdminQuotationsPage.jsx';
 import ClientModulePage from './pages/client/ClientModulePage.jsx';
 import ClientProjectsPage from './pages/client/ClientProjectsPage.jsx';
 import ClientQuotationsPage from './pages/client/ClientQuotationsPage.jsx';
@@ -125,6 +126,7 @@ const App = () => {
 
             {/* Rutas CRM */}
             <Route path="/leads" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'OPERATOR']}><LeadsPage /></ProtectedRoute>} />
+            <Route path="/admin/quotations" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL', 'OPERATOR']}><AdminQuotationsPage /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" />} />
