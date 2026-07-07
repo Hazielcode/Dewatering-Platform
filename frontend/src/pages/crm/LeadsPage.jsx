@@ -16,6 +16,11 @@ const LeadsPage = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedLead, setSelectedLead] = useState(null);
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [quoteTitle, setQuoteTitle] = useState('');
+  const [quoteAmount, setQuoteAmount] = useState('');
+  const [quoteDesc, setQuoteDesc] = useState('');
+  const [isQuoting, setIsQuoting] = useState(false);
 
   const fetchLeads = async () => {
     try {
@@ -64,6 +69,28 @@ const LeadsPage = () => {
     (l.contact_name?.toLowerCase().includes(search.toLowerCase()) || 
      l.company_name?.toLowerCase().includes(search.toLowerCase()))
   );
+
+  const handleSendQuote = async () => {
+    if (!quoteTitle || !quoteAmount) return Swal.fire('Error', 'Ingrese título y monto', 'error');
+    setIsQuoting(true);
+    try {
+      await api.post('/quotations', {
+        title: quoteTitle,
+        description: quoteDesc || `Cotización solicitada por ${selectedLead.company_name}`,
+        amount: parseFloat(quoteAmount),
+        lead_id: selectedLead.id
+      });
+      Swal.fire('¡Éxito!', 'Cotización enviada. El cliente la verá en su portal.', 'success');
+      setShowQuoteForm(false);
+      setQuoteTitle('');
+      setQuoteAmount('');
+      setQuoteDesc('');
+    } catch (error) {
+      Swal.fire('Error', 'No se pudo generar la cotización', 'error');
+    } finally {
+      setIsQuoting(false);
+    }
+  };
 
   return (
     <DashboardLayout title="Leads (Prospectos)" subtitle="Gestión comercial y pipeline">
@@ -184,7 +211,7 @@ const LeadsPage = () => {
           <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.25rem' }}>Detalles del Prospecto</h3>
-              <button onClick={() => setSelectedLead(null)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>&times;</button>
+              <button onClick={() => { setSelectedLead(null); setShowQuoteForm(false); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>&times;</button>
             </div>
             <div className="card-body">
               <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
@@ -221,9 +248,39 @@ const LeadsPage = () => {
                 </div>
               </div>
 
+              {showQuoteForm && (
+                <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', border: '1px solid var(--border-color)' }}>
+                  <h4 style={{ marginBottom: '1rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}><FileText size={18}/> Generador de Cotización (PDF)</h4>
+                  
+                  <div className="form-group" style={{ marginBottom: '1rem' }}>
+                    <label style={{ fontSize: '0.85rem' }}>Título de la Propuesta</label>
+                    <input type="text" className="input-control" value={quoteTitle} onChange={e => setQuoteTitle(e.target.value)} placeholder="Ej. Suministro de Bomba PEMO" />
+                  </div>
+                  
+                  <div className="form-group" style={{ marginBottom: '1rem' }}>
+                    <label style={{ fontSize: '0.85rem' }}>Monto Total (USD)</label>
+                    <input type="number" className="input-control" value={quoteAmount} onChange={e => setQuoteAmount(e.target.value)} placeholder="Ej. 15000" />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ fontSize: '0.85rem' }}>Descripción / Notas</label>
+                    <textarea className="input-control" rows="2" value={quoteDesc} onChange={e => setQuoteDesc(e.target.value)} placeholder="Detalles extra..."></textarea>
+                  </div>
+
+                  <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleSendQuote} disabled={isQuoting}>
+                    {isQuoting ? 'Generando PDF y Enviando...' : 'Confirmar y Enviar Cotización'}
+                  </button>
+                </div>
+              )}
+
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
-                <button className="btn btn-ghost" onClick={() => setSelectedLead(null)}>Cerrar</button>
-                <a href={`mailto:${selectedLead.contact_email}`} className="btn btn-primary"><Mail size={16}/> Enviar Correo</a>
+                <button className="btn btn-ghost" onClick={() => { setSelectedLead(null); setShowQuoteForm(false); }}>Cerrar</button>
+                {!showQuoteForm && (
+                  <button className="btn" style={{ backgroundColor: 'var(--warning)', color: '#fff' }} onClick={() => setShowQuoteForm(true)}>
+                    <FileText size={16}/> Generar Cotización
+                  </button>
+                )}
+                <a href={`mailto:${selectedLead.contact_email}`} className="btn btn-primary"><Mail size={16}/> Contactar</a>
               </div>
             </div>
           </div>
