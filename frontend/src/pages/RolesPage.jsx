@@ -73,7 +73,7 @@ const RolesPage = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                {['ID', 'Usuario', 'Rol', 'Estado', 'Registro', 'Acciones'].map(h => (
+                {['ID', 'Usuario', 'Rol', 'Acceso', 'Registro', 'Acciones'].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '0.75rem 1.25rem', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{h}</th>
                 ))}
               </tr>
@@ -97,8 +97,8 @@ const RolesPage = () => {
                   </td>
                   <td style={{ padding: '0.85rem 1.25rem' }}>
                     {u.is_active ? 
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--success)', fontSize: '0.85rem', fontWeight: 500 }}><CheckCircle size={14}/> Activo</span> : 
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 500 }}><XCircle size={14}/> Inactivo</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--success)', fontSize: '0.85rem', fontWeight: 500 }}><CheckCircle size={14}/> Habilitado</span> : 
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 500 }}><XCircle size={14}/> Suspendido</span>
                     }
                   </td>
                   <td style={{ padding: '0.85rem 1.25rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -154,7 +154,7 @@ const RolesPage = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', padding: '0.5rem 0' }}>
                 <input type="checkbox" id="activeUser" checked={form.is_active} onChange={e => setForm({...form, is_active: e.target.checked})} style={{ width: '16px', height: '16px', accentColor: 'var(--accent-primary)' }} />
-                <label htmlFor="activeUser" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 500 }}>Cuenta Activa</label>
+                <label htmlFor="activeUser" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 500 }}>Acceso Habilitado (Permitir Ingreso)</label>
               </div>
 
               <button type="submit" className="btn btn-primary w-full">{editing ? 'Guardar Cambios' : 'Crear Usuario'}</button>
