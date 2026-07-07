@@ -1,39 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout.jsx';
-import { Plus, Pencil, Trash2, X, Shield } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Users as UsersIcon, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../services/api.js';
 
 const RolesPage = () => {
-  const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ nombre:'', descripcion:'' });
+  const [form, setForm] = useState({ full_name: '', email: '', role: 'CLIENT', is_active: true });
   const [error, setError] = useState('');
 
-  const fetch = async () => {
-    try { const r = await api.get('/roles'); setRoles(r.data.roles || r.data || []); }
-    catch { setRoles([]); }
+  const fetchUsers = async () => {
+    try { 
+      const r = await api.get('/users'); 
+      setUsers(r.data.users || []); 
+    }
+    catch { setUsers([]); }
     finally { setLoading(false); }
   };
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => { fetchUsers(); }, []);
 
-  const openCreate = () => { setEditing(null); setForm({ nombre:'',descripcion:'' }); setError(''); setShowModal(true); };
-  const openEdit = (r) => { setEditing(r); setForm({ nombre:r.nombre, descripcion:r.descripcion||'' }); setError(''); setShowModal(true); };
+  const openCreate = () => { setEditing(null); setForm({ full_name: '', email: '', role: 'CLIENT', is_active: true }); setError(''); setShowModal(true); };
+  const openEdit = (u) => { setEditing(u); setForm({ full_name: u.full_name || '', email: u.email, role: u.role || 'CLIENT', is_active: u.is_active }); setError(''); setShowModal(true); };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('');
     try {
-      if (editing) { await api.put(`/roles/${editing.id}`, form); }
-      else { await api.post('/roles', form); }
-      setShowModal(false); fetch();
-    } catch (err) { setError(err.response?.data?.error||'Error'); }
+      if (editing) { 
+        await api.put(`/users/${editing.id}`, form); 
+      }
+      else { 
+        // Crear usuario por defecto con password (123456)
+        await api.post('/auth/register', { ...form, password: 'password123' }); 
+      }
+      setShowModal(false); fetchUsers();
+      Swal.fire({ title: 'Éxito', text: 'Usuario guardado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+    } catch (err) { setError(err.response?.data?.error || 'Error'); }
   };
+
   const handleDelete = async (id) => {
     const result = await Swal.fire({
-      title: '¿Eliminar rol?',
-      text: 'Solo es posible si no tiene usuarios asignados. Esta acción es irreversible.',
+      title: '¿Eliminar usuario?',
+      text: 'Esta acción es irreversible.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
@@ -45,57 +55,109 @@ const RolesPage = () => {
     });
     if (!result.isConfirmed) return;
     try { 
-      await api.delete(`/roles/${id}`); 
-      fetch(); 
-      Swal.fire({ title: 'Eliminado', text: 'El rol ha sido eliminado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
+      await api.delete(`/users/${id}`); 
+      fetchUsers(); 
+      Swal.fire({ title: 'Eliminado', text: 'El usuario ha sido eliminado.', icon: 'success', timer: 1500, showConfirmButton: false, background: 'var(--bg-primary)', color: 'var(--text-primary)' });
     }
-    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error||'Error al eliminar rol', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
+    catch (err) { Swal.fire({ title: 'Error', text: err.response?.data?.error || 'Error al eliminar', icon: 'error', background: 'var(--bg-primary)', color: 'var(--text-primary)' }); }
   };
 
-  const colors = ['#2563eb','#10b981','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
-
   return (
-    <DashboardLayout title="Roles y Permisos" subtitle="Gestión del sistema RBAC">
-      <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:'1.5rem' }}>
-        <button className="btn btn-primary" onClick={openCreate}><Plus size={18}/> Nuevo Rol</button>
+    <DashboardLayout title="Roles y Usuarios" subtitle="Gestión de cuentas y accesos RBAC">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
+        <button className="btn btn-primary" onClick={openCreate}><Plus size={18}/> Nuevo Usuario</button>
       </div>
-      <div className="grid-4" style={{ gridTemplateColumns:'repeat(auto-fill, minmax(260px, 1fr))' }}>
-        {loading ? <div className="card" style={{ padding:'3rem',textAlign:'center',gridColumn:'1/-1' }}><p className="text-secondary">Cargando...</p></div>
-        : roles.length===0 ? <div className="card" style={{ padding:'3rem',textAlign:'center',gridColumn:'1/-1' }}><p className="text-secondary">No hay roles.</p></div>
-        : roles.map((r,i)=>(
-          <div key={r.id} className="card" style={{ padding:'1.5rem',transition:'transform 0.2s, box-shadow 0.2s' }}
-            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='var(--shadow-lg)';}}
-            onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='var(--shadow-sm)';}}>
-            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start' }}>
-              <div style={{ display:'flex',alignItems:'center',gap:'0.75rem' }}>
-                <div style={{ width:42,height:42,borderRadius:'10px',backgroundColor:`${colors[i%colors.length]}15`,display:'flex',alignItems:'center',justifyContent:'center' }}>
-                  <Shield size={20} color={colors[i%colors.length]}/>
-                </div>
-                <div>
-                  <h4 style={{ fontSize:'1rem',color:'var(--text-primary)',margin:0 }}>{r.nombre}</h4>
-                  <p style={{ fontSize:'0.8rem',color:'var(--text-secondary)',marginTop:2 }}>{r.descripcion||'Sin descripción'}</p>
-                </div>
-              </div>
-              <div style={{ display:'flex',gap:'0.25rem' }}>
-                <button className="btn-ghost" onClick={()=>openEdit(r)} style={{ width:30,height:30 }}><Pencil size={14}/></button>
-                <button className="btn-ghost" onClick={()=>handleDelete(r.id)} style={{ width:30,height:30,color:'var(--danger)' }}><Trash2 size={14}/></button>
-              </div>
-            </div>
-          </div>
-        ))}
+
+      <div className="card">
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                {['ID', 'Usuario', 'Rol', 'Estado', 'Registro', 'Acciones'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '0.75rem 1.25rem', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Cargando usuarios...</td></tr>
+              ) : users.length === 0 ? (
+                <tr><td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No se encontraron usuarios.</td></tr>
+              ) : users.map(u => (
+                <tr key={u.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td style={{ padding: '0.85rem 1.25rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{u.id.substring(0, 8)}...</td>
+                  <td style={{ padding: '0.85rem 1.25rem' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{u.full_name || 'Sin Nombre'}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{u.email}</div>
+                  </td>
+                  <td style={{ padding: '0.85rem 1.25rem' }}>
+                    <span style={{ padding: '0.15rem 0.5rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 600, backgroundColor: u.role === 'ADMIN' || u.role === 'SUPER_ADMIN' ? 'rgba(139,92,246,0.1)' : 'rgba(10,185,129,0.1)', color: u.role === 'ADMIN' || u.role === 'SUPER_ADMIN' ? '#8b5cf6' : '#10b981' }}>
+                      {u.role}
+                    </span>
+                  </td>
+                  <td style={{ padding: '0.85rem 1.25rem' }}>
+                    {u.is_active ? 
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--success)', fontSize: '0.85rem', fontWeight: 500 }}><CheckCircle size={14}/> Activo</span> : 
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 500 }}><XCircle size={14}/> Inactivo</span>
+                    }
+                  </td>
+                  <td style={{ padding: '0.85rem 1.25rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                    {new Date(u.created_at).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '0.85rem 1.25rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button className="btn-ghost" onClick={() => openEdit(u)} style={{ width: 32, height: 32 }}><Pencil size={15}/></button>
+                      <button className="btn-ghost" onClick={() => handleDelete(u.id)} style={{ width: 32, height: 32, color: 'var(--danger)' }}><Trash2 size={15}/></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
       {showModal && (
-        <div style={{ position:'fixed',inset:0,backgroundColor:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:200,padding:'1rem' }} onClick={()=>setShowModal(false)}>
-          <div className="card animate-fade-in" style={{ width:'100%',maxWidth:440,padding:'2rem' }} onClick={e=>e.stopPropagation()}>
-            <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem' }}>
-              <h3 style={{ color:'var(--text-primary)' }}>{editing?'Editar Rol':'Nuevo Rol'}</h3>
-              <button className="btn-ghost" onClick={()=>setShowModal(false)} style={{ width:32,height:32 }}><X size={18}/></button>
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: '1rem' }} onClick={() => setShowModal(false)}>
+          <div className="card animate-fade-in" style={{ width: '100%', maxWidth: 440, padding: '2rem' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ color: 'var(--text-primary)' }}>{editing ? 'Editar Usuario' : 'Nuevo Usuario'}</h3>
+              <button className="btn-ghost" onClick={() => setShowModal(false)} style={{ width: 32, height: 32 }}><X size={18}/></button>
             </div>
-            {error && <div style={{ backgroundColor:'rgba(239,68,68,0.1)',color:'var(--danger)',padding:'0.6rem',borderRadius:6,marginBottom:'1rem',fontSize:'0.85rem' }}>{error}</div>}
+            {error && <div style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '0.6rem', borderRadius: 6, marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</div>}
+            
             <form onSubmit={handleSubmit}>
-              <div className="input-group"><label className="input-label">Nombre</label><input className="input-control" required value={form.nombre} onChange={e=>setForm({...form,nombre:e.target.value})}/></div>
-              <div className="input-group"><label className="input-label">Descripción</label><input className="input-control" value={form.descripcion} onChange={e=>setForm({...form,descripcion:e.target.value})}/></div>
-              <button type="submit" className="btn btn-primary w-full">{editing?'Guardar':'Crear Rol'}</button>
+              <div className="input-group">
+                <label className="input-label">Nombre Completo</label>
+                <input className="input-control" required value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} />
+              </div>
+              <div className="input-group">
+                <label className="input-label">Email</label>
+                <input type="email" className="input-control" required value={form.email} onChange={e => setForm({...form, email: e.target.value})} disabled={!!editing} />
+              </div>
+              
+              {!editing && (
+                <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: 'var(--accent-light)', borderRadius: '6px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  La contraseña por defecto será: <strong>password123</strong> (El usuario deberá cambiarla).
+                </div>
+              )}
+
+              <div className="input-group">
+                <label className="input-label">Rol del Sistema</label>
+                <select className="input-control" value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
+                  <option value="CLIENT">CLIENTE (Solo ver su portal)</option>
+                  <option value="OPERATOR">OPERARIO (Operaciones, ver inventario)</option>
+                  <option value="ADMIN">ADMINISTRADOR (Acceso Total)</option>
+                  <option value="SUPER_ADMIN">SUPER ADMIN (Auditoría, Roles)</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', padding: '0.5rem 0' }}>
+                <input type="checkbox" id="activeUser" checked={form.is_active} onChange={e => setForm({...form, is_active: e.target.checked})} style={{ width: '16px', height: '16px', accentColor: 'var(--accent-primary)' }} />
+                <label htmlFor="activeUser" style={{ fontSize: '0.9rem', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 500 }}>Cuenta Activa</label>
+              </div>
+
+              <button type="submit" className="btn btn-primary w-full">{editing ? 'Guardar Cambios' : 'Crear Usuario'}</button>
             </form>
           </div>
         </div>
@@ -103,4 +165,5 @@ const RolesPage = () => {
     </DashboardLayout>
   );
 };
+
 export default RolesPage;
