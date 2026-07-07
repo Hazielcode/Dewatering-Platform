@@ -1,70 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout.jsx';
 import { FileText, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
 import Swal from 'sweetalert2';
+import api from '../../services/api';
 
 const ClientQuotationsPage = () => {
-  const [quotations, setQuotations] = useState([
-    {
-      id: 'COT-2026-089',
-      title: 'Suministro de Filtro Prensa automatizado y Placas',
-      date: '02-Jun-2026',
-      amount: '$145,000.00',
-      status: 'pending',
-      validUntil: '02-Jul-2026'
-    },
-    {
-      id: 'COT-2026-045',
-      title: 'Overhaul de Centrífuga Pusher',
-      date: '15-May-2026',
-      amount: '$32,500.00',
-      status: 'approved',
-      validUntil: '15-Jun-2026'
-    },
-    {
-      id: 'COT-2026-012',
-      title: 'Estudio de Reología y Filtración Piloto',
-      date: '10-Ene-2026',
-      amount: '$8,200.00',
-      status: 'approved',
-      validUntil: '10-Feb-2026'
+  const [quotations, setQuotations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchQuotations();
+  }, []);
+
+  const fetchQuotations = async () => {
+    try {
+      const response = await api.get('/quotations');
+      setQuotations(response.data.quotations || response.data);
+    } catch (error) {
+      console.error('Error fetching quotations:', error);
+    } finally {
+      setLoading(false);
     }
-  ]);
-
-  const handleApprove = (id) => {
-    setQuotations(prev => prev.map(q => q.id === id ? { ...q, status: 'approved' } : q));
-    Swal.fire({
-      title: 'Aprobada',
-      text: `Cotización ${id} aprobada exitosamente. El equipo ha sido notificado.`,
-      icon: 'success',
-      background: 'var(--bg-primary)',
-      color: 'var(--text-primary)',
-      confirmButtonColor: '#10b981'
-    });
   };
 
-  const handleReject = (id) => {
-    setQuotations(prev => prev.map(q => q.id === id ? { ...q, status: 'rejected' } : q));
-    Swal.fire({
-      title: 'Rechazada',
-      text: `Cotización ${id} rechazada. Nos pondremos en contacto para reevaluar la propuesta.`,
-      icon: 'error',
-      background: 'var(--bg-primary)',
-      color: 'var(--text-primary)',
-      confirmButtonColor: '#ef4444'
-    });
+  const handleApprove = async (id) => {
+    try {
+      await api.patch(`/quotations/${id}/status`, { status: 'APPROVED' });
+      fetchQuotations();
+      Swal.fire({
+        title: 'Aprobada',
+        text: `Cotización aprobada exitosamente. El equipo ha sido notificado.`,
+        icon: 'success',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
+        confirmButtonColor: '#10b981'
+      });
+    } catch (error) {
+      Swal.fire('Error', 'No se pudo aprobar la cotización.', 'error');
+    }
   };
 
-  const handleDownload = (id) => {
+  const handleReject = async (id) => {
+    try {
+      await api.patch(`/quotations/${id}/status`, { status: 'REJECTED' });
+      fetchQuotations();
+      Swal.fire({
+        title: 'Rechazada',
+        text: `Cotización rechazada. Nos pondremos en contacto para reevaluar la propuesta.`,
+        icon: 'error',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
+        confirmButtonColor: '#ef4444'
+      });
+    } catch (error) {
+      Swal.fire('Error', 'No se pudo rechazar la cotización.', 'error');
+    }
+  };
+
+  const handleDownload = (id, number) => {
     Swal.fire({
-      title: 'Descargando',
-      text: `Descargando archivo encriptado: ${id}_Propuesta_Tecnica.pdf`,
+      title: 'Generando PDF Oficial...',
+      text: `Por favor espere un momento.`,
       icon: 'info',
-      timer: 2000,
       showConfirmButton: false,
-      background: 'var(--bg-primary)',
-      color: 'var(--text-primary)'
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
     });
+
+    api.get(`/quotations/${id}/pdf`, { responseType: 'blob' })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `Cotizacion_${number}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        Swal.close();
+      })
+      .catch(() => {
+        Swal.fire('Error', 'No se pudo generar el documento.', 'error');
+      });
   };
 
   return (
@@ -84,27 +101,27 @@ const ClientQuotationsPage = () => {
             {quotations.map(q => (
               <tr key={q.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                 <td style={{ padding: '1.25rem 1.5rem' }}>
-                  <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{q.id}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Emitida: {q.date}</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>{q.quotation_number}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Emitida: {new Date(q.created_at).toLocaleDateString()}</div>
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem' }}>
                   <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{q.title}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Válida hasta: {q.validUntil}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Válida hasta: {new Date(q.valid_until).toLocaleDateString()}</div>
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                  {q.amount}
+                  $ {Number(q.total).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem' }}>
-                  {q.status === 'pending' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--warning)', backgroundColor: 'rgba(245,158,11,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><Clock size={14}/> Pendiente</span>}
-                  {q.status === 'approved' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--success)', backgroundColor: 'rgba(16,185,129,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><CheckCircle size={14}/> Aprobada</span>}
-                  {q.status === 'rejected' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--danger)', backgroundColor: 'rgba(239,68,68,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><XCircle size={14}/> Rechazada</span>}
+                  {q.status === 'PENDING' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--warning)', backgroundColor: 'rgba(245,158,11,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><Clock size={14}/> Pendiente</span>}
+                  {q.status === 'APPROVED' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--success)', backgroundColor: 'rgba(16,185,129,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><CheckCircle size={14}/> Aprobada</span>}
+                  {q.status === 'REJECTED' && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--danger)', backgroundColor: 'rgba(239,68,68,0.1)', padding: '0.35rem 0.75rem', borderRadius: '20px' }}><XCircle size={14}/> Rechazada</span>}
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                    <button onClick={() => handleDownload(q.id)} className="btn-ghost" title="Descargar PDF" style={{ padding: '0.5rem', borderRadius: '8px' }}>
+                    <button onClick={() => handleDownload(q.id, q.quotation_number)} className="btn-ghost" title="Descargar PDF" style={{ padding: '0.5rem', borderRadius: '8px' }}>
                       <Download size={18} color="var(--text-secondary)" />
                     </button>
-                    {q.status === 'pending' && (
+                    {q.status === 'PENDING' && (
                       <>
                         <button onClick={() => handleApprove(q.id)} className="btn" style={{ padding: '0.5rem 1rem', backgroundColor: 'var(--success)', color: 'white', borderRadius: '8px', fontSize: '0.85rem' }}>Aprobar</button>
                         <button onClick={() => handleReject(q.id)} className="btn" style={{ padding: '0.5rem 1rem', backgroundColor: 'transparent', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '8px', fontSize: '0.85rem' }}>Rechazar</button>
