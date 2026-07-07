@@ -12,30 +12,37 @@ const AdminQuotationsPage = () => {
   const [quoteTitle, setQuoteTitle] = useState('');
   const [quoteAmount, setQuoteAmount] = useState('');
   const [quoteDesc, setQuoteDesc] = useState('');
+  const [leadId, setLeadId] = useState('');
+  const [leads, setLeads] = useState([]);
   const [isQuoting, setIsQuoting] = useState(false);
 
-  useEffect(() => {
-    fetchQuotations();
-  }, []);
-
-  const fetchQuotations = async () => {
+  const fetchQuotationsAndLeads = async () => {
     try {
-      const response = await api.get('/quotations');
-      setQuotations(response.data.quotations || response.data);
+      const [qRes, lRes] = await Promise.all([
+        api.get('/quotations'),
+        api.get('/leads')
+      ]);
+      setQuotations(qRes.data.quotations || qRes.data);
+      setLeads(lRes.data.leads || lRes.data || []);
     } catch (error) {
-      console.error('Error fetching quotations:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchQuotationsAndLeads();
+  }, []);
+
   const handleSendQuote = async () => {
-    if (!quoteTitle || !quoteAmount) return Swal.fire('Error', 'Ingrese título y monto', 'error');
+    if (!quoteTitle || !quoteAmount || !leadId) return Swal.fire('Error', 'Ingrese título, monto y seleccione un cliente', 'error');
     setIsQuoting(true);
     try {
       await api.post('/quotations', {
         title: quoteTitle,
         description: quoteDesc,
+        lead_id: leadId,
         items: [{ description: quoteTitle, quantity: 1, unit_price: parseFloat(quoteAmount), subtotal: parseFloat(quoteAmount) }],
         subtotal: parseFloat(quoteAmount),
         tax: 0,
@@ -47,7 +54,8 @@ const AdminQuotationsPage = () => {
       setQuoteTitle('');
       setQuoteAmount('');
       setQuoteDesc('');
-      fetchQuotations();
+      setLeadId('');
+      fetchQuotationsAndLeads();
     } catch (error) {
       Swal.fire('Error', 'No se pudo generar la cotización', 'error');
     } finally {
@@ -111,6 +119,15 @@ const AdminQuotationsPage = () => {
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
             <div className="form-group">
+              <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Cliente / Empresa (Lead)</label>
+              <select className="input-control" value={leadId} onChange={e => setLeadId(e.target.value)} style={{ width: '100%' }}>
+                <option value="">-- Seleccionar Cliente --</option>
+                {leads.map(l => (
+                  <option key={l.id} value={l.id}>{l.contact_name} {l.company_name ? `(${l.company_name})` : ''}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
               <label style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Título de la Propuesta</label>
               <input type="text" className="input-control" value={quoteTitle} onChange={e => setQuoteTitle(e.target.value)} placeholder="Ej. Suministro de Bomba PEMO" style={{ width: '100%' }} />
             </div>
@@ -156,6 +173,7 @@ const AdminQuotationsPage = () => {
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem' }}>
                   <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{q.title}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Cliente: {q.lead_name || 'Sin Asignar'}</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Vence: {new Date(q.valid_until).toLocaleDateString()}</div>
                 </td>
                 <td style={{ padding: '1.25rem 1.5rem', fontWeight: 700, color: 'var(--text-primary)' }}>
