@@ -14,6 +14,7 @@ const navItems = [
   { section: 'CRM / Comercial', items: [
     { label: 'Solicitudes Web', icon: Users, path: '/admin/requests', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
     { label: 'Gestión Cotizaciones', icon: FileText, path: '/admin/quotations', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
+    { label: 'Inventario Equipos', icon: Package, path: '/admin/products', roles: ['SUPER_ADMIN', 'ADMIN'] },
   ]},
   { section: 'Operaciones', items: [
     { label: 'Inventario', icon: Package, path: '/inventory', roles: ['SUPER_ADMIN', 'ADMIN', 'OPERATOR'] },
@@ -59,7 +60,7 @@ const DashboardLayout = ({ children, title, subtitle }) => {
     SUPER_ADMIN: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444' },
     ADMIN: { bg: 'rgba(139,92,246,0.1)', color: '#8b5cf6' },
     OPERATOR: { bg: 'rgba(37,99,235,0.1)', color: '#2563eb' },
-    CLIENT: { bg: 'rgba(16,185,129,0.1)', color: '#10b981' },
+    CLIENT: { bg: 'rgba(10,185,129,0.1)', color: '#10b981' },
   };
   const roleBadge = roleColors[primaryRole] || { bg: 'rgba(100,100,100,0.08)', color: 'var(--text-secondary)' };
 

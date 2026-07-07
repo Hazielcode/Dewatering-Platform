@@ -23,6 +23,7 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import LeadsPage from './pages/crm/LeadsPage.jsx';
 import AdminRequestsPage from './pages/crm/AdminRequestsPage.jsx';
 import AdminQuotationsPage from './pages/crm/AdminQuotationsPage.jsx';
+import AdminProductsPage from './pages/crm/AdminProductsPage.jsx';
 import ClientModulePage from './pages/client/ClientModulePage.jsx';
 import ClientProjectsPage from './pages/client/ClientProjectsPage.jsx';
 import ClientQuotationsPage from './pages/client/ClientQuotationsPage.jsx';
@@ -129,6 +130,7 @@ const App = () => {
             <Route path="/leads" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'OPERATOR']}><LeadsPage /></ProtectedRoute>} />
             <Route path="/admin/requests" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL', 'OPERATOR']}><AdminRequestsPage /></ProtectedRoute>} />
             <Route path="/admin/quotations" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL', 'OPERATOR']}><AdminQuotationsPage /></ProtectedRoute>} />
+            <Route path="/admin/products" element={<ProtectedRoute requiredRoles={['SUPER_ADMIN', 'ADMIN', 'COMMERCIAL', 'OPERATOR']}><AdminProductsPage /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" />} />
