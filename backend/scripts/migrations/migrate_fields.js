@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 
 async function runMigration() {
   try {
-    console.log('[Mainroot] ⏳ Iniciando migración de esquema...');
+    console.log('[Dewatering Solutions] ⏳ Iniciando migración de esquema...');
 
     // 1. Alterar tabla usuarios
     await pool.query(`
@@ -15,14 +15,14 @@ async function runMigration() {
       ALTER TABLE usuarios ADD COLUMN telefono VARCHAR(20) DEFAULT '';
       ALTER TABLE usuarios ADD COLUMN fecha_nacimiento DATE NULL;
     `);
-    console.log('[Mainroot] ✅ Columnas corporativas agregadas.');
+    console.log('[Dewatering Solutions] ✅ Columnas corporativas agregadas.');
 
     // 2. Crear las dos cuentas de Super Admin solicitadas
-    const passwordHash = await bcrypt.hash('MainrootEnterprise2026!@#', 12);
+    const passwordHash = await bcrypt.hash('Dewatering SolutionsEnterprise2026!@#', 12);
 
     const admins = [
-      { email: 'alfonsoadmi@mainroot.com', nombres: 'Alfonso', apellidos: 'Admin' },
-      { email: 'galvanadmi@mainroot.com', nombres: 'Galvan', apellidos: 'Admin' }
+      { email: 'alfonsoadmi@dewatering_solutions.com', nombres: 'Alfonso', apellidos: 'Admin' },
+      { email: 'galvanadmi@dewatering_solutions.com', nombres: 'Galvan', apellidos: 'Admin' }
     ];
 
     for (const admin of admins) {
@@ -36,13 +36,13 @@ async function runMigration() {
       const roleRes = await pool.query("SELECT id FROM roles WHERE nombre = 'Admin'");
       if (roleRes.rows.length > 0) {
         await pool.query('INSERT INTO usuario_roles (usuario_id, rol_id) VALUES ($1, $2)', [newUserId, roleRes.rows[0].id]);
-        console.log(`[Mainroot] ✅ Cuenta creada y ascendida a Admin: ${admin.email}`);
+        console.log(`[Dewatering Solutions] ✅ Cuenta creada y ascendida a Admin: ${admin.email}`);
       }
     }
 
-    console.log('[Mainroot] 🎉 Migración completada exitosamente.');
+    console.log('[Dewatering Solutions] 🎉 Migración completada exitosamente.');
   } catch (error) {
-    console.error('[Mainroot] ❌ Error en la migración:', error.message);
+    console.error('[Dewatering Solutions] ❌ Error en la migración:', error.message);
   } finally {
     await pool.end();
   }

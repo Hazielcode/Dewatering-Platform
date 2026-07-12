@@ -1,9 +1,9 @@
-# 🏗️ Mainroot Enterprise — Documentación del Sistema
+# 🏗️ Dewatering Solutions Enterprise — Documentación del Sistema
 
 ## Arquitectura General
 
 ```
-mainroot/
+dewatering_solutions/
 ├── backend/               # API REST (Node.js + Express 5)
 │   └── src/
 │       ├── config/        # Pool de conexiones PostgreSQL

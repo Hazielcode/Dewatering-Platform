@@ -1,11 +1,11 @@
-name: mainroot
+name: dewatering_solutions
 
 services:
   backend:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    container_name: mainroot_backend
+    container_name: dewatering_solutions_backend
     ports:
       - "3000:3000"
     environment:
@@ -17,21 +17,21 @@ services:
       - ../backend/.env
     restart: unless-stopped
     networks:
-      - mainroot_network
+      - dewatering_solutions_network
 
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
-    container_name: mainroot_frontend
+    container_name: dewatering_solutions_frontend
     ports:
       - "8080:80"
     depends_on:
       - backend
     restart: unless-stopped
     networks:
-      - mainroot_network
+      - dewatering_solutions_network
 
 networks:
-  mainroot_network:
+  dewatering_solutions_network:
     driver: bridge

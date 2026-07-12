@@ -92,7 +92,7 @@ Request → Helmet → CORS → Morgan → JWT Auth → RBAC → ABAC → Contro
 ## 📁 Estructura del Proyecto
 
 ```
-mainroot/
+dewatering_solutions/
 ├── backend/
 │   └── src/
 │       ├── config/          # Pool de conexiones PostgreSQL
@@ -127,8 +127,8 @@ mainroot/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/Hazielcode/MainRoot.git
-cd MainRoot
+git clone https://github.com/Hazielcode/Dewatering-Solutions.git
+cd Dewatering-Solutions
 ```
 
 ### 2. Instalar dependencias
@@ -153,7 +153,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=tu_password_aqui
-DB_NAME=mainroot_db
+DB_NAME=dewatering_solutions_db
 
 # JWT
 JWT_SECRET=cambia_esto_por_un_secreto_seguro_de_64_chars
@@ -167,7 +167,7 @@ NODE_ENV=development
 
 ```bash
 # Ejecutar el schema en tu instancia de PostgreSQL
-psql -U postgres -d mainroot_db -f database/database.sql
+psql -U postgres -d dewatering_solutions_db -f database/database.sql
 ```
 
 > **💡 Tip:** Si usas Supabase, copia el contenido de `database/database.sql` en el SQL Editor de tu proyecto.

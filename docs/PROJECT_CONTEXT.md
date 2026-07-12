@@ -7,10 +7,10 @@
 
 ## 1. Origen del Proyecto
 
-Este proyecto es un **clon de MainRoot** (una plataforma enterprise de gestión con Zero Trust).
+Este proyecto es un **clon de Dewatering-Solutions** (una plataforma enterprise de gestión con Zero Trust).
 Se reutiliza como base para construir la plataforma web de **Dewatering Solutions**.
 
-- **MainRoot = la empresa desarrolladora (nosotros).**
+- **Dewatering-Solutions = la empresa desarrolladora (nosotros).**
 - **Dewatering Solutions = el cliente real (empresa de Lima, Perú).**
 - **Tipo de proyecto: Pre-tesis universitaria + producto real.**
 
@@ -86,7 +86,7 @@ Se reutiliza como base para construir la plataforma web de **Dewatering Solution
 - `LoginPage.jsx` — Logo "D", nombre "Dewatering Solutions", slogan, correo `@dewatering.com`
 - `DashboardLayout.jsx` — Sidebar rebrandeado: logo "D", nombre "Dewatering", nuevas secciones de navegación (Cotizaciones, Leads, Proyectos, Documentos, Auditoría, Roles y Usuarios)
 - `AuthContext.jsx` — Roles actualizados a SUPER_ADMIN/ADMIN/COMMERCIAL/ENGINEER/CLIENT
-- `App.jsx` — Aún tiene las rutas viejas de MainRoot (necesita actualización)
+- `App.jsx` — Aún tiene las rutas viejas de Dewatering-Solutions (necesita actualización)
 
 ### ✅ Backend — Parcialmente adaptado
 - `.env` — Apunta a nueva Supabase (credenciales configuradas)
@@ -96,11 +96,11 @@ Se reutiliza como base para construir la plataforma web de **Dewatering Solution
 - `middlewares/abacMiddleware.js` — Roles actualizados
 - `middlewares/rbacMiddleware.js` — Sin cambios necesarios (es genérico)
 
-### ⚠️ Backend — SIN CAMBIAR (aún tiene código de MainRoot)
-- `controllers/` — Todos los controllers son de MainRoot (productController, storeController, etc.)
-- `models/` — Todos los models son de MainRoot
-- `routes/` — Todas las rutas son de MainRoot
-- `services/authService.js` — Aún valida `@mainroot.com` y usa tabla `usuarios` vieja
+### ⚠️ Backend — SIN CAMBIAR (aún tiene código de Dewatering-Solutions)
+- `controllers/` — Todos los controllers son de Dewatering-Solutions (productController, storeController, etc.)
+- `models/` — Todos los models son de Dewatering-Solutions
+- `routes/` — Todas las rutas son de Dewatering-Solutions
+- `services/authService.js` — Aún valida `@dewatering_solutions.com` y usa tabla `usuarios` vieja
 - `app.js` — Aún registra rutas viejas
 
 ---
@@ -114,7 +114,7 @@ Se reutiliza como base para construir la plataforma web de **Dewatering Solution
 4. Ejecutar `npm install` y `npm run dev` en `frontend/` para verificar el frontend
 
 ### 🟡 SEMANA 1 — Backend nuevo
-5. **Reescribir `authService.js`**: Cambiar validación de `@mainroot.com` a `@dewatering.com`, usar tabla `users` (UUID) en vez de `usuarios`
+5. **Reescribir `authService.js`**: Cambiar validación de `@dewatering_solutions.com` a `@dewatering.com`, usar tabla `users` (UUID) en vez de `usuarios`
 6. **Crear nuevos models**: `leadModel.js`, `quotationModel.js`, `serviceModel.js`, `productModel.js` (Dewatering), `documentModel.js`, `projectModel.js`
 7. **Crear nuevos controllers**: `leadController.js`, `quotationController.js`, `serviceController.js`, `documentController.js`, `projectController.js`
 8. **Crear nuevas routes**: `/api/leads`, `/api/quotations`, `/api/services`, `/api/products`, `/api/documents`, `/api/projects`

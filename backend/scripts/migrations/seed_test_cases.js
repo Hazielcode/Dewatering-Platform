@@ -4,13 +4,13 @@ import bcrypt from 'bcrypt';
 
 async function seedTestCases() {
   try {
-    console.log('[Mainroot] 🧪 Iniciando carga de Casos de Prueba...');
+    console.log('[Dewatering Solutions] 🧪 Iniciando carga de Casos de Prueba...');
 
-    const passHash = await bcrypt.hash('Mainroot2026!', 12);
+    const passHash = await bcrypt.hash('Dewatering Solutions2026!', 12);
 
     // 1. Limpiar datos previos de prueba (opcional, para evitar duplicados)
     // Usamos DELETE para limpiar pero con cuidado de no romper la DB
-    const testEmails = ['gerente@mainroot.com', 'empleado@mainroot.com', 'gerente_lima@mainroot.com', 'gerente_cusco@mainroot.com'];
+    const testEmails = ['gerente@dewatering_solutions.com', 'empleado@dewatering_solutions.com', 'gerente_lima@dewatering_solutions.com', 'gerente_cusco@dewatering_solutions.com'];
     
     // Eliminar de las tablas hijas primero
     await pool.query('DELETE FROM audit_logs WHERE usuario_id IN (SELECT id FROM usuarios WHERE email = ANY($1))', [testEmails]);
@@ -24,14 +24,14 @@ async function seedTestCases() {
     // 3. Crear Escenario: GERENTE LIMA
     const resGerente = await pool.query(
       "INSERT INTO usuarios (email, password_hash, nombres, apellidos, activo, tienda_id) VALUES ($1, $2, $3, $4, true, 1) RETURNING id",
-      ['gerente@mainroot.com', passHash, 'Roberto', 'Gerente']
+      ['gerente@dewatering_solutions.com', passHash, 'Roberto', 'Gerente']
     );
     await pool.query("INSERT INTO usuario_roles (usuario_id, rol_id) VALUES ($1, 2)", [resGerente.rows[0].id]);
 
     // 4. Crear Escenario: EMPLEADO LIMA
     const resEmpleado = await pool.query(
       "INSERT INTO usuarios (email, password_hash, nombres, apellidos, activo, tienda_id) VALUES ($1, $2, $3, $4, true, 1) RETURNING id",
-      ['empleado@mainroot.com', passHash, 'Juan', 'Empleado']
+      ['empleado@dewatering_solutions.com', passHash, 'Juan', 'Empleado']
     );
     await pool.query("INSERT INTO usuario_roles (usuario_id, rol_id) VALUES ($1, 3)", [resEmpleado.rows[0].id]);
 
@@ -50,11 +50,11 @@ async function seedTestCases() {
       ['Mouse Logitech Pro', 'Mouse inalámbrico oficina', 85.00, 50, 'Accesorios', 1, false]
     );
 
-    console.log('[Mainroot] ✅ Datos de prueba cargados exitosamente.');
-    console.log('[Mainroot] 👤 Usuarios: gerente@mainroot.com / empleado@mainroot.com');
-    console.log('[Mainroot] 🔑 Contraseña: Mainroot2026!');
+    console.log('[Dewatering Solutions] ✅ Datos de prueba cargados exitosamente.');
+    console.log('[Dewatering Solutions] 👤 Usuarios: gerente@dewatering_solutions.com / empleado@dewatering_solutions.com');
+    console.log('[Dewatering Solutions] 🔑 Contraseña: Dewatering Solutions2026!');
   } catch (error) {
-    console.error('[Mainroot] ❌ Error en el seed:', error);
+    console.error('[Dewatering Solutions] ❌ Error en el seed:', error);
   } finally {
     await pool.end();
   }

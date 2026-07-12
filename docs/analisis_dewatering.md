@@ -83,7 +83,7 @@ El usuario final es un **ingeniero metalúrgico de 45 años** que usa WhatsApp y
 
 ### ¿Por qué NO Spring Boot?
 
-No es que Java sea malo — tú ya dominas Spring Boot y MainRoot lo demuestra. Pero para **este proyecto específico**:
+No es que Java sea malo — tú ya dominas Spring Boot y Dewatering-Solutions lo demuestra. Pero para **este proyecto específico**:
 
 1. **Dos deploys vs uno** — Con Spring Boot necesitas deploy del frontend (Vercel) + backend (AWS/Railway/Render). Con Next.js API Routes, es **un solo deploy** en Vercel.
 2. **Dos repos vs uno** — Menos complejidad de CI/CD, menos configuración de CORS, menos puntos de fallo.
