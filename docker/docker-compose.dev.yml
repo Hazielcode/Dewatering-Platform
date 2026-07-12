@@ -2,7 +2,7 @@ name: mainroot
 
 services:
   backend:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: mainroot_backend_dev
     working_dir: /app
     ports:
@@ -22,7 +22,7 @@ services:
       - mainroot_network
 
   frontend:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: mainroot_frontend_dev
     working_dir: /app
     ports:
